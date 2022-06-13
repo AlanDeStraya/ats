@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"> 
 	<head>
+	  <meta charset="UTF-8">
 		<title>Alan's Train Simulator</title> 
+		<style>
+		  canvas {
+		    margin-right: 10px;
+		  }
+		</style>
 	</head>
 	<body>
 		<canvas id="mycanvas"></canvas> 
-	</body>
+
  
 	<script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
  	<script>
@@ -50,6 +56,7 @@ var eastY = 450;
 var westY = 346;
 
 var power = true;
+var systemH = false;
 
 var speed = 60;         //speed
 var e = 21;             //eastDwell
@@ -58,7 +65,7 @@ var w = 21;             //westDwell
 //stationMenus E,W 0=null 1,2=TUN 3,4=BAY 5,6=PIM 7,8=LYO 9,10=PAR 11,12=RID, 13,14=UOT 15,16=LEE 17,18=HUR 19,20=TRE 21,22=STL 23,24=CYR 25,26=BLA
 var stationMenus = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
-var variance = [0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined];
+var variance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var lma = [0, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,];
 
@@ -111,16 +118,17 @@ var Pseudos = function(name, position, both, hold, eastHold, westHold, eastClose
 	this.westClose = westClose;
 };
 
-//EastShadowConstructor
-var EastShadows = function(run, position, dwell) {
+//ShadowConstructor
+var Shadows = function(run, position, dwell, docked, near, jump, direction) {
     this.run = run;
     this.position = position;
+    this.dwell = dwell;
+    this.docked = docked;
+    this.near = near;
+    this.jump = jump;
+    this.direction = direction;
 };
-//WestShadowConstructor
-var WestShadows = function(run, position, dwell) {
-    this.run = run;
-    this.position = position;
-};
+
 
 //signalConstructor
 var Signals = function(x, y, aspect, direction, label) {
@@ -151,37 +159,11 @@ var Button = function(config) {
 
 
 
-//ButtonMethods
-Button.prototype.isMouseInside = function() {
-	return mouseX > this.x &&
-		mouseX < (this.x + this.width) &&
-		mouseY > this.y &&
-		mouseY < (this.y + this.height);
-};
-
-Button.prototype.handleMouseClick = function() {
-	if (this.isMouseInside()) {
-		this.onClick();
-		}
-};
-
-Button.prototype.draw = function() {
-    fill(255, 255, 255);
-    rect(this.x, this.y, this.width, this.height);
-    //fill(0, 0, 0);
-    //textSize(19);
-    //textAlign(LEFT, TOP);
-    //text(this.label, this.x+10, this.y+this.height/4);
-    //text("test", this.x, this.y);
-};
 
 
 
 
-
-//station instances
-
-//stations(name, position, centerPlatform, eastHold, westHold, eastClose, westClose, dwell)
+//stations(name, position, centerPlatform, eastHold, westHold, eastClose, westClose, dwell, system)
 
 var tun = new Stations("TUN", 130, false, false, false, false, false, 23);
 var bay = new Stations("BAY", 420, false, false, false, false, false, 23);
@@ -206,22 +188,11 @@ var ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 
 
 
-
 //methods
 
-
-/*var checkNearStation = function() {
-	var nearStation = 0;
-	for(s = 0; s < stationsArray.length; s ++) {
-		nearStation += 1;
-	};*/
-		
-
-
-
-
-//eastTrainDrawMethod
-Trains.prototype.drawTrainEast = function() {
+//trainDrawMethod
+Trains.prototype.drawTrain = function() {
+  this.position = constrain(this.position, 50, 3750);
 	for(var j = 0; j < stationsArray.length; j++) {
 		if(this.position >= stationsArray[j].position - 10 && 
 		this.position <= stationsArray[j].position + 10 &&
@@ -237,18 +208,141 @@ Trains.prototype.drawTrainEast = function() {
 	for(var d = 0; d < stationsArray.length; d++) {
 		if(this.position === stationsArray[d].position) {
 			this.docked = true;
-			if(this.direction === 0 && stationsArray[d].eastHold === true) {
+			if((this.direction === 0 && stationsArray[d].eastHold === true) || (this.direction === 1 && stationsArray[d].westHold === true) || systemH === true) {
 				this.hold = true;
-			}
-			if(this.direction === 1 && stationsArray[d].westHold === true) {
-				this.hold = true;
+			} else {
+			  this.hold = false;
 			}
 			d = stationsArray.length;
-		} else {
-			this.docked = false;
 		}
 	}
 	
+  //moveDistances
+	if(this.near === true && this.docked === false) {
+		this.jump = 1;
+	} else if(this.docked === true) { //possibly unnecessary
+		this.jump = 0;
+	} else if(this.near === false && this.docked === false) {
+		this.jump = floor(random(1, 9));
+	}
+	//move
+	if(frameCount % speed === 0 && this.docked === false && this.direction === 0 && power === true) {
+		this.position += this.jump;
+	}
+	if(frameCount % speed === 0 && this.docked === false && this.direction === 1 && power === true) {
+		this.position -= this.jump;
+	}
+	//depart
+	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 0 && this.line > 0) {
+		this.position += 1;
+		this.docked = false;
+	}
+	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 1 && this.line > 0) {
+		this.position -= 1;
+		this.docked = false;
+	}
+	//dwellCount
+	if(frameCount % speed === 0 && this.docked === true) {
+		this.dwell -= 1;
+	}
+  //dwellShow
+  if(this.line > 0) {
+  	textSize(13);
+  	if(this.dwell < 0) {
+  		fill(230, 0, 0);
+  	} else {
+  		fill(0, 0, 0);
+  	}
+  	if(this.docked === true && this.direction === 0) {
+  		text(this.dwell, this.position - 35, eastY + 38);
+  	}
+  	if(this.docked === true && this.direction === 1) {
+  		text(this.dwell, this.position - 35, westY - 17);
+  	}
+  }
+  //draw
+	strokeWeight(0.5);
+	stroke(0, 0, 0);
+	fill(0, 250, 250, 150);
+	if(this.direction === 0) {
+		beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); 
+				vertex(this.position + 30, eastY + 8); vertex(this.position + 22, eastY + 15); 
+				vertex(this.position, eastY + 15); vertex(this.position, eastY); endShape();
+	}
+	if(this.direction === 1) {
+   		beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); 
+				vertex(this.position + 22, westY + 15); vertex(this.position, westY + 15); 
+				vertex(this.position - 8, westY + 8); vertex(this.position, westY); endShape();
+	}
+  //labelColor
+	if(this.variance > 20) {
+		stroke(0, 0, 0);
+		fill(255, 255, 0);
+	} else if(this.variance <= 20 && this.variance >= -20) {
+		stroke(255, 255, 255);
+		fill(0, 0, 0);
+	} else {
+		stroke(0, 0, 0);
+		fill(0, 255, 0);
+	}
+	//label
+	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
+		textSize(11);
+		text("0" + this.run + "BLW" + this.number, this.position - 18, eastY - 6);
+	}
+	if(this.direction === 1 && (this.line >= 1 && this.line <= 6)) {
+		textSize(11);
+		text("0" + this.run + "TUW" + this.number, this.position - 18, westY - 6);
+	}
+	//showATPM
+	if(this.atpm === true && this.doorOpen === false) {
+		fill(80, 80, 80);
+		textSize(13);
+		text("P", this.position + 7, eastY + 12);
+	}
+	//doors
+	if(this.docked === true && this.dwell > 4) {
+	    this.doorOpen = true;
+	} else {
+	    this.doorOpen = false;
+	}
+  if(this.doorOpen === true && this.direction === 0) {
+  	noStroke();
+		fill(90, 90, 90, 180);
+		rect(this.position + 7, eastY + 3, 9, 9);
+	}
+	if(this.doorOpen === true && this.direction === 1) {
+    noStroke();
+    fill(90, 90, 90, 180);
+    rect(this.position + 6, westY + 3, 9, 9);
+  }
+
+		
+};
+
+
+
+//shadowDrawMethod
+Shadows.prototype.drawShadow = function() {
+  for(var j = 0; j < stationsArray.length; j++) {
+		if(this.position >= stationsArray[j].position +3 && 
+		this.position <= stationsArray[j].position + 26 &&
+		this.position !== stationsArray[j].position + 13) {
+			this.dwell = stationsArray[j].dwell;
+			this.near = true;
+			this.docked = false;
+			j = stationsArray.length;
+		} else {
+			this.near = false;
+		}
+	}
+	for(var d = 0; d < stationsArray.length; d++) {
+		if(this.position === stationsArray[d].position + 13) {
+			this.docked = true;
+			d = stationsArray.length;
+		} 
+	}
+
 
 	if(this.near === true && this.docked === false) {
 		this.jump = 1;
@@ -263,76 +357,48 @@ Trains.prototype.drawTrainEast = function() {
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 1) {
 		this.position -= this.jump;
 	}
-	if(this.docked === true && this.hold === false && this.dwell === 0 && this.direction === 0) {
+	if(this.docked === true && this.dwell <= 0 && this.direction === 0) {
 		this.position += 1;
 		this.docked = false;
 	}
-	if(this.docked === true && this.hold === false && this.dwell === 0 && this.direction === 1) {
+	if(this.docked === true && this.dwell <= 0 && this.direction === 1) {
 		this.position -= 1;
 		this.docked = false;
 	}
 	if(frameCount % speed === 0 && this.docked === true) {
 		this.dwell -= 1;
 	}
-
 	
-
-	textSize(13);
-	if(this.dwell < 0) {
-		fill(230, 0, 0);
-	} else {
-		fill(0, 0, 0);
-	}
-	if(this.docked === true && this.direction === 0) {
-		text(this.dwell, this.position - 35, eastY + 38);
-	}
-	if(this.docked === true && this.direction === 1) {
-		text(this.dwell, this.position - 35, westY - 17);
-	}
-
-
-	strokeWeight(0.5);
-	stroke(0, 0, 0);
-	fill(0, 250, 250, 150);
 	if(this.direction === 0) {
-		beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); 
-				vertex(this.position + 30, eastY + 8); vertex(this.position + 22, eastY + 15); 
-				vertex(this.position, eastY + 15); vertex(this.position, eastY); endShape();
-	}
-	if(this.direction === 1) {
-   		beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); 
-				vertex(this.position + 22, westY + 15); vertex(this.position, westY + 15); 
-				vertex(this.position - 8, westY + 8); vertex(this.position, westY); endShape();
-	}
-
-	if(this.variance > 20) {
-		stroke(0, 0, 0);
-		fill(255, 255, 0);
-	} else if(this.variance <= 20 && this.variance >= -20) {
-		stroke(255, 255, 255);
-		fill(0, 0, 0);
-	} else {
-		stroke(0, 0, 0);
-		fill(0, 255, 0);
-	}
-	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
-		textSize(11);
-		text("0" + this.run + "BLW" + this.number, this.position - 18, eastY - 6);
-	}
-	if(this.direction === 1 && (this.line >= 1 && this.line <= 6)) {
-		textSize(11);
-		text("0" + this.run + "TUW" + this.number, this.position - 18, westY - 6);
-	}
-		
+  	strokeWeight(0.4);
+    if(variance[1] > 100) {
+      stroke(0, 0, 0);
+      fill(255, 255, 0);
+    } else if(variance[1] <= 100 && variance[1] >- 11) {
+      stroke(255, 255, 255);
+      fill(0, 0, 0);
+    } else {
+      stroke(0, 0, 0);
+      fill(0, 255, 0);
+    }
+    ellipse(this.position, eastY + 8, 14, 14);
+  }
+  if(this.direction === 1) {
+    strokeWeight(0.4);
+    if(variance[7] > 100) {
+        stroke(0, 0, 0);
+        fill(255, 255, 0);
+    } else if(variance[7] <= 100 && variance[7] >- 11) {
+        stroke(255, 255, 255);
+        fill(0, 0, 0);
+    } else {
+        stroke(0, 0, 0);
+        fill(0, 255, 0);
+    }
+    ellipse(this.position, westY + 8, 14, 14);
+  }
+	
 };
-
-
-
-
-
-
-
-
 
 
 
@@ -351,300 +417,6 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*Trains.prototype.drawTrainEasto = function() {
-	//locatorEast
-	if(this.position >= rid.position + 2 || this.position <= rid.position - 10) {
-		if (frameCount % speed === 0) {
-			this.position += floor(random(3, 13));
-		}
-		this.dwell = 21;
-    	} else if(this.position < rid.position + 2 && this.position > rid.position - 10 && this.dwell > 0) {
-		this.position = rid.position;
-		this.docked = true;
-		if (frameCount % speed === 0) {
-			this.dwell -= 1;
-		}
-
-
-		//dwellShowEast
-		if(this.dwell < 20) {
-			fill(0, 0, 0);
-			textSize(13);
-			text(this.dwell, rid.position - 35, eastY + 38);
-		}
-	} else if(this.position === rid.position && rid.eastHold === true) {
-		fill(230, 0, 0);
-		textSize(13);
-		text(this.dwell, rid.position - 35, eastY + 38);
-		if (frameCount % speed === 0) {
-			this.dwell -= 1;
-		}
-	} else {
-		this.position = rid.position + 10;
-		this.docked = false;
-	}
-    
-	//drawShapeEast
-	strokeWeight(0.5);
-	stroke(0, 0, 0);
-	fill(0, 250, 250, 150);
-	beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); 
-		vertex(this.position + 30, eastY + 8); vertex(this.position + 22, eastY + 15); 
-		vertex(this.position, eastY + 15); vertex(this.position, eastY); endShape(); 
-    
-	//doorSetEast
-	if((this.dwell > 4 && this.dwell < 19) || this.hold === true) {
-		this.doorOpen = true;
-	} else {
-		this.doorOpen = false;
-	}
-    
-	//doorShowEast
-	if(this.doorOpen === true) {
-		noStroke();
-		fill(90, 90, 90, 180);
-		rect(this.position + 7, eastY + 2, 8, 8);
-	}
-    
-	//atpmShowEast
-	if((this.atpm === true)&&this.doorOpen === false) {
-		fill(80, 80, 80);
-		textSize(10);
-		text("P", this.position + 6, eastY + 10);
-	}
-    
-
-    
-	//labelEast
-	if(this.variance > 20) {
-		stroke(0, 0, 0);
-		fill(255, 255, 0);
-	} else if(this.variance <= 20 && this.variance >= -20) {
-		stroke(255, 255, 255);
-		fill(0, 0, 0);
-	} else {
-		stroke(0, 0, 0);
-		fill(0, 255, 0);
-	}
-	textSize(11);	
-	text(this.run + "BLW" + this.number, this.position - 18, eastY - 6);
-    
-
-
-    
-    //flankEast
-    if(this.position > 100 && this.position < 392) {
-        flankUOTeast = true;
-    } else {
-        flankUOTeast = false;
-    }
-};*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//westTrainDrawMethod
-Trains.prototype.drawTrainWest = function() {
-    
-    //locatorWest
-    if(this.position >= rid.position + 10 || this.position <= rid.position - 2) {
-        if (frameCount % speed === 0) {
-            this.position -= floor(random(3, 13));
-        }
-        this.dwell = 21;
-    } else if(this.position < rid.position + 10 && this.position > rid.position - 2 && this.dwell > 0) {
-        this.position = rid.position;
-        this.docked = true;
-        if (frameCount % speed === 0) {
-            this.dwell -= 1;
-        }
-        
-        //dwellShowWest
-        if(this.dwell < 20) {
-            fill(0, 0, 0);
-            textSize(13);
-            text(this.dwell, rid.position - 35, westY - 17);
-        }
-    } else if(this.position === rid.position && rid.westHold === true) {
-            fill(230, 0, 0);
-            textSize(13);
-            text(this.dwell, rid.position - 35, westY - 17);
-            if (frameCount % speed === 0) {
-                this.dwell -= 1;
-            }
-    } else {
-    this.position = rid.position - 10;
-    this.docked = false;
-    }
-    
-    //drawShapeWest
-    strokeWeight(0.5);
-    stroke(0, 0, 0);
-    fill(0, 250, 250, 150);
-    beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); 
-		vertex(this.position + 22, westY + 15); vertex(this.position, westY + 15); 
-		vertex(this.position - 8, westY + 8); vertex(this.position, westY); endShape();
-    
-        //doorSetWest
-    if(this.dwell > 3 && this.dwell < 19) {
-        this.doorOpen = true;
-    } else {
-            this.doorOpen = false;
-    }
-    
-    //doorShowWest
-    if(this.doorOpen === true) {
-        noStroke();
-        fill(90, 90, 90, 180);
-        rect(this.position + 5, westY + 2, 8, 8);       /*fix size later? +tracks, flank, run shadows*/
-    }
-    
-    //atpmShowWest
-    if((this.atpm === true)&&this.doorOpen === false) {
-        fill(80, 80, 80);
-        textSize(10);
-        text("P", this.position + 5, westY + 10);
-    }
-    
-    /*trainResetWest
-    if(this.position <- 50) {
-        this.position = 2430;
-    }*/
-
-    //labelWest
-    if(variance[7] > 100) {
-        stroke(0, 0, 0);
-        fill(255, 255, 0);
-    } else if(variance[7] <= 100 && variance[7] >- 11) {
-        stroke(255, 255, 255);
-        fill(0, 0, 0);
-    } else {
-        stroke(0, 0, 0);
-        fill(0, 255, 0);
-    }
-    textSize(11);
-    text("0113" + "TUW" + "26", this.position - 20, westY - 7);
-    
-    
-    //flankWest 
-    if(this.position > 250) {
-        flankUOTwest = true;
-    } else {
-        flankUOTwest = false;
-    }
-};
-
-
-
-
-
-//eastShadowDrawMethod
-EastShadows.prototype.drawShadowEast = function() {
-    //location/movement
-    if(this.position >= rid.position + 12 || this.position <= rid.position) {
-        if (frameCount % speed === 0) {
-            this.position += floor(random(3, 13));
-        }
-        this.dwell = 15;
-    } else if(this.position < rid.position + 12 && this.position > rid.position && this.dwell > 0) {
-        this.position = rid.position + 10;
-        if (frameCount % speed === 0) {
-            this.dwell -= 1;
-        }
-    } else {
-        this.position = rid.position + 20;
-    }
-    
-    //runResetEast
-    if(this.position > 2410) {
-        this.position = -20;
-    }
-    
-    //shadowColorEast
-    strokeWeight(0.4);
-    if(variance[1] > 100) {
-        stroke(0, 0, 0);
-        fill(255, 255, 0);
-    } else if(variance[1] <= 100 && variance[1] >- 11) {
-        stroke(255, 255, 255);
-        fill(0, 0, 0);
-    } else {
-        stroke(0, 0, 0);
-        fill(0, 255, 0);
-    }
-    ellipse(this.position, eastY + 8, 14, 14);
-};
-
-
-
-//westShadowDrawMethod
-WestShadows.prototype.drawShadowWest = function() {
-    //location/movement
-    if(this.position >= rid.position + 20 || this.position <= rid.position + 8) {
-        if (frameCount % speed === 0) {
-            this.position -= floor(random(3, 13));
-        }
-        this.dwell = 15;
-    } else if(this.position < rid.position + 20 && this.position > rid.position + 8 && this.dwell > 0) { 
-        this.position = rid.position + 10;
-        if (frameCount % speed === 0) {
-            this.dwell -= 1;
-        }
-    } else {
-        this.position = rid.position;
-    }
-    
-    //runResetWest
-    if(this.position <- 20) {
-        this.position = 2420;
-    }
-    
-    //shadowColorWest
-    strokeWeight(0.4);
-    if(variance[7] > 100) {
-        stroke(0, 0, 0);
-        fill(255, 255, 0);
-    } else if(variance[7] <= 100 && variance[7] >- 11) {
-        stroke(255, 255, 255);
-        fill(0, 0, 0);
-    } else {
-        stroke(0, 0, 0);
-        fill(0, 255, 0);
-    }
-    ellipse(this.position, westY + 8, 14, 14);
-};
 
 
 
@@ -720,6 +492,8 @@ var drawDownCross = function(x, y) {
 
 
 
+
+
 //StationDrawMethod
 Stations.prototype.drawStation = function() {
     //GIDS
@@ -746,6 +520,10 @@ Stations.prototype.drawStation = function() {
             fill(255, 255, 0);
             rect(this.position, eastY + 36, 26, 6);
         }
+        if(systemH === true) {
+            fill(0, 255, 0);
+            rect(this.position, eastY + 36, 26, 6);
+        }
         
         if(this.westClose === true) {
             fill(195, 0, 0);
@@ -758,7 +536,11 @@ Stations.prototype.drawStation = function() {
             fill(255, 255, 0);
             rect(this.position, westY - 30, 26, 6);
         }
-    } else {                                ///////////centerPlatform
+        if(systemH === true) {
+            fill(0, 255, 0);
+            rect(this.position, westY - 30, 26, 6);
+        }
+    } else {                                //centerPlatform
         if(this.eastClose === true) {
             fill(195, 0, 0);
         } else {
@@ -770,6 +552,10 @@ Stations.prototype.drawStation = function() {
             fill(255, 255, 0);
             rect(this.position, eastY - 32, 26, 6);
         }
+        if(systemH === true) {
+            fill(0, 255, 0);
+            rect(this.position, eastY - 32, 26, 6);
+        }
         
         if(this.westClose === true) {
             fill(195, 0, 0);
@@ -779,8 +565,12 @@ Stations.prototype.drawStation = function() {
         stroke(0, 0, 0);
         rect(this.position, westY + 42, 26, 12);
         if(this.westHold === true) {
-            fill(255, 255, 0);
-            rect(this.position, westY + 42, 26, 6);
+          fill(255, 255, 0);
+          rect(this.position, westY + 42, 26, 6);
+        }
+        if(systemH === true) {
+          fill(0, 255, 0);
+          rect(this.position, westY + 42, 26, 6);
         }
     }
     
@@ -788,18 +578,18 @@ Stations.prototype.drawStation = function() {
     fill(0, 255, 0);
     textSize(13);
     if(this.centerPlatform === false) {
-        text(this.name + "-E", this.position - 6, eastY + 71);
-        text(this.name + "-W", this.position - 6, westY - 51);
+      text(this.name + "-E", this.position - 6, eastY + 71);
+       text(this.name + "-W", this.position - 6, westY - 51);
     } else {
-        text(this.name + "-E", this.position + 38, eastY - 26);
-        text(this.name + "-W", this.position + 38, westY + 53);
+       text(this.name + "-E", this.position + 38, eastY - 26);
+      text(this.name + "-W", this.position + 38, westY + 53);
     }
 
 };
 
 //PseudoDrawMethod
 Pseudos.prototype.drawPseudo = function() {
-        noStroke();
+    noStroke();
     fill(88, 88, 88);
     rect(this.position, westY - 36, 26, 12);
 
@@ -807,20 +597,43 @@ Pseudos.prototype.drawPseudo = function() {
     textSize(13);
     text(this.name + "-W", this.position - 12, westY - 46);
     if(this.both === true) {
-        fill(88, 88, 88);
-	rect(this.position, eastY + 36, 26, 12);
-	fill(0, 255, 0);
-        text(this.name + "-E", this.position - 12, eastY + 70);
+      fill(88, 88, 88);
+	    rect(this.position, eastY + 36, 26, 12);
+	    fill(0, 255, 0);
+      text(this.name + "-E", this.position - 12, eastY + 70);
     }
-	//markers
-	markerDraw(this.position + 1, westY - 2);
-	markerDraw(this.position + 19, westY - 2);
-	if(this.both === true) {
-		markerDraw(this.position + 1, eastY - 2);
-		markerDraw(this.position + 19, eastY - 2);
-	}
+  	markerDraw(this.position + 1, westY - 2);
+  	markerDraw(this.position + 19, westY - 2);
+  	if(this.both === true) {
+  		markerDraw(this.position + 1, eastY - 2);
+  		markerDraw(this.position + 19, eastY - 2);
+  	}
 };
 
+
+//ButtonMethods
+Button.prototype.isMouseInside = function() {
+	return mouseX > this.x &&
+		mouseX < (this.x + this.width) &&
+		mouseY > this.y &&
+		mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+	if (this.isMouseInside()) {
+		this.onClick();
+		}
+};
+
+Button.prototype.draw = function() {
+    fill(255, 255, 255);
+    rect(this.x, this.y, this.width, this.height);
+    //fill(0, 0, 0);
+    //textSize(19);
+    //textAlign(LEFT, TOP);
+    //text(this.label, this.x+10, this.y+this.height/4);
+    //text("test", this.x, this.y);
+};
 
 
 
@@ -840,34 +653,46 @@ Menus.prototype.drawStationMenu = function() {
 
 
 
-//instances
-
 
 //Trains         (position, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, dock, jump, line)
 
 var trainA = new Trains(130,  false, 101, 20, "01", false, false, 0, false, false, 0, false, 0, 1);
 var trainB = new Trains(575,  false, 102, 20, "02", false, false, 0, false, false, 0, false, 0, 1);
-var trainC = new Trains(855,  false, 103, 20, "03", false, false, 0, false, false, 0, false, 0, 1);
-var trainD = new Trains(1210, false, 104, 20, "04", false, false, 0, false, false, 0, false, 0, 1);
-var trainE = new Trains(1558, false, 105, 20, "05", false, false, 0, false, false, 0, false, 0, 1);
-var trainF = new Trains(1900, false, 106, 20, "06", false, false, 0, false, false, 0, false, 0, 1);
-var trainG = new Trains(2300, false, 107, 20, "07", false, false, 0, false, false, 0, false, 0, 1);
+var trainC = new Trains(1155, false, 103, 20, "03", false, false, 0, false, false, 0, false, 0, 1);
+var trainD = new Trains(1610, false, 104, 20, "04", false, false, 0, false, false, 0, false, 0, 1);
+var trainE = new Trains(2058, false, 105, 20, "05", false, false, 0, false, false, 0, false, 0, 1);
+var trainF = new Trains(2800, false, 106, 20, "06", false, false, 0, false, false, 0, false, 0, 1);
+var trainG = new Trains(3200, false, 107, 20, "07", false, false, 0, false, false, 0, false, 0, 1);
 var trainH = new Trains(3600, false, 108, 20, "08", false, false, 0, false, false, 1, false, 0, 1);
 var trainI = new Trains(3200, false, 109, 20, "09", false, false, 0, false, false, 1, false, 0, 1);
 var trainJ = new Trains(2758, false, 110, 20, "10", false, false, 0, false, false, 1, false, 0, 1);
 var trainK = new Trains(2199, false, 111, 20, "11", false, false, 0, false, false, 1, false, 0, 1);
 var trainL = new Trains(1750, false, 112, 20, "12", false, false, 0, false, false, 1, false, 0, 1);
 var trainM = new Trains(1345, false, 113, 20, "13", false, false, 0, false, false, 1, false, 0, 1);
-var trainN = new Trains(856, false, 114, 20, "14", false, false, 0, false, false, 1, false, 0, 1);
-var trainO = new Trains(466, false, 115, 20, "15", false, false, 0, false, false, 1, false, 0, 1);
+var trainN = new Trains(856,  false, 114, 20, "14", false, false, 0, false, false, 1, false, 0, 1);
+var trainO = new Trains(466,  false, 115, 20, "15", false, false, 0, false, false, 1, false, 0, 1);
 
 var trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, 
 		trainG, trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
 
-//runs (run, position)
-var run0101 = new EastShadows("0101", 30);
-var run0107 = new WestShadows("0107", 350);
+//runs (run, position, dwell, docked, near, jump, direction)
+var run101 = new Shadows(101, 143, 25, false, false, 0, 0);
+var run102 = new Shadows(102, 585, 25, false, false, 0, 0);
+var run103 = new Shadows(103, 1155, 25, false, false, 0, 0);
+var run104 = new Shadows(104, 1610, 25, false, false, 0, 0);
+var run105 = new Shadows(105, 2058, 25, false, false, 0, 0);
+var run106 = new Shadows(106, 2800, 25, false, false, 0, 0);
+var run107 = new Shadows(107, 3200, 25, false, false, 0, 0);
+var run108 = new Shadows(108, 3600, 25, false, false, 0, 1);
+var run109 = new Shadows(109, 3200, 25, false, false, 0, 1);
+var run110 = new Shadows(110, 2758, 25, false, false, 0, 1);
+var run111 = new Shadows(111, 2199, 25, false, false, 0, 1);
+var run112 = new Shadows(112, 1750, 25, false, false, 0, 1);
+var run113 = new Shadows(113, 1345, 25, false, false, 0, 1);
+var run114 = new Shadows(114, 856, 25, false, false, 0, 1);
+var run115 = new Shadows(115, 466, 25, false, false, 0, 1);
 
+var runsArray = [run101, run102, run103, run104, run104, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
 
 
 
@@ -962,8 +787,7 @@ var sig42 = new Signals(bla.position - 152, eastY + 26, 0, 0, "4-E-2");
 var sig43 = new Signals(bla.position - 20, westY - 15, 0, 1, "4-W-3");
 var sig44 = new Signals(bla.position - 50, eastY - 15, 0, 1, "4-W-4");
 
-
-
+var signalsArray = [sig11, sig12, sig13, sig14, sig21, sig22, sig23, sig24, sig25, sig26, sig27, sig28, sig31, sig32, sig33, sig34, sig35, sig36, sig37, sig38, sig39, sig310, sig311, sig312, sig313, sig314, sig315, sig316, sig318, sig320, sig321, sig322, sig323, sig324, sig41, sig42, sig43, sig44];
 
 
 
@@ -990,6 +814,7 @@ var stationMenu = new Menus({
 
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////
 //                                                              DRAW
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1000,11 +825,64 @@ draw = function() {
     background(112, 112, 112);    
     
     
+/*
+  fill(0, 0, 0);
+  text("Held: " + trainA.hold + " Docked: " + trainA.docked, 30, 30);
+*/
+
+    
+    var systemHoldButton = new Button({
+      x: 20,
+      y: 5,
+      width: 35,
+      height: 35,
+      onClick: function() {
+        systemH = !systemH;
+      }
+    });
+    
+    fill(160, 160, 160);
+    stroke(0, 0, 0);
+    strokeWeight(1);
+    rect(systemHoldButton.x, systemHoldButton.y, systemHoldButton.width, systemHoldButton.height);
+    fill(255, 255, 0);
+    rect(systemHoldButton.x + 7, systemHoldButton.y + 7, 7, 19);
+    rect(systemHoldButton.x + 21, systemHoldButton.y + 7, 7, 19);
+    
+    var powerButton = new Button({
+      x: 55,
+      y: 5,
+      width: 35,
+      height: 35,
+      onClick: function(){
+        power = !power;
+      }
+    });
+    
+    fill(160, 160, 160);
+    stroke(0, 0, 0);
+    strokeWeight(1);
+    rect(powerButton.x, powerButton.y, powerButton.width, powerButton.height);
+    strokeWeight(0.5);
+    fill(255, 255, 0);
+    beginShape(); vertex(powerButton.x + 19, powerButton.y + 4); vertex(powerButton.x + 8, powerButton.y + 19); vertex(powerButton.x + 16, powerButton.y + 17); vertex(powerButton.x + 13, powerButton.y + 32); vertex(powerButton.x + 23, powerButton.y + 13); vertex(powerButton.x + 16, powerButton.y + 14); vertex(powerButton.x + 19, powerButton.y + 4); endShape();
+
+    
+    
+    
     var btn1 = new Button({
         x: trainA.position - 5,
         y: eastY,
         onClick: function() {
             trainA.atpm = !trainA.atpm;
+        },
+    });
+    
+        var btn2 = new Button({
+        x: trainB.position - 5,
+        y: eastY,
+        onClick: function() {
+            trainB.atpm = !trainB.atpm;
         },
     });
     
@@ -1024,112 +902,23 @@ draw = function() {
 		width: stationMenu.w,
 		height: 16,
 		onClick: function() {
-			if(stationMenus[1] === true) {
-				stationMenus[1] = false;
-				tun.eastHold = !tun.eastHold;
-			}
-			if(stationMenus[2] === true) {
-				stationMenus[2] = false;
-				tun.westHold = !tun.westHold;
-			}
-			if(stationMenus[3] === true) {
-				stationMenus[3] = false;
-				bay.eastHold = !bay.eastHold;
-			}
-			if(stationMenus[4] === true) {
-				stationMenus[4] = false;
-				bay.westHold = !bay.westHold;
-			}
-			if(stationMenus[5] === true) {
-				stationMenus[5] = false;
-				pim.eastHold = !pim.eastHold;
-			}
-			if(stationMenus[6] === true) {
-				stationMenus[6] = false;
-				pim.westHold = !pim.westHold;
-			}
-			if(stationMenus[7] === true) {
-				stationMenus[7] = false;
-				lyo.eastHold = !lyo.eastHold;
-			}
-			if(stationMenus[8] === true) {
-				stationMenus[8] = false;
-				lyo.westHold = !lyo.westHold;
-			}
-			if(stationMenus[9] === true) {
-				stationMenus[9] = false;
-				par.eastHold = !par.eastHold;
-			}
-			if(stationMenus[10] === true) {
-				stationMenus[10] = false;
-				par.westHold = !par.westHold;
-			}
-			if(stationMenus[11] === true) {
-				stationMenus[11] = false;
-				rid.eastHold = !rid.eastHold;
-			}
-			if(stationMenus[12] === true) {
-				stationMenus[12] = false;
-				rid.westHold = !rid.westHold;
-			}
-			if(stationMenus[13] === true) {
-				stationMenus[13] = false;
-				uot.eastHold = !uot.eastHold;
-			}
-			if(stationMenus[14] === true) {
-				stationMenus[14] = false;
-				uot.westHold = !uot.westHold;
-			}
-			if(stationMenus[15] === true) {
-				stationMenus[15] = false;
-				lee.eastHold = !lee.eastHold;
-			}
-			if(stationMenus[16] === true) {
-				stationMenus[16] = false;
-				lee.westHold = !lee.westHold;
-			}
-			if(stationMenus[17] === true) {
-				stationMenus[17] = false;
-				hur.eastHold = !hur.eastHold;
-			}
-			if(stationMenus[18] === true) {
-				stationMenus[18] = false;
-				hur.westHold = !hur.westHold;
-			}
-			if(stationMenus[19] === true) {
-				stationMenus[19] = false;
-				tre.eastHold = !tre.eastHold;
-			}
-			if(stationMenus[20] === true) {
-				stationMenus[20] = false;
-				tre.westHold = !tre.westHold;
-			}
-			if(stationMenus[21] === true) {
-				stationMenus[21] = false;
-				stl.eastHold = !stl.eastHold;
-			}
-			if(stationMenus[22] === true) {
-				stationMenus[22] = false;
-				stl.westHold = !stl.westHold;
-			}
-			if(stationMenus[23] === true) {
-				stationMenus[23] = false;
-				cyr.eastHold = !cyr.eastHold;
-			}
-			if(stationMenus[24] === true) {
-				stationMenus[24] = false;
-				cyr.westHold = !cyr.westHold;
-			}
-			if(stationMenus[25] === true) {
-				stationMenus[25] = false;
-				bla.eastHold = !bla.eastHold;
-			}
-			if(stationMenus[26] === true) {
-				stationMenus[26] = false;
-				bla.westHold = !bla.westHold;
-			}
+		  
+		  for(var c = 1; c < stationMenus.length; c++) {
+        if(stationMenus[c] === true) {
+          stationMenus[c] = false;
+          if(c % 2 === 0) {
+            stationsArray[floor((c - 1) / 2)].westHold = !stationsArray[floor((c - 1) / 2)].westHold;
+          } else {
+            stationsArray[floor((c - 1) / 2)].eastHold = !stationsArray[floor((c - 1) / 2)].eastHold;
+          }
+        }
+  		}
 		}
 	});
+    
+
+  
+    
     
 	var btnSC = new Button({
 		x:stationMenu.x + 20,
@@ -1137,110 +926,17 @@ draw = function() {
 		width: stationMenu.w,
 		height: 16,
 		onClick: function() {
-			if(stationMenus[1] === true) {
-				stationMenus[1] = false;
-				tun.eastClose = !tun.eastClose;
-			}
-			if(stationMenus[2] === true) {
-				stationMenus[2] = false;
-				tun.westClose = !tun.westClose;
-			}
-			if(stationMenus[3] === true) {
-				stationMenus[3] = false;
-				bay.eastClose = !bay.eastClose;
-			}
-			if(stationMenus[4] === true) {
-				stationMenus[4] = false;
-				bay.westClose = !bay.westClose;
-			}
-			if(stationMenus[5] === true) {
-				stationMenus[5] = false;
-				pim.eastClose = !pim.eastClose;
-			}
-			if(stationMenus[6] === true) {
-				stationMenus[6] = false;
-				pim.westClose = !pim.westClose;
-			}
-			if(stationMenus[7] === true) {
-				stationMenus[7] = false;
-				lyo.eastClose = !lyo.eastClose;
-			}
-			if(stationMenus[8] === true) {
-				stationMenus[8] = false;
-				lyo.westClose = !lyo.westClose;
-			}
-			if(stationMenus[9] === true) {
-				stationMenus[9] = false;
-				par.eastClose = !par.eastClose;
-			}
-			if(stationMenus[10] === true) {
-				stationMenus[10] = false;
-				par.westClose = !par.westClose;
-			}
-			if(stationMenus[11] === true) {
-				stationMenus[11] = false;
-				rid.eastClose = !rid.eastClose;
-			}
-			if(stationMenus[12] === true) {
-				stationMenus[12] = false;
-				rid.westClose = !rid.westClose;
-			}
-			if(stationMenus[13] === true) {
-				stationMenus[13] = false;
-				uot.eastClose = !uot.eastClose;
-			}
-			if(stationMenus[14] === true) {
-				stationMenus[14] = false;
-				uot.westClose = !uot.westClose;
-			}
-			if(stationMenus[15] === true) {
-				stationMenus[15] = false;
-				lee.eastClose = !lee.eastClose;
-			}
-			if(stationMenus[16] === true) {
-				stationMenus[16] = false;
-				lee.westClose = !lee.westClose;
-			}
-			if(stationMenus[17] === true) {
-				stationMenus[17] = false;
-				hur.eastClose = !hur.eastClose;
-			}
-			if(stationMenus[18] === true) {
-				stationMenus[18] = false;
-				hur.westClose = !hur.westClose;
-			}
-			if(stationMenus[19] === true) {
-				stationMenus[19] = false;
-				tre.eastClose = !tre.eastClose;
-			}
-			if(stationMenus[20] === true) {
-				stationMenus[20] = false;
-				tre.westClose = !tre.westClose;
-			}
-			if(stationMenus[21] === true) {
-				stationMenus[21] = false;
-				stl.eastClose = !stl.eastClose;
-			}
-			if(stationMenus[22] === true) {
-				stationMenus[22] = false;
-				stl.westClose = !stl.westClose;
-			}
-			if(stationMenus[23] === true) {
-				stationMenus[23] = false;
-				cyr.eastClose = !cyr.eastClose;
-			}
-			if(stationMenus[24] === true) {
-				stationMenus[24] = false;
-				cyr.westClose = !cyr.westClose;
-			}
-			if(stationMenus[25] === true) {
-				stationMenus[25] = false;
-				bla.eastClose = !bla.eastClose;
-			}
-			if(stationMenus[26] === true) {
-				stationMenus[26] = false;
-				bla.westClose = !bla.westClose;
-			}
+		  
+  		for(var c = 1; c < stationMenus.length; c++) {
+        if(stationMenus[c] === true) {
+          stationMenus[c] = false;
+          if(c % 2 === 0) {
+            stationsArray[floor((c - 1) / 2)].westClose = !stationsArray[floor((c - 1) / 2)].westClose;
+          } else {
+            stationsArray[floor((c - 1) / 2)].eastClose = !stationsArray[floor((c - 1) / 2)].eastClose;
+          }
+        }
+  		}
 		}
 	});
     
@@ -1251,6 +947,11 @@ draw = function() {
 		x: tun.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[1] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1260,6 +961,11 @@ draw = function() {
 		x: tun.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[2] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1270,6 +976,11 @@ draw = function() {
 		x: bay.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[3] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1279,6 +990,11 @@ draw = function() {
 		x: bay.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[4] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1289,6 +1005,11 @@ draw = function() {
 		x: pim.position,
 		y: eastY - 38,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[5] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1298,6 +1019,11 @@ draw = function() {
 		x: pim.position,
 		y: westY + 42,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[6] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1308,6 +1034,11 @@ draw = function() {
 		x: lyo.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[7] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1317,6 +1048,11 @@ draw = function() {
 		x: lyo.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[8] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1327,6 +1063,11 @@ draw = function() {
 		x: par.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[9] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1336,6 +1077,11 @@ draw = function() {
 		x: par.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[10] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1346,6 +1092,11 @@ draw = function() {
 		x: rid.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[11] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1355,6 +1106,11 @@ draw = function() {
 		x: rid.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[12] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1365,6 +1121,11 @@ draw = function() {
 		x: uot.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[13] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1374,6 +1135,11 @@ draw = function() {
 		x: uot.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[14] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1384,6 +1150,11 @@ draw = function() {
 		x: lee.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[15] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1393,6 +1164,11 @@ draw = function() {
 		x: lee.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[16] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1403,6 +1179,11 @@ draw = function() {
 		x: hur.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[17] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1412,6 +1193,11 @@ draw = function() {
 		x: hur.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[18] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1422,6 +1208,11 @@ draw = function() {
 		x: tre.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[19] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1431,6 +1222,11 @@ draw = function() {
 		x: tre.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[20] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1441,6 +1237,11 @@ draw = function() {
 		x: stl.position,
 		y: eastY + 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[21] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1450,6 +1251,11 @@ draw = function() {
 		x: stl.position,
 		y: westY - 36,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[22] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1460,6 +1266,11 @@ draw = function() {
 		x: cyr.position,
 		y: eastY - 38,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[23] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1469,6 +1280,11 @@ draw = function() {
 		x: cyr.position,
 		y: westY + 42,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[24] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1479,6 +1295,11 @@ draw = function() {
 		x: bla.position,
 		y: eastY - 38,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[25] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1488,6 +1309,11 @@ draw = function() {
 		x: bla.position,
 		y: westY + 42,
 		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
 			stationMenus[26] = true;
 			stationMenu.x = mouseX;
 			stationMenu.y = mouseY;
@@ -1501,18 +1327,11 @@ draw = function() {
 
 
     
-    variance[1] = run0101.position - trainA.position;
-    variance[7] = trainG.position - run0107.position;
+    //variance[1] = run101.position - trainA.position;
+    //variance[7] = trainG.position - run107.position;
     
 
     
-
-
-    //position, docked, run, directionE, number, doorOpen, atpm, variance, hold, eb
-    /*fill(0,0,0);
-    textSize(10);
-    text(trainA.position+"_"+trainA.docked+"_"+trainA.run+"_"+trainA.dwell+"_"+trainA.number+"_"+trainA.doorOpen+"_"+trainA.atmp+"_"+trainA.variance+"_"+trainA.hold+"_"+trainA.eb,20,20);
-*/
     
 
 	gidsDraw(puot.position + 35);		//portals
@@ -1559,68 +1378,13 @@ draw = function() {
 	markerDraw(3455, eastY - 2);
 
 
-    
-	sig11.drawSignal();
-	sig12.drawSignal();
-	sig13.drawSignal();
-	sig14.drawSignal();
-
-	sig21.drawSignal();
-	sig22.drawSignal();
-	sig23.drawSignal();
-	sig24.drawSignal();
-	sig25.drawSignal();
-	sig26.drawSignal();
-	sig27.drawSignal();
-	sig28.drawSignal();
-
-	sig31.drawSignal();
-	sig32.drawSignal();
-	sig33.drawSignal();
-	sig34.drawSignal();
-	sig35.drawSignal();
-	sig36.drawSignal();
-	sig37.drawSignal();
-	sig38.drawSignal();
-	sig39.drawSignal();
-	sig310.drawSignal();
-	sig311.drawSignal();
-	sig312.drawSignal();
-	sig313.drawSignal();
-	sig314.drawSignal();
-	sig315.drawSignal();
-	sig316.drawSignal();
-	sig318.drawSignal();
-	sig320.drawSignal();
-	sig321.drawSignal();
-	sig322.drawSignal();
-	sig323.drawSignal();
-	sig324.drawSignal();
-
-	sig41.drawSignal();
-	sig42.drawSignal();
-	sig43.drawSignal();
-	sig44.drawSignal();
-
+  for(var s = 0; s < signalsArray.length; s++) {
+    signalsArray[s].drawSignal();
+  }
+  for(var s = 0; s < stationsArray.length; s++) {
+    stationsArray[s].drawStation();
+  }
    
-
-    
-
-	//methodCalls
-
-	tun.drawStation();
-	bay.drawStation();
-	pim.drawStation();
-	lyo.drawStation();
-	par.drawStation();
-	rid.drawStation();
-	uot.drawStation();
-	lee.drawStation();
-	hur.drawStation();
-	tre.drawStation();
-	stl.drawStation();
-	cyr.drawStation();
-	bla.drawStation();
 
 	puot.drawPseudo();
 	phur.drawPseudo();
@@ -1681,6 +1445,7 @@ draw = function() {
 	}
 	rect(20, eastY + 2, 3760, 11);                      //track1
 	rect(20, westY + 2, 3760, 11);                      //track2
+	
     
 	drawUpCross(tun.position + 50, westY + 19);	//crossovers
 	drawDownCross(tun.position + 50, westY + 19);
@@ -1716,75 +1481,68 @@ draw = function() {
 
 
 
-
-
-    //var trains = [trainA, trainG];
-    //trains[0].drawEast();
-    //for loop through train array (array east, array west? or alternate?)
-
-
-
-
-
-    //moreMethodCalls    
-    
-
 	for(var t = 0; t < trainsArray.length; t++) {
-		trainsArray[t].drawTrainEast();
+		trainsArray[t].drawTrain();
 	}
 
+  for(var r = 0; r < runsArray.length; r++) {
+    runsArray[r].drawShadow();
+  }
     
-    run0101.drawShadowEast();
-    run0107.drawShadowWest();
+    
     
     //btn1.draw();
     //btn7.draw();
 
 	mouseClicked = function() {
-	btn1.handleMouseClick();
-	btn7.handleMouseClick();
+	  
+	  systemHoldButton.handleMouseClick();
+	  powerButton.handleMouseClick();
+	  
+	  btn1.handleMouseClick();
+	  btn7.handleMouseClick();
     
-	btnSH.handleMouseClick();
-	btnSC.handleMouseClick();
+	  btnSH.handleMouseClick();
+	  btnSC.handleMouseClick();
 
-	btnTunE.handleMouseClick();
-	btnTunW.handleMouseClick();
-	btnBayE.handleMouseClick();
-	btnBayW.handleMouseClick();
-	btnPimE.handleMouseClick();
-	btnPimW.handleMouseClick();
-	btnLyoE.handleMouseClick();
-	btnLyoW.handleMouseClick();
-	btnParE.handleMouseClick();
-	btnParW.handleMouseClick();
-	btnRidE.handleMouseClick();
-	btnRidW.handleMouseClick();
-	btnUotE.handleMouseClick();
-	btnUotW.handleMouseClick();
-	btnLeeE.handleMouseClick();
-	btnLeeW.handleMouseClick();
-	btnHurE.handleMouseClick();
-	btnHurW.handleMouseClick();
-	btnTreE.handleMouseClick();
-	btnTreW.handleMouseClick();
-	btnStlE.handleMouseClick();
-	btnStlW.handleMouseClick();
-	btnCyrE.handleMouseClick();
-	btnCyrW.handleMouseClick();
-	btnBlaE.handleMouseClick();
-	btnBlaW.handleMouseClick();
+  	btnTunE.handleMouseClick();
+	  btnTunW.handleMouseClick();
+  	btnBayE.handleMouseClick();
+  	btnBayW.handleMouseClick();
+  	btnPimE.handleMouseClick();
+  	btnPimW.handleMouseClick();
+  	btnLyoE.handleMouseClick();
+  	btnLyoW.handleMouseClick();
+  	btnParE.handleMouseClick();
+  	btnParW.handleMouseClick();
+  	btnRidE.handleMouseClick();
+  	btnRidW.handleMouseClick();
+  	btnUotE.handleMouseClick();
+  	btnUotW.handleMouseClick();
+  	btnLeeE.handleMouseClick();
+  	btnLeeW.handleMouseClick();
+  	btnHurE.handleMouseClick();
+  	btnHurW.handleMouseClick();
+  	btnTreE.handleMouseClick();
+  	btnTreW.handleMouseClick();
+  	btnStlE.handleMouseClick();
+  	btnStlW.handleMouseClick();
+  	btnCyrE.handleMouseClick();
+  	btnCyrW.handleMouseClick();
+  	btnBlaE.handleMouseClick();
+  	btnBlaW.handleMouseClick();
 
 
-    };
+  };
     
 	for(i = 0; i < stationMenus.length; i++) {
-    		if(stationMenus[i] === true) {
-			stationMenu.drawStationMenu();
-			for(m = 0; m < stationMenus.length; m++) {
-				if (m != i) {
-					stationMenus[m] = false
-				}
-			}
+    if(stationMenus[i] === true) {
+		  stationMenu.drawStationMenu();
+		  for(m = 0; m < stationMenus.length; m++) {
+		    if (m != i) {
+			    stationMenus[m] = false
+		    }
+		  }
 		}
 	}
     
@@ -1793,11 +1551,9 @@ draw = function() {
 
 
 //planned features to add
-    //buttons-x,y,w,h - functions!
+  //line
 	//LMAs
-	//stnHold fn
 	//stnClose fn
-	//sysHold
 	//swt fn
 	//disturb switch
 	//track segments
@@ -1805,63 +1561,17 @@ draw = function() {
 	//track fns
     //MRR
     //powerStatus
-    //eb
-    //alt TDT
-    
-    //dwell+/-
-    
-    //cross switches?
+  //eb
+  //additional lines
+  //alt TDT
+  //dwell+/-
+  //cross switches?
 
 
 
 //if (frameCount % 60 === 0)      <--slow movement?
-//if (random(1) < 0.5)          <--50/50 random?
+//if (random(0,1) < 0.5)          <--50/50 random?
 
-
-
-
-
-//button constructor-> config construction
-//config object into the constructor
-//allows defaults for undefined properties
-
-/*
-if a drawn button is needed
-Button.prototype.draw = function() {
-    fill(0, 234, 255);
-    rect(this.x, this.y, this.width, this.height);
-    fill(0, 0, 0);
-    textSize(19);
-    textAlign(LEFT, TOP);
-    text(this.label, this.x+10, this.y+this.height/4);
-}; --> btn1.draw();
-
-
-
-var btn1 = new Button({
-    x: this.position,
-    y: 100,
-    onClick: function() {
-        text/rect
-    }
-});
-
-
-
-
-var btn2 = new Button({
-    x: 100,
-    y: 213,
-    label: "No! Click ME!",
-    onClick: function() {
-        text("Yay, you picked me!", this.x, this.y+this.height);
-    }
-});
-btn2.draw();
-
-
-
-*/
 
 
 
@@ -1875,5 +1585,5 @@ btn2.draw();
     // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
     var processingInstance = new Processing(canvas, sketchProc); 
 	</script>
-
+	</body>
 </html>
