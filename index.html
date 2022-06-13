@@ -5,11 +5,189 @@
 		<title>Alan's Train Simulator</title> 
 		<style>
 		  canvas {
-		    margin-right: 10px;
+		    position: absolute;
+		    top: 102px;
+		    border: none;
 		  }
+		  
+      body {
+        background-color: rgb(238, 238, 238);
+        font-family: sans-serif;
+        width: 3810px;
+        overflow: auto;
+      }
+      
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        height: 102px;
+        width: 1920px;
+        background-color: rgb(232, 232, 232);
+        z-index: 1;
+      }
+      
+      .outline {
+        border: 1px inset rgb(235, 235, 235);
+      }
+      
+      #left-block {
+        display: flex;
+        flex-wrap: wrap;
+        width: 262px;
+        height: 75px;
+      }
+      
+      #ack {
+          border: 1px solid rgb(220, 220, 220);
+          background-color: rgb(232, 232, 232);
+          font-family: tahoma, sans-serif;
+          font-size: 11px;
+          text-align: center;
+          width: 95px;
+          height: 40px;
+          margin-left: 3px;
+          margin-bottom: 0px;
+      }
+      
+      #ack .outline {
+        width: 40px;
+      }
+      
+      #thales {
+        font-family: sans-serif;
+        font-size: 18px;
+        letter-spacing: 8px;
+        text-align: center;
+        border: 4px double rgb(220, 220, 220);
+        background-color: rgb(251, 251, 251);
+        color: rgb(0, 0, 100);
+        padding: 6px 4px;
+        width: 140px;
+        height: 22px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      
+
+      
+      #date {
+        border: 0.5px inset rgb(245, 245, 245);
+        background-color: rgb(232, 232, 232);
+        font-family: tahoma, sans-serif;
+        font-size: 12px;
+        text-align: center;
+        padding: 6px;
+        width: 240px;
+        margin-top: 2px;
+      }
+      
+      #alarms {
+        overflow: auto;
+        width: 1240px;
+        height: 70px;
+        margin: 0px;
+        /*position: absolute;
+        top: 0px;
+        left: 250px;*/
+        color: white;
+        background-color: red;
+        border: 1px solid grey;
+        font-family: tahoma, sans-serif;
+        font-size: 13px;
+        line-height: 1.6em;
+        padding-left: 5px;
+      }
+        
+      #alarms span {
+        margin-right: 42px;
+      }
+      
+      #servers {/*
+        position: absolute;
+        left: 1080px;
+        top: 0px;*/
+        font-size: 14px;
+      }
+      
+      #servers div {
+        display: inline-block;
+        border: 1px inset rgb(235, 235, 235);
+        margin: 1.5px;
+        text-align: center;
+        vertical-align: center;
+        height: 16px;
+        padding: 2px;
+        background-color: rgb(241, 241, 241);
+      }
+      
+      #servers div.green {
+        background-color: rgb(0, 155, 0);
+        color: white;
+      }
+      
+      #servers div.grey {
+        background-color: rgb(200, 200, 200);
+      }
+      
+      .categories {
+        width: 38px;
+      }
+      
+      .topserv {
+        width: 100px;
+      }
+      
+      .numserv {
+        width: 50px;
+      }
+      
+      #log-on-icon {
+       width: 14px; 
+      }
+        
+      #menus {
+        position: absolute;
+        top: 66px;
+        z-index: 2;
+        font-family: segoe ui;
+        font-size: 0.8em;
+      }
 		</style>
 	</head>
 	<body>
+	<header>
+      <div id='left-block'>
+        <h1 id='thales'>A.T.S. +</h1>
+        <table id='ack'>
+          <tbody>
+            <tr>
+              <td>Not Ack</td>
+              <td class='outline'>288</td>
+            </tr>
+            <tr>
+              <td>Active</td>
+              <td class='outline'>109</td>
+            </tr>
+          </tbody>
+        </table>
+        <p id='date'><span>Wednesday, May 25, 2022.</span> &nbsp; <span>21:26:48</span></p>
+      </div>
+      <div id='alarms'><span>5/25/2022 21:44:06 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:43:59 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:43:24 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:42:48 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span>
+      </div>
+      <div id='servers'>
+        <div class='categories'>SRS</div><div class='green topserv'>C1</div><div class='green topserv'>FSRS</div><div class='grey topserv'>DL</div><div class='topserv' id='log-on-icon'>:)</div><br>
+      
+        <div class='categories'>LSRS</div><div class='grey numserv'>1</div><div class='grey numserv'>2</div><div class='grey numserv'>3</div><div class='grey numserv'>4</div><div class='grey numserv'>5</div><div class='grey numserv'>6</div><br>
+      
+        <div class='categories'>ZC</div><div class='green numserv'>1</div><div class='green numserv'>2</div><div class='green numserv'>3</div><div class='green numserv'>4</div><div class='green numserv'>5</div><div class='green numserv'>6</div>
+      </div>
+    </header>
+    <p id='menus'>Window &nbsp; Train &nbsp; Guideway &nbsp; Regulation &nbsp; View</p>
 		<canvas id="mycanvas"></canvas> 
 
  
@@ -48,9 +226,15 @@ Display features:
 
 */
 
-//Code notes: positions are upper left (train, station)
+//Code notes: xpositions are upper left (train, station)
 //stations are 26 wide. I'm pretty sure.
-//stationPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
+//stationxPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
+
+/*
+--              Change station menu code to be simpler \/
+--Current: repair track menu, not showing when selecting from station menu
+*/
+
 
 //variables
 
@@ -61,8 +245,7 @@ var power = true;
 var systemH = false;
 
 var speed = 60;         //speed
-var e = 21;             //eastDwell
-var w = 21;             //westDwell
+var speedf = 3;
 
 //stationMenus E,W 0=null 1,2=TUN 3,4=BAY 5,6=PIM 7,8=LYO 9,10=PAR 11,12=RID, 13,14=UOT 15,16=LEE 17,18=HUR 19,20=TRE 21,22=STL 23,24=CYR 25,26=BLA
 var stationMenus = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
@@ -76,8 +259,8 @@ var flankUOTeast;
 //constructors
 
 //TrainConstructor
-var Trains = function(position, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu) {
-	this.position = position;
+var Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu) {
+	this.x = x;
 	this.y = y;
 	this.docked = docked;
 	this.run = run;
@@ -99,9 +282,9 @@ var Trains = function(position, y, docked, run, dwell, number, doorOpen, atpm, v
 };
 
 //stationConstructor
-var Stations = function(name, position, centerPlatform, eastHold, westHold, eastClose, westClose, dwell) {
+var Stations = function(name, x, centerPlatform, eastHold, westHold, eastClose, westClose, dwell) {
 	this.name = name;
-	this.position = position;
+	this.x = x;
 	this.centerPlatform = centerPlatform;
 	this.eastHold = eastHold;
 	this.westHold = westHold;
@@ -111,9 +294,9 @@ var Stations = function(name, position, centerPlatform, eastHold, westHold, east
 };
 
 //PseudoConstructor
-var Pseudos = function(name, position, both, hold, eastHold, westHold, eastClose, westClose) {
+var Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westClose) {
 	this.name = name;
-	this.position = position;
+	this.x = x;
 	this.both = both;
 	this.eastHold = eastHold;
 	this.westHold = westHold;
@@ -122,9 +305,10 @@ var Pseudos = function(name, position, both, hold, eastHold, westHold, eastClose
 };
 
 //ShadowConstructor
-var Shadows = function(run, position, dwell, docked, near, jump, direction) {
+var Shadows = function(run, x, y, dwell, docked, near, jump, direction) {
     this.run = run;
-    this.position = position;
+    this.x = x;
+    this.y = y;
     this.dwell = dwell;
     this.docked = docked;
     this.near = near;
@@ -201,7 +385,7 @@ var Switches = function(x, track, number, tangent, disturbed, manual, reserved, 
 
 
 
-//stations(name, position, centerPlatform, eastHold, westHold, eastClose, westClose, dwell, system)
+//stations(name, x, centerPlatform, eastHold, westHold, eastClose, westClose, dwell, system)
 
 var tun = new Stations("TUN", 130,  false, false, false, false, false, 23, false);
 var bay = new Stations("BAY", 420,  false, false, false, false, false, 23,  false);
@@ -219,7 +403,7 @@ var bla = new Stations("BLA", 3630, true,  false, false, false, false, 180, fals
 
 var stationsArray = [tun, bay, pim, lyo, par, rid, uot, lee, hur, tre, stl, cyr, bla];
 
-//pseudos(name, position, both, eastHold, westHold, eastClose, westClose)
+//pseudos(name, x, both, eastHold, westHold, eastClose, westClose)
 var puot = new Pseudos("PUOT", 1520, true, false, false, false, false);
 var phur = new Pseudos("PHUR", 2210, false, false, false, false, false);
 var ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
@@ -239,10 +423,11 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
 //trainDrawMethod
 Trains.prototype.drawTrain = function() {	
+	//var vertical; //1.73
 	for(var j = 0; j < stationsArray.length; j++) {  //cycle stations
-		if(this.position >= stationsArray[j].position - 10 && 
-		this.position <= stationsArray[j].position + 10 &&
-		this.position !== stationsArray[j].position) {  //if near, set dwell
+		if(this.x >= stationsArray[j].x - 10 && 
+		this.x <= stationsArray[j].x + 10 &&
+		this.x !== stationsArray[j].x) {  //if near, set dwell
 			this.dwell = stationsArray[j].dwell;
 			this.near = true;
 			this.docked = false;
@@ -252,7 +437,7 @@ Trains.prototype.drawTrain = function() {
 		}
 	}
 	for(var d = 0; d < stationsArray.length; d++) {
-		if(this.position === stationsArray[d].position) {
+		if(this.x === stationsArray[d].x) {
 			this.docked = true;
 			if((this.direction === 0 && stationsArray[d].eastHold === true) || (this.direction === 1 && stationsArray[d].westHold === true) || systemH === true) {
 				this.hold = true;
@@ -271,20 +456,27 @@ Trains.prototype.drawTrain = function() {
 	} else if(this.near === false && this.docked === false) {
 		this.jump = floor(random(1, 9));
 	}
+	//vertical = 1.73 * this.jump;
 	//move
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 0 && power === true) {
-		this.position += this.jump;
+		this.x += this.jump;
 	}
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 1 && power === true) {
-		this.position -= this.jump;
+		this.x -= this.jump;
 	}
+	if(frameCount % speed === 0 && (this.track === 3 || this.track === 6)) {
+    this.y += this.jump * 1.73;
+  }
+  if(frameCount % speed ===0 && (this.track === 4 || this.track === 5)) {
+    this.y -= this.jump * 1.73;
+  }
 	//depart
 	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 0 && this.line > 0) {
-		this.position += 1;
+		this.x += 1;
 		this.docked = false;
 	}
 	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 1 && this.line > 0) {
-		this.position -= 1;
+		this.x -= 1;
 		this.docked = false;
 	}
 	//dwellCount
@@ -300,71 +492,119 @@ Trains.prototype.drawTrain = function() {
   		fill(0, 0, 0);
   	}
   	if(this.docked === true && this.track === 2) {
-  		text(this.dwell, this.position - 35, eastY + 38);
+  		text(this.dwell, this.x - 35, eastY + 38);
   	}
   	if(this.docked === true && this.track === 1) {
-  		text(this.dwell, this.position - 35, westY - 17);
+  		text(this.dwell, this.x - 35, westY - 17);
   	}
   }
+
+  //line decisions
+	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
+	  this.track = 3;
+	  this.x = 179;
+	  this.y += 5;
+	  this.turnout = true;
+	}
+	if(this.line === 1 && this.direction === 0 && this.track === 3 && this.x > 220) {
+	  this.turnout = false;
+	  this.track = 2;
+	  this.x += 15;
+	}
+	
+	if(this.line === 1 && this.direction === 0 && this.track === 2 && this.x >= 3531 && this.x <= 3539) {
+	  this.track = 5;
+	  this.x = 3540;
+	  this.y -= 5;
+	  this.turnout = true;
+	}
+	if(this.line === 1 && this.direction === 0 && this.track === 5 && this.x > 3581) {
+	  this.turnout = false;
+	  this.track = 1;
+	  this.x += 15;
+	}
+	
   //draw
 	strokeWeight(0.5);
 	stroke(0, 0, 0);
 	fill(0, 250, 250, 150);
-
-	if(this.line === 1 && this.direction === 0 && this.position >= 176 && this.position <= 184) {
-	  this.track = 3;
-	}
+	
 	if(this.track === 1 && this.direction === 1) {
-   		beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); 
-				vertex(this.position + 22, westY + 15); vertex(this.position, westY + 15); 
-				vertex(this.position - 8, westY + 8); vertex(this.position, westY); endShape();
-				this.y = westY;
+   	beginShape(); vertex(this.x, westY); vertex(this.x + 22, westY); 
+				vertex(this.x + 22, westY + 15); vertex(this.x, westY + 15); 
+				vertex(this.x - 8, westY + 8); vertex(this.x, westY); endShape();
+		this.y = westY;
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
 	}
 	if(this.track === 1 && this.direction === 0) {
-		beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); 
-				vertex(this.position + 30, westY + 8); vertex(this.position + 22, westY + 15); 
-				vertex(this.position, westY + 15); vertex(this.position, westY); endShape();
-				this.y = westY;
+		beginShape(); vertex(this.x, westY); vertex(this.x + 22, westY); 
+				vertex(this.x + 30, westY + 8); vertex(this.x + 22, westY + 15); 
+				vertex(this.x, westY + 15); vertex(this.x, westY); endShape();
+		this.y = westY;
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
 	}
 	if(this.track === 2 && this.direction === 0) {
-		beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); 
-				vertex(this.position + 30, eastY + 8); vertex(this.position + 22, eastY + 15); 
-				vertex(this.position, eastY + 15); vertex(this.position, eastY); endShape();
-				this.y = eastY;
+		beginShape(); vertex(this.x, eastY); vertex(this.x + 22, eastY); 
+				vertex(this.x + 30, eastY + 8); vertex(this.x + 22, eastY + 15); 
+				vertex(this.x, eastY + 15); vertex(this.x, eastY); endShape();
+		this.y = eastY;
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
 	}
 	if(this.track === 2 && this.direction === 1) {
-   		beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); 
-				vertex(this.position + 22, eastY + 15); vertex(this.position, eastY + 15); 
-				vertex(this.position - 8, eastY + 8); vertex(this.position, eastY); endShape();
-				this.y = eastY;
+   		beginShape(); vertex(this.x, eastY); vertex(this.x + 22, eastY); 
+				vertex(this.x + 22, eastY + 15); vertex(this.x, eastY + 15); 
+				vertex(this.x - 8, eastY + 8); vertex(this.x, eastY); endShape();
+		this.y = eastY;
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
 	}
 	
-
+  //rotators
 	if(this.track === 3) {
   	pushMatrix();
-    translate(this.position, westY + 13); 
-    rotate(45);
+    translate(this.x, this.y + 13); 
+    rotate(1);
   	beginShape(); vertex(0, 0); vertex(0, -15); vertex(22, -15); vertex(30, -8); vertex(22, 0); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
   	popMatrix();
 	}
-	if(this.turnout === 4) {
+	if(this.track === 4) {
 	  pushMatrix();
-    translate(this.position, westY); 
-    rotate(45);
+    translate(this.x, this.y); 
+    rotate(4);
 	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
   	popMatrix();
 	}
-	if(this.turnout === 5) {
+	if(this.track === 5) {
   	pushMatrix();
-    translate(this.position, eastY); 
-    rotate(315);
+    translate(this.x, this.y); 
+    rotate(-1);
   	beginShape(); vertex(0, 0); vertex(22, 0); vertex(30, 8); vertex(22, 15); vertex(0, 15); vertex(0, 0); endShape();
   	popMatrix();
 	}
-	if(this.turnout === 6) {
+	if(this.track === 6) {
 	  pushMatrix();
-    translate(this.position, westY); 
-    rotate(315);
+    translate(this.x, this.y); 
+    rotate(4);
 	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
   	popMatrix();
 	}
@@ -381,19 +621,13 @@ Trains.prototype.drawTrain = function() {
 		fill(0, 255, 0);
 	}
 	//label
-	if(this.track === 2 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
+	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
 		textSize(11);
-		text("0" + this.run + "BLW" + this.number, this.position - 18, this.y - 6);
+		text("0" + this.run + "BLW" + this.number, this.x - 18, this.y - 6);
 	}
-	if(this.track === 1 && (this.line >= 1 && this.line <= 6)) {
+	if(this.direction === 1 && (this.line <= 6)) {
 		textSize(11);
-		text("0" + this.run + "TUW" + this.number, this.position - 18, this.y - 6);
-	}
-	//showATPM
-	if(this.atpm === true && this.doorOpen === false) {
-		fill(80, 80, 80);
-		textSize(13);
-		text("P", this.position + 7, eastY + 12);
+		text("0" + this.run + "TUW" + this.number, this.x - 18, this.y - 6);
 	}
 	//doors
 	if(this.docked === true && this.dwell > 4) {
@@ -404,29 +638,23 @@ Trains.prototype.drawTrain = function() {
   if(this.doorOpen === true && this.track === 2) {
   	noStroke();
 		fill(90, 90, 90, 180);
-		rect(this.position + 7, eastY + 3, 9, 9);
+		rect(this.x + 7, eastY + 3, 9, 9);
 	}
 	if(this.doorOpen === true && this.track === 1) {
     noStroke();
     fill(90, 90, 90, 180);
-    rect(this.position + 6, westY + 3, 9, 9);
+    rect(this.x + 6, westY + 3, 9, 9);
   }
 
-  if((this.line >= 1 && this.line <= 6) && this.position === tun.position) {
+  if((this.line >= 1 && this.line <= 6) && this.x === tun.x) {
     this.direction = 0;
   }
   
-  if((this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18) && this.position === bla.position) {
+  if((this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18) && this.x === bla.x) {
     this.direction = 1;
   }
 		
 };
-
-
-
-
-
-
 
 
 
@@ -443,12 +671,16 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
 
 
+
+
+
+
 //shadowDrawMethod
 Shadows.prototype.drawShadow = function() {
   for(var j = 0; j < stationsArray.length; j++) {
-		if(this.position >= stationsArray[j].position +3 && 
-		this.position <= stationsArray[j].position + 26 &&
-		this.position !== stationsArray[j].position + 13) {
+		if(this.x >= stationsArray[j].x +3 && 
+		this.x <= stationsArray[j].x + 26 &&
+		this.x !== stationsArray[j].x + 13) {
 			this.dwell = stationsArray[j].dwell;
 			this.near = true;
 			this.docked = false;
@@ -458,7 +690,7 @@ Shadows.prototype.drawShadow = function() {
 		}
 	}
 	for(var d = 0; d < stationsArray.length; d++) {
-		if(this.position === stationsArray[d].position + 13) {
+		if(this.x === stationsArray[d].x + 13) {
 			this.docked = true;
 			d = stationsArray.length;
 		} 
@@ -473,22 +705,48 @@ Shadows.prototype.drawShadow = function() {
 		this.jump = floor(random(1, 9));
 	}
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 0) {
-		this.position += this.jump;
+		this.x += this.jump;
 	}
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 1) {
-		this.position -= this.jump;
+		this.x -= this.jump;
 	}
 	if(this.docked === true && this.dwell <= 0 && this.direction === 0) {
-		this.position += 1;
+		this.x += 1;
 		this.docked = false;
 	}
 	if(this.docked === true && this.dwell <= 0 && this.direction === 1) {
-		this.position -= 1;
+		this.x -= 1;
 		this.docked = false;
 	}
 	if(frameCount % speed === 0 && this.docked === true) {
 		this.dwell -= 1;
 	}
+	
+	  //line decisions
+	if(this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
+	  this.track = 3;
+	  this.x = 179;
+	  this.y += 5;
+	  this.turnout = true;
+	}
+	if(this.direction === 0 && this.track === 3 && this.x > 220) {
+	  this.turnout = false;
+	  this.track = 2;
+	  this.x += 15;
+	}
+	
+	if(this.direction === 0 && this.track === 2 && this.x >= 3531 && this.x <= 3539) {
+	  this.track = 5;
+	  this.x = 3540;
+	  this.y -= 5;
+	  this.turnout = true;
+	}
+	if(this.direction === 0 && this.track === 5 && this.x > 3581) {
+	  this.turnout = false;
+	  this.track = 1;
+	  this.x += 15;
+	}
+	
 	
 	if(this.direction === 0) {
   	strokeWeight(0.4);
@@ -502,7 +760,7 @@ Shadows.prototype.drawShadow = function() {
       stroke(0, 0, 0);
       fill(0, 255, 0);
     }
-    ellipse(this.position, eastY + 8, 14, 14);
+    ellipse(this.x, eastY + 8, 14, 14);
   }
   if(this.direction === 1) {
     strokeWeight(0.4);
@@ -516,7 +774,15 @@ Shadows.prototype.drawShadow = function() {
         stroke(0, 0, 0);
         fill(0, 255, 0);
     }
-    ellipse(this.position, westY + 8, 14, 14);
+    ellipse(this.x, westY + 8, 14, 14);
+  }
+	
+  if(this.x === tun.x) {
+    this.direction = 0;
+  }
+  
+  if(this.x === bla.x) {
+    this.direction = 1;
   }
 	
 };
@@ -652,9 +918,9 @@ Crossover.prototype.drawCross = function(x, y, up) { //x, 365, t/f
   fill(192, 192, 192);
   noStroke();
   if(this.up === true) {
-	 	quad(this.x + 5, this.y + 73, this.x + 14, this.y + 79, this.x + 61, this.y + 6, this.x + 53, this.y);
+    quad(this.x + 9, this.y + 73, this.x + 16, this.y + 78, this.x + 56, this.y + 8, this.x + 49, this.y + 3);
 	} else {
-		quad(this.x + 5, this.y + 6, this.x + 14, this.y, this.x + 61, this.y + 73, this.x + 53, this.y + 79);    
+    quad(this.x + 9, this.y + 8, this.x + 16, this.y + 3, this.x + 56, this.y + 73, this.x + 49, this.y + 78);
 	}
 };
 
@@ -666,14 +932,14 @@ Crossover.prototype.drawCross = function(x, y, up) { //x, 365, t/f
 //StationDrawMethod
 Stations.prototype.drawStation = function() {
     //GIDS
-    gidsDraw(this.position - 4);
-    gidsDraw(this.position + 28);
+    gidsDraw(this.x - 4);
+    gidsDraw(this.x + 28);
     
     //markers
-    markerDraw(this.position + 5, westY - 2);
-    markerDraw(this.position + 22, westY - 2);
-    markerDraw(this.position + 5, eastY - 2);
-    markerDraw(this.position + 22, eastY - 2);
+    markerDraw(this.x + 5, westY - 2);
+    markerDraw(this.x + 22, westY - 2);
+    markerDraw(this.x + 5, eastY - 2);
+    markerDraw(this.x + 22, eastY - 2);
     
     //platforms
     strokeWeight(0.5);
@@ -684,14 +950,14 @@ Stations.prototype.drawStation = function() {
             fill(0, 0, 255);
         }
         stroke(0, 0, 0);
-        rect(this.position, eastY + 36, 26, 12);
+        rect(this.x, eastY + 36, 26, 12);
         if(this.eastHold === true) {
             fill(255, 255, 0);
-            rect(this.position, eastY + 36, 26, 6);
+            rect(this.x, eastY + 36, 26, 6);
         }
         if(systemH === true) {
             fill(0, 255, 0);
-            rect(this.position, eastY + 36, 26, 6);
+            rect(this.x, eastY + 36, 26, 6);
         }
         
         if(this.westClose === true) {
@@ -700,14 +966,14 @@ Stations.prototype.drawStation = function() {
             fill(0, 0, 230);
         }
         stroke(0, 0, 0);
-        rect(this.position, westY - 36, 26, 12);
+        rect(this.x, westY - 36, 26, 12);
         if(this.westHold === true) {
             fill(255, 255, 0);
-            rect(this.position, westY - 30, 26, 6);
+            rect(this.x, westY - 30, 26, 6);
         }
         if(systemH === true) {
             fill(0, 255, 0);
-            rect(this.position, westY - 30, 26, 6);
+            rect(this.x, westY - 30, 26, 6);
         }
     } else {                                //centerPlatform
         if(this.eastClose === true) {
@@ -716,14 +982,14 @@ Stations.prototype.drawStation = function() {
             fill(0, 0, 255);
         }
         stroke(0, 0, 0);
-        rect(this.position, eastY - 38, 26, 12);
+        rect(this.x, eastY - 38, 26, 12);
         if(this.eastHold === true) {
             fill(255, 255, 0);
-            rect(this.position, eastY - 32, 26, 6);
+            rect(this.x, eastY - 32, 26, 6);
         }
         if(systemH === true) {
             fill(0, 255, 0);
-            rect(this.position, eastY - 32, 26, 6);
+            rect(this.x, eastY - 32, 26, 6);
         }
         
         if(this.westClose === true) {
@@ -732,14 +998,14 @@ Stations.prototype.drawStation = function() {
             fill(0, 0, 230);
         }
         stroke(0, 0, 0);
-        rect(this.position, westY + 42, 26, 12);
+        rect(this.x, westY + 42, 26, 12);
         if(this.westHold === true) {
           fill(255, 255, 0);
-          rect(this.position, westY + 42, 26, 6);
+          rect(this.x, westY + 42, 26, 6);
         }
         if(systemH === true) {
           fill(0, 255, 0);
-          rect(this.position, westY + 42, 26, 6);
+          rect(this.x, westY + 42, 26, 6);
         }
     }
     
@@ -747,11 +1013,11 @@ Stations.prototype.drawStation = function() {
     fill(0, 255, 0);
     textSize(13);
     if(this.centerPlatform === false) {
-      text(this.name + "-E", this.position - 6, eastY + 71);
-       text(this.name + "-W", this.position - 6, westY - 51);
+      text(this.name + "-E", this.x - 6, eastY + 71);
+       text(this.name + "-W", this.x - 6, westY - 51);
     } else {
-       text(this.name + "-E", this.position + 38, eastY - 26);
-      text(this.name + "-W", this.position + 38, westY + 53);
+       text(this.name + "-E", this.x + 38, eastY - 26);
+      text(this.name + "-W", this.x + 38, westY + 53);
     }
 
 };
@@ -760,22 +1026,22 @@ Stations.prototype.drawStation = function() {
 Pseudos.prototype.drawPseudo = function() {
     noStroke();
     fill(88, 88, 88);
-    rect(this.position, westY - 36, 26, 12);
+    rect(this.x, westY - 36, 26, 12);
 
     fill(0, 255, 0);
     textSize(13);
-    text(this.name + "-W", this.position - 12, westY - 46);
+    text(this.name + "-W", this.x - 12, westY - 46);
     if(this.both === true) {
       fill(88, 88, 88);
-	    rect(this.position, eastY + 36, 26, 12);
+	    rect(this.x, eastY + 36, 26, 12);
 	    fill(0, 255, 0);
-      text(this.name + "-E", this.position - 12, eastY + 70);
+      text(this.name + "-E", this.x - 12, eastY + 70);
     }
-  	markerDraw(this.position + 1, westY - 2);
-  	markerDraw(this.position + 19, westY - 2);
+  	markerDraw(this.x + 1, westY - 2);
+  	markerDraw(this.x + 19, westY - 2);
   	if(this.both === true) {
-  		markerDraw(this.position + 1, eastY - 2);
-  		markerDraw(this.position + 19, eastY - 2);
+  		markerDraw(this.x + 1, eastY - 2);
+  		markerDraw(this.x + 19, eastY - 2);
   	}
 };
 
@@ -820,10 +1086,30 @@ Menus.prototype.drawStationMenu = function() {
 };
 
 
+/*
 //TrackMenuMethods
+Stations.prototype.isUnderMouse = function(x, y) {
+  return x >= this.x && x <= this.x + 26 &&
+        y >= this.y && y <= this.y + 12
+};
+
+Platforms.prototype.drawPlatformMenu = function() {
+  fill(210, 210, 210);
+  stroke(0, 0, 0);
+  strokeWeight(1);
+  rect(stationMenu.x + 20, stationMenu.y + 15, 100, 80);
+  fill(0, 0, 0);
+  textSize(12);
+  text("Set/Clear Hold", this.x + 26, this.y + 26);
+  text("Open/Close", this.x + 26, this.y + 42);
+  text("Adjust Dwells", this.x + 26, this.y + 58);
+};
+*/
+
+
 Tracks.prototype.isUnderMouse = function(x, y) {
     return x >= this.x && x <= this.x + this.length  &&
-        y >= this.y + 2 && y <= this.y + 13;
+          y >= this.y + 2 && y <= this.y + 13;
 };
 
 Tracks.prototype.drawTrackMenu = function() {
@@ -838,9 +1124,11 @@ Tracks.prototype.drawTrackMenu = function() {
     text("Work Zone", trackMenu.x + 26, trackMenu.y + 63);
 };
 
-Trains.prototype.isUnderMouse = function(x, y) {
-  return x >= this.position && x <= this.position + 26 &&
-    y >= this.y && y <= this.y + 15;
+
+
+Trains.prototype.isUnderMouse = function(mx, y) {
+  return mx >= this.x && mx <= this.x + 26 &&
+        y >= this.y && y <= this.y + 15;
 };
 
 Trains.prototype.drawTrainMenu = function() {
@@ -851,8 +1139,8 @@ Trains.prototype.drawTrainMenu = function() {
     fill(0, 0, 0);
     textSize(12);
     text("Depart", trainMenu.x + 26, trainMenu.y + 31);
-    text("Another thing", trainMenu.x + 26, trainMenu.y + 47);
-    text("Another", trainMenu.x + 26, trainMenu.y + 63);
+    text("Train " + this.number, trainMenu.x + 26, trainMenu.y + 47);
+    text("Set to ATPM", trainMenu.x + 26, trainMenu.y + 63);
 };
     
     
@@ -1059,9 +1347,8 @@ var trackTsr = [];
 var trackWz = [];
 var trackMenuActive = [];
 //trackSelect.push(tracksArray[x]);
-    
-    //cross  t  2530, 2630, msf  2860, 2960, stl  3440, 3540 
-      //stationPositions  l800, p1170, r1340, u1790, l1970, h2080, 2420, 3090, 3210, 3630   //PUOT1520
+
+
 //switchInstances       //(x, track, number, tangent, disturbed, manual, reserved, flank, menu)
 var switch301 = new Switches(180, 1, 301, true, false, false, false, false, false);
 var switch302 = new Switches(225, 2, 302, true, false, false, false, false, false);
@@ -1114,16 +1401,16 @@ var shuffler = function(array) {
 shuffler(trainNums);
 
 
-//position, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu
-//Trains         (position, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu)
+//x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu
+//Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu)
 
-var trainA = new Trains(130,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
+var trainA = new Trains(131,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 1, false, 0, 1, false, 0, false);
 var trainB = new Trains(575,  eastY, false, 102, 20, "02", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
 var trainC = new Trains(1155, eastY, false, 103, 20, "03", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
 var trainD = new Trains(1610, eastY, false, 104, 20, "04", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
 var trainE = new Trains(2058, eastY, false, 105, 20, "05", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
 var trainF = new Trains(2800, eastY, false, 106, 20, "06", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
-var trainG = new Trains(3200, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
+var trainG = new Trains(3450, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false);
 var trainH = new Trains(3600, westY, false, 108, 20, "08", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
 var trainI = new Trains(3200, westY, false, 109, 20, "09", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
 var trainJ = new Trains(2758, westY, false, 110, 20, "10", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
@@ -1131,93 +1418,87 @@ var trainK = new Trains(2199, westY, false, 111, 20, "11", false, false, 0, fals
 var trainL = new Trains(1750, westY, false, 112, 20, "12", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
 var trainM = new Trains(1345, westY, false, 113, 20, "13", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
 var trainN = new Trains(856,  westY, false, 114, 20, "14", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
-var trainO = new Trains(150,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false); //466
+var trainO = new Trains(466,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false);
 
 var trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
-                
-var trainMenuActive = [];
 
 for(var t = 0; t < trainsArray.length; t++) {
 	trainsArray[t].number = trainNums[t];
 }
 
-//runs (run, position, dwell, docked, near, jump, direction)
-var run101 = new Shadows(101, 143, 25, false, false, 0, 0);
-var run102 = new Shadows(102, 585, 25, false, false, 0, 0);
-var run103 = new Shadows(103, 1155, 25, false, false, 0, 0);
-var run104 = new Shadows(104, 1610, 25, false, false, 0, 0);
-var run105 = new Shadows(105, 2058, 25, false, false, 0, 0);
-var run106 = new Shadows(106, 2800, 25, false, false, 0, 0);
-var run107 = new Shadows(107, 3200, 25, false, false, 0, 0);
-var run108 = new Shadows(108, 3600, 25, false, false, 0, 1);
-var run109 = new Shadows(109, 3200, 25, false, false, 0, 1);
-var run110 = new Shadows(110, 2758, 25, false, false, 0, 1);
-var run111 = new Shadows(111, 2199, 25, false, false, 0, 1);
-var run112 = new Shadows(112, 1750, 25, false, false, 0, 1);
-var run113 = new Shadows(113, 1345, 25, false, false, 0, 1);
-var run114 = new Shadows(114, 856, 25, false, false, 0, 1);
-var run115 = new Shadows(115, 466, 25, false, false, 0, 1);
+var trainMenuActive = [];
+
+//runs (run, x, y, dwell, docked, near, jump, direction)
+var run101 = new Shadows(101, 143, eastY, 25, false, false, 0, 0);
+var run102 = new Shadows(102, 585, eastY, 25, false, false, 0, 0);
+var run103 = new Shadows(103, 1155, eastY, 25, false, false, 0, 0);
+var run104 = new Shadows(104, 1610, eastY, 25, false, false, 0, 0);
+var run105 = new Shadows(105, 2058, eastY, 25, false, false, 0, 0);
+var run106 = new Shadows(106, 2800, eastY, 25, false, false, 0, 0);
+var run107 = new Shadows(107, 3200, eastY, 25, false, false, 0, 0);
+var run108 = new Shadows(108, 3600, westY, 25, false, false, 0, 1);
+var run109 = new Shadows(109, 3200, westY, 25, false, false, 0, 1);
+var run110 = new Shadows(110, 2758, westY, 25, false, false, 0, 1);
+var run111 = new Shadows(111, 2199, westY, 25, false, false, 0, 1);
+var run112 = new Shadows(112, 1750, westY, 25, false, false, 0, 1);
+var run113 = new Shadows(113, 1345, westY, 25, false, false, 0, 1);
+var run114 = new Shadows(114, 856, westY, 25, false, false, 0, 1);
+var run115 = new Shadows(115, 466, westY, 25, false, false, 0, 1);
 
 var runsArray = [run101, run102, run103, run104, run104, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
 
 
-
-
-
 //signalInstances      (x, y, aspect, direction, label)
-
-var sig11 = new Signals(tun.position + 47, westY + 31, 0, 0, "1-E-1");
-var sig12 = new Signals(tun.position + 41, eastY + 29, 0, 0, "1-E-2");
-var sig13 = new Signals(tun.position + 130, westY - 14, 0, 1, "1-W-3");
-var sig14 = new Signals(tun.position + 130, eastY - 14, 0, 1, "1-W-4");
-
-var sig21 = new Signals(lyo.position + 157, westY + 31, 0, 0, "2-E-1");
-var sig22 = new Signals(lyo.position + 166, eastY + 29, 0, 0, "2-E-2");
-var sig23 = new Signals(lyo.position + 235, westY - 14, 0, 1, "2-W-3");
-var sig24 = new Signals(lyo.position + 242, eastY - 14, 0, 1, "2-W-4");
-var sig25 = new Signals(puot.position + 47, westY + 31, 0, 0, "2-E-5");
-var sig26 = new Signals(puot.position + 24, eastY + 27, 0, 0, "2-E-6");
-var sig27 = new Signals(puot.position + 130, westY - 14, 0, 1, "2-W-7");
-var sig28 = new Signals(puot.position + 130, eastY - 14, 0, 1, "2-W-8");
-
-var sig31 = new Signals(hur.position + 85, westY + 26, 0, 0, "3-E-1");
-var sig32 = new Signals(hur.position + 47, eastY + 27, 0, 0, "3-E-2");
-var sig33 = new Signals(hur.position + 129, westY - 15, 0, 1, "3-W-3");
-var sig34 = new Signals(hur.position + 98, eastY - 15, 0, 1, "3-W-4");
-var sig35 = new Signals(tre.position - 110, westY + 26, 0, 0, "3-E-5");
-var sig36 = new Signals(tre.position - 67, eastY + 27, 0, 0, "3-E-6");
-var sig37 = new Signals(tre.position - 69, westY - 15, 0, 1, "3-W-7");
-var sig38 = new Signals(tre.position - 30, eastY - 15, 0, 1, "3-W-8");
-var sig39 = new Signals(tre.position + 135, westY + 26, 0, 0, "3-E-9");
-var sig310 = new Signals(tre.position + 97, eastY + 27, 0, 0, "3-E-10");
-var sig311 = new Signals(tre.position + 179, westY - 15, 0, 1, "3-W-11");
-var sig312 = new Signals(tre.position + 148, eastY - 15, 0, 1, "3-W-12");
-var sig313 = new Signals(tre.position + 207, westY + 26, 0, 0, "3-E-13");
-var sig314 = new Signals(tre.position + 242, eastY + 27, 0, 0, "3-E-14");
-var sig315 = new Signals(tre.position + 250, westY - 15, 0, 1, "3-W-15");
-var sig316 = new Signals(tre.position + 330, eastY - 12, 0, 1, "3-W-16");
-var sig318 = new Signals(tre.position + 381, eastY + 26, 0, 0, "3-W-18");
-var sig320 = new Signals(tre.position + 409, eastY - 12, 0, 1, "3-W-20");
-var sig321 = new Signals(stl.position - 200, westY + 26, 0, 0, "3-E-21");
-var sig322 = new Signals(stl.position - 230, eastY + 26, 0, 0, "3-E-22");
-var sig323 = new Signals(stl.position - 115, westY - 15, 0, 1, "3-W-23");
-var sig324 = new Signals(stl.position - 60, eastY - 15, 0, 1, "3-W-24");
-
-var sig41 = new Signals(bla.position - 200, westY + 26, 0, 0, "4-E-1");
-var sig42 = new Signals(bla.position - 152, eastY + 26, 0, 0, "4-E-2");
-var sig43 = new Signals(bla.position - 20, westY - 15, 0, 1, "4-W-3");
-var sig44 = new Signals(bla.position - 50, eastY - 15, 0, 1, "4-W-4");
+var sig11 = new Signals(tun.x + 47, westY + 31, 0, 0, "1-E-1");
+var sig12 = new Signals(tun.x + 41, eastY + 29, 0, 0, "1-E-2");
+var sig13 = new Signals(tun.x + 130, westY - 14, 0, 1, "1-W-3");
+var sig14 = new Signals(tun.x + 130, eastY - 14, 0, 1, "1-W-4");
+var sig21 = new Signals(lyo.x + 157, westY + 31, 0, 0, "2-E-1");
+var sig22 = new Signals(lyo.x + 166, eastY + 29, 0, 0, "2-E-2");
+var sig23 = new Signals(lyo.x + 235, westY - 14, 0, 1, "2-W-3");
+var sig24 = new Signals(lyo.x + 242, eastY - 14, 0, 1, "2-W-4");
+var sig25 = new Signals(puot.x + 47, westY + 31, 0, 0, "2-E-5");
+var sig26 = new Signals(puot.x + 24, eastY + 27, 0, 0, "2-E-6");
+var sig27 = new Signals(puot.x + 130, westY - 14, 0, 1, "2-W-7");
+var sig28 = new Signals(puot.x + 130, eastY - 14, 0, 1, "2-W-8");
+var sig31 = new Signals(hur.x + 85, westY + 26, 0, 0, "3-E-1");
+var sig32 = new Signals(hur.x + 47, eastY + 27, 0, 0, "3-E-2");
+var sig33 = new Signals(hur.x + 129, westY - 15, 0, 1, "3-W-3");
+var sig34 = new Signals(hur.x + 98, eastY - 15, 0, 1, "3-W-4");
+var sig35 = new Signals(tre.x - 110, westY + 26, 0, 0, "3-E-5");
+var sig36 = new Signals(tre.x - 67, eastY + 27, 0, 0, "3-E-6");
+var sig37 = new Signals(tre.x - 69, westY - 15, 0, 1, "3-W-7");
+var sig38 = new Signals(tre.x - 30, eastY - 15, 0, 1, "3-W-8");
+var sig39 = new Signals(tre.x + 135, westY + 26, 0, 0, "3-E-9");
+var sig310 = new Signals(tre.x + 97, eastY + 27, 0, 0, "3-E-10");
+var sig311 = new Signals(tre.x + 179, westY - 15, 0, 1, "3-W-11");
+var sig312 = new Signals(tre.x + 148, eastY - 15, 0, 1, "3-W-12");
+var sig313 = new Signals(tre.x + 207, westY + 26, 0, 0, "3-E-13");
+var sig314 = new Signals(tre.x + 242, eastY + 27, 0, 0, "3-E-14");
+var sig315 = new Signals(tre.x + 250, westY - 15, 0, 1, "3-W-15");
+var sig316 = new Signals(tre.x + 330, eastY - 12, 0, 1, "3-W-16");
+var sig318 = new Signals(tre.x + 381, eastY + 26, 0, 0, "3-W-18");
+var sig320 = new Signals(tre.x + 409, eastY - 12, 0, 1, "3-W-20");
+var sig321 = new Signals(stl.x - 200, westY + 26, 0, 0, "3-E-21");
+var sig322 = new Signals(stl.x - 230, eastY + 26, 0, 0, "3-E-22");
+var sig323 = new Signals(stl.x - 115, westY - 15, 0, 1, "3-W-23");
+var sig324 = new Signals(stl.x - 60, eastY - 15, 0, 1, "3-W-24");
+var sig41 = new Signals(bla.x - 200, westY + 26, 0, 0, "4-E-1");
+var sig42 = new Signals(bla.x - 152, eastY + 26, 0, 0, "4-E-2");
+var sig43 = new Signals(bla.x - 20, westY - 15, 0, 1, "4-W-3");
+var sig44 = new Signals(bla.x - 50, eastY - 15, 0, 1, "4-W-4");
 
 var signalsArray = [sig11, sig12, sig13, sig14, sig21, sig22, sig23, sig24, sig25, sig26, sig27, sig28, sig31, sig32, sig33, sig34, sig35, sig36, sig37, sig38, sig39, sig310, sig311, sig312, sig313, sig314, sig315, sig316, sig318, sig320, sig321, sig322, sig323, sig324, sig41, sig42, sig43, sig44];
 
 
-var cross1 = new Crossover(tun.position + 50, 365, true);	//crossovers (x, 365, up)
-var cross2 = new Crossover(tun.position + 50, 365, false);
-var cross3 = new Crossover(lyo.position + 170, 365, true);
-var cross4 = new Crossover(lyo.position + 170, 365, false);
-var cross5 = new Crossover(puot.position + 50, 365, true);
-var cross6 = new Crossover(puot.position + 50, 365, false);
+//crossovers (x, 365, up)
+var cross1 = new Crossover(tun.x + 50, 365, true);	
+var cross2 = new Crossover(tun.x + 50, 365, false);
+var cross3 = new Crossover(lyo.x + 170, 365, true);
+var cross4 = new Crossover(lyo.x + 170, 365, false);
+var cross5 = new Crossover(puot.x + 50, 365, true);
+var cross6 = new Crossover(puot.x + 50, 365, false);
 var cross7 = new Crossover(2130, 365, true); //hur
 var cross8 = new Crossover(2320, 365, false);
 var cross9 = new Crossover(2530, 365, true);
@@ -1269,40 +1550,19 @@ var trackMenu = new Menus({
 
 draw = function() {
     
-    background(112, 112, 112);    
+    background(112, 112, 112); 
+    fill(232, 232, 232);
+    noStroke();
+    rect(0, 0, 3800, 37);
     
-/*
-  //into mouseClicked
-    for(var t = 0; t < tracksArray.length; t++) {
-      if(tracksArray[t].isUnderMouse(mouseX, mouseY)) {
-        tracksArray[t].select = !tracksArray[t].select;
-        tracksArray[t].westArrow = !tracksArray[t].westArrow;
-        tracksArray[t].eastArrow = !tracksArray[t].eastArrow;
-        for(var m = 0; m < tracksArray.length; m++) {
-          tracksArray[m].menu = false;
-        }
-        tracksArray[t].menu = true;
-      }
-    }
-    
-*/  
-    
-    
-    
-/*
-  fill(0, 0, 0);
-  text("Held: " + trainA.hold + " Docked: " + trainA.docked, 30, 30);
-*/
-
-/*
-fill(0, 0, 0);
-for(var i=1;i<stationsArray.length;i++){
-	text(stationsArray[i].position - stationsArray[i-1].position, 30 + 30*i, 200);
-}*/
+    fill(0, 0, 0);
+    text("Welcome to A. Train Simulator. Still in development. Features so far:", 50, 700);
+    text("VISUAL-- Train: ATPM. Track: Close, TSR, WZ. Station: Close.", 50, 720);
+    text("FUNCTIONAL-- Train: line 1. Station: Hold. System: power, hold.", 50, 740);
     
     var systemHoldButton = new Button({
-      x: 20,
-      y: 5,
+      x: 1,
+      y: 1,
       width: 35,
       height: 35,
       onClick: function() {
@@ -1310,7 +1570,11 @@ for(var i=1;i<stationsArray.length;i++){
       }
     });
     
-    fill(160, 160, 160);
+    if(systemH === true) {
+      fill(190, 190, 190);
+    } else {
+      fill(232, 232, 232);
+    }
     stroke(0, 0, 0);
     strokeWeight(1);
     rect(systemHoldButton.x, systemHoldButton.y, systemHoldButton.width, systemHoldButton.height);
@@ -1320,19 +1584,23 @@ for(var i=1;i<stationsArray.length;i++){
     
     
     var powerButton = new Button({
-      x: 55,
-      y: 5,
+      x: 36,
+      y: 1,
       width: 35,
       height: 35,
       onClick: function(){
+        power = !power;
         for(var p = 0; p < tracksArray.length; p++) {
           tracksArray[p].power = !tracksArray[p].power;
-          power = !power;
         }
       }
     });
     
-    fill(160, 160, 160);
+    if(power === false) {
+      fill(190, 190, 190);
+    } else {
+      fill(232, 232, 232);
+    }
     stroke(0, 0, 0);
     strokeWeight(1);
     rect(powerButton.x, powerButton.y, powerButton.width, powerButton.height);
@@ -1341,40 +1609,457 @@ for(var i=1;i<stationsArray.length;i++){
     beginShape(); vertex(powerButton.x + 19, powerButton.y + 4); vertex(powerButton.x + 8, powerButton.y + 19); vertex(powerButton.x + 16, powerButton.y + 17); vertex(powerButton.x + 13, powerButton.y + 32); vertex(powerButton.x + 23, powerButton.y + 13); vertex(powerButton.x + 16, powerButton.y + 14); vertex(powerButton.x + 19, powerButton.y + 4); endShape();
 
     
+    var speedDown = new Button({
+      x: 71,
+      y: 1,
+      width: 35,
+      height: 35,
+      onClick: function(){
+        if(speedf > 0) {
+          speedf -= 1;
+        }
+      }
+    });
+    
+    fill(232, 232, 232);
+    stroke(0, 0, 0);
+    strokeWeight(1);
+    rect(speedDown.x, speedDown.y, speedDown.width, speedDown.height);
+    strokeWeight(3);
+    line(speedDown.x + 7, speedDown.y + 17.5, speedDown.x + 28, speedDown.y + 17.5);
+    
+    strokeWeight(1);
+    rect(speedDown.x + speedDown.width, 1, 94, 35);
+    fill(0, 0, 0);
+    textSize(18);
+    text("SPEED=" + speedf, speedDown.x + speedDown.width + 7, 25);
+      
+    var speedUp = new Button({
+      x: 200,
+      y: 1,
+      width: 35,
+      height: 35,
+      onClick: function(){
+        if(speedf < 8) {
+          speedf += 1;
+        }
+      }
+    });
+    
+    fill(232, 232, 232);
+    stroke(0, 0, 0);
+    strokeWeight(1);
+    rect(speedUp.x, speedUp.y, speedUp.width, speedUp.height);
+    strokeWeight(3);
+    line(speedUp.x + 7, speedUp.y + 17.5, speedUp.x + 28, speedUp.y + 17.5);
+    line(speedUp.x + 17.5, speedUp.y + 7, speedUp.x + 17.5, speedUp.y + 28);
+    
+    
+    if(speedf === 0) {
+      speed = 0;
+    } else if(speedf === 1) {
+      speed = 240;
+    } else if(speedf === 2) {
+      speed = 120;
+    } else if(speedf === 3) {
+      speed = 60;
+    } else if(speedf === 4) {
+      speed = 30;
+    } else if(speedf === 5) {
+      speed = 15;
+    } else if(speedf === 6) {
+      speed = 8;
+    } else if(speedf === 7) {
+      speed = 4;
+    } else if(speedf === 8) {
+      speed = 1;
+    }
+    
+    //speed
     //runShadowsVisible
     //CombinedState
     //switchLabels
     
+
+
+
+
+	var btnTunE = new Button({
+		x: tun.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[1] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnTunW = new Button({
+		x: tun.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[2] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnBayE = new Button({
+		x: bay.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[3] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnBayW = new Button({
+		x: bay.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[4] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnPimE = new Button({
+		x: pim.x,
+		y: eastY - 38,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[5] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnPimW = new Button({
+		x: pim.x,
+		y: westY + 42,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[6] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnLyoE = new Button({
+		x: lyo.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[7] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnLyoW = new Button({
+		x: lyo.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[8] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnParE = new Button({
+		x: par.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[9] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnParW = new Button({
+		x: par.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[10] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnRidE = new Button({
+		x: rid.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[11] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnRidW = new Button({
+		x: rid.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[12] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
     
-    var btn1 = new Button({
-        x: trainA.position - 5,
-        y: eastY,
-        onClick: function() {
-            trainA.atpm = !trainA.atpm;
-        },
-    });
-    
-        var btn2 = new Button({
-        x: trainB.position - 5,
-        y: eastY,
-        onClick: function() {
-            trainB.atpm = !trainB.atpm;
-        },
-    });
-    
-    var btn7 = new Button({
-        x: trainG.position - 5,
-        y: westY,
-        onClick: function() {
-            trainG.atpm = !trainG.atpm;
-        },
-    });
+	var btnUotE = new Button({
+		x: uot.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[13] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnUotW = new Button({
+		x: uot.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[14] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
 
+	var btnLeeE = new Button({
+		x: lee.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[15] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnLeeW = new Button({
+		x: lee.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[16] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
 
+	var btnHurE = new Button({
+		x: hur.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[17] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnHurW = new Button({
+		x: hur.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[18] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
 
+	var btnTreE = new Button({
+		x: tre.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[19] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnTreW = new Button({
+		x: tre.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[20] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
 
+	var btnStlE = new Button({
+		x: stl.x,
+		y: eastY + 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[21] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnStlW = new Button({
+		x: stl.x,
+		y: westY - 36,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[22] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
 
+	var btnCyrE = new Button({
+		x: cyr.x,
+		y: eastY - 38,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[23] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnCyrW = new Button({
+		x: cyr.x,
+		y: westY + 42,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[24] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
 
+	var btnBlaE = new Button({
+		x: bla.x,
+		y: eastY - 38,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[25] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnBlaW = new Button({
+		x: bla.x,
+		y: westY + 42,
+		onClick: function() {
+		  for(var z = 0; z < stationMenus.length; z++) {
+		    if(stationMenus[z] === true) {
+		      stationsMenus[z] = false;
+		    }
+		  }
+			stationMenus[26] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
 
 
 	var btnSH = new Button({
@@ -1418,386 +2103,6 @@ for(var i=1;i<stationsArray.length;i++){
 	});
     
     
-
-
-	var btnTunE = new Button({
-		x: tun.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[1] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnTunW = new Button({
-		x: tun.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[2] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnBayE = new Button({
-		x: bay.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[3] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnBayW = new Button({
-		x: bay.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[4] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnPimE = new Button({
-		x: pim.position,
-		y: eastY - 38,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[5] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnPimW = new Button({
-		x: pim.position,
-		y: westY + 42,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[6] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnLyoE = new Button({
-		x: lyo.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[7] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnLyoW = new Button({
-		x: lyo.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[8] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnParE = new Button({
-		x: par.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[9] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnParW = new Button({
-		x: par.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[10] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnRidE = new Button({
-		x: rid.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[11] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnRidW = new Button({
-		x: rid.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[12] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-    
-	var btnUotE = new Button({
-		x: uot.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[13] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnUotW = new Button({
-		x: uot.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[14] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-
-	var btnLeeE = new Button({
-		x: lee.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[15] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnLeeW = new Button({
-		x: lee.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[16] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-
-	var btnHurE = new Button({
-		x: hur.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[17] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnHurW = new Button({
-		x: hur.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[18] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-
-	var btnTreE = new Button({
-		x: tre.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[19] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnTreW = new Button({
-		x: tre.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[20] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-
-	var btnStlE = new Button({
-		x: stl.position,
-		y: eastY + 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[21] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnStlW = new Button({
-		x: stl.position,
-		y: westY - 36,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[22] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	});
-
-	var btnCyrE = new Button({
-		x: cyr.position,
-		y: eastY - 38,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[23] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnCyrW = new Button({
-		x: cyr.position,
-		y: westY + 42,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[24] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-	var btnBlaE = new Button({
-		x: bla.position,
-		y: eastY - 38,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[25] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-	var btnBlaW = new Button({
-		x: bla.position,
-		y: westY + 42,
-		onClick: function() {
-		  for(var z = 0; z < stationMenus.length; z++) {
-		    if(stationMenus[z] === true) {
-		      stationsMenus[z] = false;
-		    }
-		  }
-			stationMenus[26] = true;
-			stationMenu.x = mouseX;
-			stationMenu.y = mouseY;
-		}
-	}); 
-
-
 
 
 
@@ -1858,17 +2163,21 @@ for(var i=1;i<stationsArray.length;i++){
 	  });
 
 
+  var btnTrnAtpm = new Button({
+    x: trainMenu.x + 20,
+    y: trainMenu.y + 49,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      trainMenuActive[0].atpm = !trainMenuActive[0].atpm;
+      trainMenuActive = [];
+      //rect(200, 200, 200, 200);
+    }
+  });
 
-    
-    //variance[1] = run101.position - trainA.position;
-    //variance[7] = trainG.position - run107.position;
-    
 
-    
-    
-
-	gidsDraw(puot.position + 35);		//portals
-	drawEastPortal(puot.position - 2);
+	gidsDraw(puot.x + 35);		//portals
+	drawEastPortal(puot.x - 2);
 	
 	gidsDraw(642);
 	drawWestPortal(640);
@@ -1911,37 +2220,34 @@ for(var i=1;i<stationsArray.length;i++){
 	markerDraw(3455, eastY - 2);
 
 
-  for(var s = 0; s < signalsArray.length; s++) {
-    signalsArray[s].drawSignal();
-  }
-  for(var s = 0; s < stationsArray.length; s++) {
-    stationsArray[s].drawStation();
-  }
-   
-
 	puot.drawPseudo();
 	phur.drawPseudo();
 	ptre.drawPseudo();
 
 
+  
+  for(var s = 0; s < stationsArray.length; s++) {
+    stationsArray[s].drawStation();
+  }
+
 
 	fill(255, 130, 0);
 	textSize(12);
 	
-	text("SW_301", tun.position - 13, westY + 35);     //swtNumber
-	text("SW_302", tun.position + 140, eastY - 17);
-	text("SW_303", tun.position - 5, eastY - 17);
-	text("SW_304", tun.position + 130, westY + 35);
+	text("SW_301", tun.x - 13, westY + 35);     //swtNumber
+	text("SW_302", tun.x + 140, eastY - 17);
+	text("SW_303", tun.x - 5, eastY - 17);
+	text("SW_304", tun.x + 130, westY + 35);
 	
-	text("SW_305", lyo.position + 95, westY + 35);
-	text("SW_306", lyo.position + 260, eastY - 17);
-	text("SW_307", lyo.position + 110, eastY - 17);
-	text("SW_308", lyo.position + 245, westY + 35);
+	text("SW_305", lyo.x + 95, westY + 35);
+	text("SW_306", lyo.x + 260, eastY - 17);
+	text("SW_307", lyo.x + 110, eastY - 17);
+	text("SW_308", lyo.x + 245, westY + 35);
 
-	text("SW_309", puot.position - 10, westY + 35);
-	text("SW_310", puot.position + 140, eastY - 17);
-	text("SW_311", puot.position + 5, eastY - 17);
-	text("SW_312", puot.position + 125, westY + 35); 
+	text("SW_309", puot.x - 10, westY + 35);
+	text("SW_310", puot.x + 140, eastY - 17);
+	text("SW_311", puot.x + 5, eastY - 17);
+	text("SW_312", puot.x + 125, westY + 35); 
 
 	text("SW_313", 2170, eastY - 17);
 	text("SW_314", 2155, westY - 11);
@@ -1963,36 +2269,9 @@ for(var i=1;i<stationsArray.length;i++){
 	text("SW_329", 3508, eastY - 22);
 	text("SW_330", 3528, westY + 35);
 
-
-
-	/*    
-	if(flankUOTeast === true || flankUOTeast === true) {
-		stroke(0, 0, 0);
-		strokeWeight(0.4);
-		fill(255, 0, 255);
-		ellipse(puot.position + 52, eastY + 7, 13, 13);
-		ellipse(puot.position + 116, westY + 7, 13, 13);
-		ellipse(puot.position + 116, eastY + 7, 13, 13);
-		ellipse(puot.position + 52, westY + 7, 13, 13);
-	}  
-*/
-
-
-   /*
-	fill(192, 192, 192);
-	if(power === true) {
-		noStroke();
-	} else {
-		stroke(0, 255, 0);			//powerStatus
-		strokeWeight(3);
-	}
-	rect(20, eastY + 2, 3760, 11);                      //track2
-	rect(20, westY + 2, 3760, 11);                      //track1
-	*/
-	
-	
-
-    
+  for(var s = 0; s < signalsArray.length; s++) {
+    signalsArray[s].drawSignal();
+  }
 	
 	for(var t = 0; t < tracksArray.length; t++) {
 	  tracksArray[t].drawTrack();
@@ -2014,60 +2293,64 @@ for(var i=1;i<stationsArray.length;i++){
     runsArray[r].drawShadow();
   }
     
-        
     
-    //btn1.draw();
-    //btn7.draw();
-    
-    
+  if(trackMenuActive.length === 0) {
+    trackMenu.x = -200;
+  }
   for(var i = 0; i < trackMenuActive.length; i++) {
     trackMenuActive[i].drawTrackMenu();
 	}
-	
-	for(var i = 0; i < trainMenuActive.length; i++) {
-	  trainMenuActive[i].drawDrainMenu();
+     
+  for(var i = 0; i < trainMenuActive.length; i++) {
+    trainMenuActive[i].drawTrainMenu();
 	}
-      
-
+     
+     
+     
+     
+     
 	mouseClicked = function() {
 	  
 	  for(var t = 0; t < tracksArray.length; t++) {
       if(tracksArray[t].isUnderMouse(mouseX, mouseY)) {
         trackSelect.push(tracksArray[t]);
         trackMenuActive = [];
+        trainMenuActive = [];
         trackMenuActive.push(tracksArray[t]);
         trackMenu.x = mouseX;
 		    trackMenu.y = mouseY;
       }
     }
-    for(var t = 0; t < trackSelect.length; t++) {
-      trackSelect[t].select = true;
-      trackSelect[t].westArrow = true;
-      trackSelect[t].eastArrow = true;
-    }
     
     for(var n = 0; n < trainsArray.length; n++) {
       if(trainsArray[n].isUnderMouse(mouseX, mouseY)) {
         trackMenuActive = [];
+        trackSelect = [];
         trainMenuActive = [];
         trainMenuActive.push(trainsArray[n]);
         trainMenu.x = mouseX;
         trainMenu.y = mouseY;
       }
     }
-    
+
+    for(var t = 0; t < trackSelect.length; t++) {
+      trackSelect[t].select = true;
+      trackSelect[t].westArrow = true;
+      trackSelect[t].eastArrow = true;
+    }
     
 
 	  btnTkTsr.handleMouseClick();
 	  btnTkClose.handleMouseClick();
 	  btnTkWz.handleMouseClick();
 	  
+	  btnTrnAtpm.handleMouseClick();
+	  
   	systemHoldButton.handleMouseClick();
   	powerButton.handleMouseClick();
+  	speedUp.handleMouseClick();
+  	speedDown.handleMouseClick();
   	  
-  	btn1.handleMouseClick();
-  	btn7.handleMouseClick();
-      
   	btnSH.handleMouseClick();
   	btnSC.handleMouseClick();
 
@@ -2102,7 +2385,7 @@ for(var i=1;i<stationsArray.length;i++){
   };
     
   
-	for(i = 0; i < stationMenus.length; i++) {
+	for(var i = 0; i < stationMenus.length; i++) {
     if(stationMenus[i] === true) {
 		  stationMenu.drawStationMenu();
 		  for(m = 0; m < stationMenus.length; m++) {
@@ -2112,7 +2395,8 @@ for(var i=1;i<stationsArray.length;i++){
 		  }
 		}
 	}
-    
+	
+
 /* debug tracks
   for(var i = 0; i < trackSelect.length; i++) {
     fill(0, 0, 0);
@@ -2122,11 +2406,11 @@ for(var i=1;i<stationsArray.length;i++){
     fill(0, 0, 0);
     text(trackMenuActive[i].number, 50+50*i, 250);
   }
-    */
+    
     
     fill(0, 0, 0);
     text("dir" + trainO.direction + "trk" + trainO.track, 100, 100)
-      
+      */
     
     
     
@@ -2135,7 +2419,7 @@ for(var i=1;i<stationsArray.length;i++){
 
 
 //planned features to add
-  //line
+  //more lines
 	//LMAs
 	//stnClose fn
 	//swt fn
@@ -2164,8 +2448,6 @@ for(var i=1;i<stationsArray.length;i++){
 
 
 
-
-
 			}
 		};  //endProcessing/sketchFunctions
 
@@ -2176,3 +2458,5 @@ for(var i=1;i<stationsArray.length;i++){
 	</script>
 	</body>
 </html>
+
+
