@@ -263,8 +263,12 @@ Trains.prototype.drawTrainEast = function() {
 	if(frameCount % speed === 0 && this.docked === false && this.direction === 1) {
 		this.position -= this.jump;
 	}
-	if(this.docked === true && this.hold === false && this.dwell === 0) {
+	if(this.docked === true && this.hold === false && this.dwell === 0 && this.direction === 0) {
 		this.position += 1;
+		this.docked = false;
+	}
+	if(this.docked === true && this.hold === false && this.dwell === 0 && this.direction === 1) {
+		this.position -= 1;
 		this.docked = false;
 	}
 	if(frameCount % speed === 0 && this.docked === true) {
@@ -839,24 +843,23 @@ Menus.prototype.drawStationMenu = function() {
 //instances
 
 
-//Trains               (position, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, dock, jump, line)
+//Trains         (position, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, dock, jump, line)
 
-var trainA = new Trains(130,       false, 101, 20, "01", false, false, 0, false, false, 0, false, 0, 1);
-var trainB = new Trains(575,       false, 102, 20, "02", false, false, 0, false, false, 1, false, 0, 1);
-var trainC = new Trains(255,       false, 103, 20, "03", false, false, 0, false, false, 0, false, 0, 1);
-var trainD = new Trains(undefined, false, 104, 20, "04", false, false, 0, false, false, 0, false, 0, 1);
-var trainE = new Trains(undefined, false, 105, 20, "05", false, false, 0, false, false, 0, false, 0, 1);
-var trainF = new Trains(undefined, false, 106, 20, "06", false, false, 0, false, false, 0, false, 0, 1);
-
-var trainG = new Trains(2000,       false, 107, 20, "07", false, false, 0, false, false, 1, false, 0, 1);
-var trainH = new Trains(undefined, false, 108, 20, "08", false, false, 0, false, false, 1, false, 0, 1);
-var trainI = new Trains(undefined, false, 109, 20, "09", false, false, 0, false, false, 1, false, 0, 1);
-var trainJ = new Trains(undefined, false, 110, 20, "10", false, false, 0, false, false, 1, false, 0, 1);
-var trainK = new Trains(undefined, false, 111, 20, "11", false, false, 0, false, false, 1, false, 0, 1);
-var trainL = new Trains(undefined, false, 112, 20, "12", false, false, 0, false, false, 1, false, 0, 1);
-var trainM = new Trains(undefined, false, 113, 20, "13", false, false, 0, false, false, 1, false, 0, 1);
-var trainN = new Trains(undefined, false, 114, 20, "14", false, false, 0, false, false, 1, false, 0, 1);
-var trainO = new Trains(undefined, false, 115, 20, "15", false, false, 0, false, false, 1, false, 0, 1);
+var trainA = new Trains(130,  false, 101, 20, "01", false, false, 0, false, false, 0, false, 0, 1);
+var trainB = new Trains(575,  false, 102, 20, "02", false, false, 0, false, false, 0, false, 0, 1);
+var trainC = new Trains(855,  false, 103, 20, "03", false, false, 0, false, false, 0, false, 0, 1);
+var trainD = new Trains(1210, false, 104, 20, "04", false, false, 0, false, false, 0, false, 0, 1);
+var trainE = new Trains(1558, false, 105, 20, "05", false, false, 0, false, false, 0, false, 0, 1);
+var trainF = new Trains(1900, false, 106, 20, "06", false, false, 0, false, false, 0, false, 0, 1);
+var trainG = new Trains(2300, false, 107, 20, "07", false, false, 0, false, false, 0, false, 0, 1);
+var trainH = new Trains(3600, false, 108, 20, "08", false, false, 0, false, false, 1, false, 0, 1);
+var trainI = new Trains(3200, false, 109, 20, "09", false, false, 0, false, false, 1, false, 0, 1);
+var trainJ = new Trains(2758, false, 110, 20, "10", false, false, 0, false, false, 1, false, 0, 1);
+var trainK = new Trains(2199, false, 111, 20, "11", false, false, 0, false, false, 1, false, 0, 1);
+var trainL = new Trains(1750, false, 112, 20, "12", false, false, 0, false, false, 1, false, 0, 1);
+var trainM = new Trains(1345, false, 113, 20, "13", false, false, 0, false, false, 1, false, 0, 1);
+var trainN = new Trains(856, false, 114, 20, "14", false, false, 0, false, false, 1, false, 0, 1);
+var trainO = new Trains(466, false, 115, 20, "15", false, false, 0, false, false, 1, false, 0, 1);
 
 var trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, 
 		trainG, trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
@@ -1725,10 +1728,10 @@ draw = function() {
 
     //moreMethodCalls    
     
-    trainA.drawTrainEast();
-    trainB.drawTrainEast();
-    trainC.drawTrainEast();
-    trainG.drawTrainEast();
+
+	for(var t = 0; t < trainsArray.length; t++) {
+		trainsArray[t].drawTrainEast();
+	}
 
     
     run0101.drawShadowEast();
