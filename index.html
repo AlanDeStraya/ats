@@ -150,9 +150,9 @@ var Menus = function(config) {
 var Button = function(config) {
     this.x = config.x || 25;
     this.y = config.y || 0;
-    this.width = config.width || 30;
-    this.height = config.height || 14;
-    this.label = config.label || "";
+    this.width = config.width || 26;
+    this.height = config.height || 12;
+    this.label = config.label || " ";
     this.onClick = config.onClick || function() {};
 };
 
@@ -173,13 +173,13 @@ Button.prototype.handleMouseClick = function() {
 };
 
 Button.prototype.draw = function() {
-    //fill(0, 234, 255);
+    fill(255, 255, 255);
     rect(this.x, this.y, this.width, this.height);
-    fill(0, 0, 0);
-    textSize(19);
+    //fill(0, 0, 0);
+    //textSize(19);
     //textAlign(LEFT, TOP);
     //text(this.label, this.x+10, this.y+this.height/4);
-    text("test", this.x, this.y);
+    //text("test", this.x, this.y);
 };
 
 
@@ -817,10 +817,49 @@ var drawMRRwest = function(westStart, westEnd) {
 
 
 
-//signalInstances(x, y, aspect, direction, label)
+//signalInstances      (x, y, aspect, direction, label)
+
 var sig11 = new Signals(tun.position + 47, westY + 31, 0, 0, "1-E-1");
+var sig12 = new Signals(tun.position + 41, eastY + 29, 0, 0, "1-E-2");
+var sig13 = new Signals(tun.position + 130, westY - 14, 0, 1, "1-W-3");
 var sig14 = new Signals(tun.position + 130, eastY - 14, 0, 1, "1-W-4");
 
+var sig21 = new Signals(lyo.position + 157, westY + 31, 0, 0, "2-E-1");
+var sig22 = new Signals(lyo.position + 166, eastY + 29, 0, 0, "2-E-2");
+var sig23 = new Signals(lyo.position + 235, westY - 14, 0, 1, "2-W-3");
+var sig24 = new Signals(lyo.position + 242, eastY - 14, 0, 1, "2-W-4");
+var sig25 = new Signals(puot.position + 47, westY + 31, 0, 0, "2-E-5");
+var sig26 = new Signals(puot.position + 24, eastY + 27, 0, 0, "2-E-6");
+var sig27 = new Signals(puot.position + 130, westY - 14, 0, 1, "2-W-7");
+var sig28 = new Signals(puot.position + 130, eastY - 14, 0, 1, "2-W-8");
+
+var sig31 = new Signals(hur.position + 85, westY + 26, 0, 0, "3-E-1");
+var sig32 = new Signals(hur.position + 47, eastY + 27, 0, 0, "3-E-2");
+var sig33 = new Signals(hur.position + 129, westY - 15, 0, 1, "3-W-3");
+var sig34 = new Signals(hur.position + 98, eastY - 15, 0, 1, "3-W-4");
+var sig35 = new Signals(tre.position - 110, westY + 26, 0, 0, "3-E-5");
+var sig36 = new Signals(tre.position - 67, eastY + 27, 0, 0, "3-E-6");
+var sig37 = new Signals(tre.position - 69, westY - 15, 0, 1, "3-W-7");
+var sig38 = new Signals(tre.position - 30, eastY - 15, 0, 1, "3-W-8");
+var sig39 = new Signals(tre.position + 135, westY + 26, 0, 0, "3-E-9");
+var sig310 = new Signals(tre.position + 97, eastY + 27, 0, 0, "3-E-10");
+var sig311 = new Signals(tre.position + 179, westY - 15, 0, 1, "3-W-11");
+var sig312 = new Signals(tre.position + 148, eastY - 15, 0, 1, "3-W-12");
+var sig313 = new Signals(tre.position + 207, westY + 26, 0, 0, "3-E-13");
+var sig314 = new Signals(tre.position + 242, eastY + 27, 0, 0, "3-E-14");
+var sig315 = new Signals(tre.position + 250, westY - 15, 0, 1, "3-W-15");
+var sig316 = new Signals(tre.position + 330, eastY - 12, 0, 1, "3-W-16");
+var sig318 = new Signals(tre.position + 381, eastY + 26, 0, 0, "3-W-18");
+var sig320 = new Signals(tre.position + 409, eastY - 12, 0, 1, "3-W-20");
+var sig321 = new Signals(stl.position - 200, westY + 26, 0, 0, "3-E-21");
+var sig322 = new Signals(stl.position - 230, eastY + 26, 0, 0, "3-E-22");
+var sig323 = new Signals(stl.position - 115, westY - 15, 0, 1, "3-W-23");
+var sig324 = new Signals(stl.position - 60, eastY - 15, 0, 1, "3-W-24");
+
+var sig41 = new Signals(bla.position - 200, westY + 26, 0, 0, "4-E-1");
+var sig42 = new Signals(bla.position - 152, eastY + 26, 0, 0, "4-E-2");
+var sig43 = new Signals(bla.position - 20, westY - 15, 0, 1, "4-W-3");
+var sig44 = new Signals(bla.position - 50, eastY - 15, 0, 1, "4-W-4");
 
 
 
@@ -876,65 +915,484 @@ draw = function() {
         },
     });
 
-    var btnSH = new Button({
-        x: stationMenu.x + 20,
-        y: stationMenu.y + 10,
-        width: stationMenu.w,
-        height: 16,
-        onClick: function() {
-            if(stationMenus[11] === true) {
-                stationMenus[11] = false;
-                rid.eastHold = !rid.eastHold;
-            }
-            if(stationMenus[12] === true) {
-                stationMenus[12] = false;
-                rid.westHold = !rid.westHold;
-            }
-        }
-    });
+
+
+	var btnSH = new Button({
+		x: stationMenu.x + 20,
+		y: stationMenu.y + 10,
+		width: stationMenu.w,
+		height: 16,
+		onClick: function() {
+			if(stationMenus[1] === true) {
+				stationMenus[1] = false;
+				tun.eastHold = !tun.eastHold;
+			}
+			if(stationMenus[2] === true) {
+				stationMenus[2] = false;
+				tun.westHold = !tun.westHold;
+			}
+			if(stationMenus[3] === true) {
+				stationMenus[3] = false;
+				bay.eastHold = !bay.eastHold;
+			}
+			if(stationMenus[4] === true) {
+				stationMenus[4] = false;
+				bay.westHold = !bay.westHold;
+			}
+			if(stationMenus[5] === true) {
+				stationMenus[5] = false;
+				pim.eastHold = !pim.eastHold;
+			}
+			if(stationMenus[6] === true) {
+				stationMenus[6] = false;
+				pim.westHold = !pim.westHold;
+			}
+			if(stationMenus[7] === true) {
+				stationMenus[7] = false;
+				lyo.eastHold = !lyo.eastHold;
+			}
+			if(stationMenus[8] === true) {
+				stationMenus[8] = false;
+				lyo.westHold = !lyo.westHold;
+			}
+			if(stationMenus[9] === true) {
+				stationMenus[9] = false;
+				par.eastHold = !par.eastHold;
+			}
+			if(stationMenus[10] === true) {
+				stationMenus[10] = false;
+				par.westHold = !par.westHold;
+			}
+			if(stationMenus[11] === true) {
+				stationMenus[11] = false;
+				rid.eastHold = !rid.eastHold;
+			}
+			if(stationMenus[12] === true) {
+				stationMenus[12] = false;
+				rid.westHold = !rid.westHold;
+			}
+			if(stationMenus[13] === true) {
+				stationMenus[13] = false;
+				uot.eastHold = !uot.eastHold;
+			}
+			if(stationMenus[14] === true) {
+				stationMenus[14] = false;
+				uot.westHold = !uot.westHold;
+			}
+			if(stationMenus[15] === true) {
+				stationMenus[15] = false;
+				lee.eastHold = !lee.eastHold;
+			}
+			if(stationMenus[16] === true) {
+				stationMenus[16] = false;
+				lee.westHold = !lee.westHold;
+			}
+			if(stationMenus[17] === true) {
+				stationMenus[17] = false;
+				hur.eastHold = !hur.eastHold;
+			}
+			if(stationMenus[18] === true) {
+				stationMenus[18] = false;
+				hur.westHold = !hur.westHold;
+			}
+			if(stationMenus[19] === true) {
+				stationMenus[19] = false;
+				tre.eastHold = !tre.eastHold;
+			}
+			if(stationMenus[20] === true) {
+				stationMenus[20] = false;
+				tre.westHold = !tre.westHold;
+			}
+			if(stationMenus[21] === true) {
+				stationMenus[21] = false;
+				stl.eastHold = !stl.eastHold;
+			}
+			if(stationMenus[22] === true) {
+				stationMenus[22] = false;
+				stl.westHold = !stl.westHold;
+			}
+			if(stationMenus[23] === true) {
+				stationMenus[23] = false;
+				cyr.eastHold = !cyr.eastHold;
+			}
+			if(stationMenus[24] === true) {
+				stationMenus[24] = false;
+				cyr.westHold = !cyr.westHold;
+			}
+			if(stationMenus[25] === true) {
+				stationMenus[25] = false;
+				bla.eastHold = !bla.eastHold;
+			}
+			if(stationMenus[26] === true) {
+				stationMenus[26] = false;
+				bla.westHold = !bla.westHold;
+			}
+		}
+	});
     
-    var btnSC = new Button({
-        x:stationMenu.x + 20,
-        y: stationMenu.y + 26,
-        width: stationMenu.w,
-        height: 16,
-        onClick: function() {
-            if(stationMenus[11] === true) {
-                stationMenus[11] = false;
-                rid.eastClose = !rid.eastClose;
-            }
-            if(stationMenus[12] === true) {
-                stationMenus[12] = false;
-                rid.westClose = !rid.westClose;
-            }
-        }
-    });
+	var btnSC = new Button({
+		x:stationMenu.x + 20,
+		y: stationMenu.y + 26,
+		width: stationMenu.w,
+		height: 16,
+		onClick: function() {
+			if(stationMenus[1] === true) {
+				stationMenus[1] = false;
+				tun.eastClose = !tun.eastClose;
+			}
+			if(stationMenus[2] === true) {
+				stationMenus[2] = false;
+				tun.westClose = !tun.westClose;
+			}
+			if(stationMenus[3] === true) {
+				stationMenus[3] = false;
+				bay.eastClose = !bay.eastClose;
+			}
+			if(stationMenus[4] === true) {
+				stationMenus[4] = false;
+				bay.westClose = !bay.westClose;
+			}
+			if(stationMenus[5] === true) {
+				stationMenus[5] = false;
+				pim.eastClose = !pim.eastClose;
+			}
+			if(stationMenus[6] === true) {
+				stationMenus[6] = false;
+				pim.westClose = !pim.westClose;
+			}
+			if(stationMenus[7] === true) {
+				stationMenus[7] = false;
+				lyo.eastClose = !lyo.eastClose;
+			}
+			if(stationMenus[8] === true) {
+				stationMenus[8] = false;
+				lyo.westClose = !lyo.westClose;
+			}
+			if(stationMenus[9] === true) {
+				stationMenus[9] = false;
+				par.eastClose = !par.eastClose;
+			}
+			if(stationMenus[10] === true) {
+				stationMenus[10] = false;
+				par.westClose = !par.westClose;
+			}
+			if(stationMenus[11] === true) {
+				stationMenus[11] = false;
+				rid.eastClose = !rid.eastClose;
+			}
+			if(stationMenus[12] === true) {
+				stationMenus[12] = false;
+				rid.westClose = !rid.westClose;
+			}
+			if(stationMenus[13] === true) {
+				stationMenus[13] = false;
+				uot.eastClose = !uot.eastClose;
+			}
+			if(stationMenus[14] === true) {
+				stationMenus[14] = false;
+				uot.westClose = !uot.westClose;
+			}
+			if(stationMenus[15] === true) {
+				stationMenus[15] = false;
+				lee.eastClose = !lee.eastClose;
+			}
+			if(stationMenus[16] === true) {
+				stationMenus[16] = false;
+				lee.westClose = !lee.westClose;
+			}
+			if(stationMenus[17] === true) {
+				stationMenus[17] = false;
+				hur.eastClose = !hur.eastClose;
+			}
+			if(stationMenus[18] === true) {
+				stationMenus[18] = false;
+				hur.westClose = !hur.westClose;
+			}
+			if(stationMenus[19] === true) {
+				stationMenus[19] = false;
+				tre.eastClose = !tre.eastClose;
+			}
+			if(stationMenus[20] === true) {
+				stationMenus[20] = false;
+				tre.westClose = !tre.westClose;
+			}
+			if(stationMenus[21] === true) {
+				stationMenus[21] = false;
+				stl.eastClose = !stl.eastClose;
+			}
+			if(stationMenus[22] === true) {
+				stationMenus[22] = false;
+				stl.westClose = !stl.westClose;
+			}
+			if(stationMenus[23] === true) {
+				stationMenus[23] = false;
+				cyr.eastClose = !cyr.eastClose;
+			}
+			if(stationMenus[24] === true) {
+				stationMenus[24] = false;
+				cyr.westClose = !cyr.westClose;
+			}
+			if(stationMenus[25] === true) {
+				stationMenus[25] = false;
+				bla.eastClose = !bla.eastClose;
+			}
+			if(stationMenus[26] === true) {
+				stationMenus[26] = false;
+				bla.westClose = !bla.westClose;
+			}
+		}
+	});
     
     
 
 
-    var btnRidE = new Button({
-        x: rid.position,
-        y: eastY + 26,
-        width: 20,
-        onClick: function() {
-            stationMenus[11] = true;
-            stationMenu.x = mouseX;
-            stationMenu.y = mouseY;
-        }
-    }); 
+	var btnTunE = new Button({
+		x: tun.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[1] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnTunW = new Button({
+		x: tun.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[2] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnBayE = new Button({
+		x: bay.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[3] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnBayW = new Button({
+		x: bay.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[4] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnPimE = new Button({
+		x: pim.position,
+		y: eastY - 38,
+		onClick: function() {
+			stationMenus[5] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnPimW = new Button({
+		x: pim.position,
+		y: westY + 42,
+		onClick: function() {
+			stationMenus[6] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnLyoE = new Button({
+		x: lyo.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[7] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnLyoW = new Button({
+		x: lyo.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[8] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnParE = new Button({
+		x: par.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[9] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnParW = new Button({
+		x: par.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[10] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnRidE = new Button({
+		x: rid.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[11] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnRidW = new Button({
+		x: rid.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[12] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
     
-    var btnRidW = new Button({
-        x: rid.position,
-        y: westY - 26,
-        width: 20,
-        onClick: function() {
-            stationMenus[12] = true;
-            stationMenu.x = mouseX;
-            stationMenu.y = mouseY;
-        }
-    });
-    
+	var btnUotE = new Button({
+		x: uot.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[13] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnUotW = new Button({
+		x: uot.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[14] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
+
+	var btnLeeE = new Button({
+		x: lee.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[15] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnLeeW = new Button({
+		x: lee.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[16] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
+
+	var btnHurE = new Button({
+		x: hur.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[17] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnHurW = new Button({
+		x: hur.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[18] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
+
+	var btnTreE = new Button({
+		x: tre.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[19] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnTreW = new Button({
+		x: tre.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[20] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
+
+	var btnStlE = new Button({
+		x: stl.position,
+		y: eastY + 36,
+		onClick: function() {
+			stationMenus[21] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnStlW = new Button({
+		x: stl.position,
+		y: westY - 36,
+		onClick: function() {
+			stationMenus[22] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	});
+
+	var btnCyrE = new Button({
+		x: cyr.position,
+		y: eastY - 38,
+		onClick: function() {
+			stationMenus[23] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnCyrW = new Button({
+		x: cyr.position,
+		y: westY + 42,
+		onClick: function() {
+			stationMenus[24] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
+	var btnBlaE = new Button({
+		x: bla.position,
+		y: eastY - 38,
+		onClick: function() {
+			stationMenus[25] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+	var btnBlaW = new Button({
+		x: bla.position,
+		y: westY + 42,
+		onClick: function() {
+			stationMenus[26] = true;
+			stationMenu.x = mouseX;
+			stationMenu.y = mouseY;
+		}
+	}); 
+
 
 
 
@@ -1002,99 +1460,48 @@ draw = function() {
 
     
 	sig11.drawSignal();
+	sig12.drawSignal();
+	sig13.drawSignal();
 	sig14.drawSignal();
 
+	sig21.drawSignal();
+	sig22.drawSignal();
+	sig23.drawSignal();
+	sig24.drawSignal();
+	sig25.drawSignal();
+	sig26.drawSignal();
+	sig27.drawSignal();
+	sig28.drawSignal();
 
-    //signalAspects
-    strokeWeight(0.8);
-    stroke(0, 0, 0);
+	sig31.drawSignal();
+	sig32.drawSignal();
+	sig33.drawSignal();
+	sig34.drawSignal();
+	sig35.drawSignal();
+	sig36.drawSignal();
+	sig37.drawSignal();
+	sig38.drawSignal();
+	sig39.drawSignal();
+	sig310.drawSignal();
+	sig311.drawSignal();
+	sig312.drawSignal();
+	sig313.drawSignal();
+	sig314.drawSignal();
+	sig315.drawSignal();
+	sig316.drawSignal();
+	sig318.drawSignal();
+	sig320.drawSignal();
+	sig321.drawSignal();
+	sig322.drawSignal();
+	sig323.drawSignal();
+	sig324.drawSignal();
 
-	fill(255, 0, 0);
-	ellipse(tun.position + 130, eastY - 14, 7, 7); //302
+	sig41.drawSignal();
+	sig42.drawSignal();
+	sig43.drawSignal();
+	sig44.drawSignal();
 
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	} 
-	ellipse(tun.position + 41, eastY + 29, 7, 7); //303
-    
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	}
-	ellipse(tun.position + 130, westY - 14, 7, 7); //304
-
-
-	fill(255, 0, 0);
-	ellipse(lyo.position + 157, westY + 31, 7, 7); //305
-
-	fill(255, 0, 0);
-	ellipse(lyo.position + 242, 436, 7, 7); //306
-
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	} 
-	ellipse(lyo.position + 166, eastY + 29, 7, 7); //307
-    
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	}
-	ellipse(lyo.position + 235, westY - 14, 7, 7); //308
-
-
-
-	fill(255, 0, 0);
-	ellipse(puot.position + 47, westY + 31, 7, 7); //309
-
-	fill(255, 0, 0);
-	ellipse(puot.position + 130, 436, 7, 7); //310
-
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	} 
-	ellipse(puot.position + 24, eastY + 27, 7, 7); //311
-    
-	if(1 === 1) {
-		fill(0, 255, 0);
-	} else {
-		fill(255, 0, 0);
-	}
-	ellipse(puot.position + 130, 332, 7, 7); //312
-
-
-
-
-    
-/*   
-	strokeWeight(3);
-	line(tun.position + 42, westY + 27, tun.position + 42, westY + 34);
-	line(tun.position + 134, eastY - 18, tun.position + 134, eastY - 11); 
-	line(tun.position + 36, eastY + 25, tun.position + 36, eastY + 32); 
-	line(tun.position + 134, westY - 18, tun.position + 134, westY - 11);
-
-	line(lyo.position + 152, westY + 27, lyo.position + 152, westY + 34);
-	line(lyo.position + 246, eastY - 18, lyo.position + 246, eastY - 11);
-	line(lyo.position + 161, eastY + 25, lyo.position + 161, eastY + 32);
-	line(lyo.position + 239, westY - 18, lyo.position + 239, westY - 11); 
-
-	line(puot.position + 42, westY + 27, puot.position + 42, westY + 34);
-	line(puot.position + 134, eastY - 18, puot.position + 134, eastY - 10);
-	line(puot.position + 19, eastY + 23, puot.position + 19, eastY + 30); 
-	line(puot.position + 134, westY - 18, puot.position + 134, westY - 11); 
-*/
-
-
-
-    
-    
+   
 
     
 
@@ -1114,7 +1521,6 @@ draw = function() {
 	cyr.drawStation();
 	bla.drawStation();
 
-    
 	puot.drawPseudo();
 	phur.drawPseudo();
 	ptre.drawPseudo();
@@ -1130,7 +1536,7 @@ draw = function() {
 	text("SW_304", tun.position + 130, westY + 35);
 	
 	text("SW_305", lyo.position + 95, westY + 35);
-	text("SW_306", lyo.position + 260, eastY - 17);    //+105 lyo
+	text("SW_306", lyo.position + 260, eastY - 17);
 	text("SW_307", lyo.position + 110, eastY - 17);
 	text("SW_308", lyo.position + 245, westY + 35);
 
@@ -1141,7 +1547,7 @@ draw = function() {
 
 	text("SW_313", 2170, eastY - 17);
 	text("SW_314", 2155, westY - 11);
-	text("SW_315", 2330, westY - 11);
+	text("SW_315", 2350, westY + 31);
 	text("SW_316", 2398, eastY - 14);
 
 	text("SW_317", 2485, eastY - 11);
@@ -1169,15 +1575,13 @@ draw = function() {
 	if(power === true) {
 		noStroke();
 	} else {
-		stroke(0, 255, 0);
+		stroke(0, 255, 0);			//powerStatus
 		strokeWeight(3);
 	}
 	rect(20, eastY + 2, 3760, 11);                      //track1
 	rect(20, westY + 2, 3760, 11);                      //track2
     
-
-
-	drawUpCross(tun.position + 50, westY + 19);	//switches
+	drawUpCross(tun.position + 50, westY + 19);	//crossovers
 	drawDownCross(tun.position + 50, westY + 19);
 	drawUpCross(lyo.position + 170, westY + 19);
 	drawDownCross(lyo.position + 170, westY + 19);
@@ -1281,35 +1685,70 @@ draw = function() {
     //btn1.draw();
     //btn7.draw();
 
-    mouseClicked = function() {
-    btn1.handleMouseClick();
-    btn7.handleMouseClick();
-    btnRidE.handleMouseClick();
-    btnRidW.handleMouseClick();
-    btnSH.handleMouseClick();
-    btnSC.handleMouseClick();
+	mouseClicked = function() {
+	btn1.handleMouseClick();
+	btn7.handleMouseClick();
+    
+	btnSH.handleMouseClick();
+	btnSC.handleMouseClick();
+
+	btnTunE.handleMouseClick();
+	btnTunW.handleMouseClick();
+	btnBayE.handleMouseClick();
+	btnBayW.handleMouseClick();
+	btnPimE.handleMouseClick();
+	btnPimW.handleMouseClick();
+	btnLyoE.handleMouseClick();
+	btnLyoW.handleMouseClick();
+	btnParE.handleMouseClick();
+	btnParW.handleMouseClick();
+	btnRidE.handleMouseClick();
+	btnRidW.handleMouseClick();
+	btnUotE.handleMouseClick();
+	btnUotW.handleMouseClick();
+	btnLeeE.handleMouseClick();
+	btnLeeW.handleMouseClick();
+	btnHurE.handleMouseClick();
+	btnHurW.handleMouseClick();
+	btnTreE.handleMouseClick();
+	btnTreW.handleMouseClick();
+	btnStlE.handleMouseClick();
+	btnStlW.handleMouseClick();
+	btnCyrE.handleMouseClick();
+	btnCyrW.handleMouseClick();
+	btnBlaE.handleMouseClick();
+	btnBlaW.handleMouseClick();
+
+
     };
     
+	for(i = 0; i < stationMenus.length; i++) {
+    		if(stationMenus[i] === true) {
+			stationMenu.drawStationMenu();
+			for(m = 0; m < stationMenus.length; m++) {
+				if (m != i) {
+					stationMenus[m] = false
+				}
+			}
+		}
+	}
     
-    if(stationMenus[11] === true) {
-        stationMenu.drawStationMenu();
-    }
-    
-    if(stationMenus[12] === true) {
-        stationMenu.drawStationMenu();
-    }
-    
+
     
 };
 
 
 //planned features to add
     //buttons-x,y,w,h - functions!
-    //subdivide LMAs
-    //stnHold
-    //stnClose
-    //sysHold
-    //disturb switch
+	//LMAs
+	//stnHold fn
+	//stnClose fn
+	//sysHold
+	//swt fn
+	//disturb switch
+	//track segments
+	//select track
+	//track fns
     //MRR
     //powerStatus
     //eb
