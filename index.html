@@ -455,13 +455,13 @@ Tracks.prototype.drawTrack = function() {
   if(this.power === false) {
       stroke(0, 255, 0);
       strokeWeight(3);
-      line(this.x + 1, this.y + 2, this.x + this.length - 1, this.y + 2);
-      line(this.x + 1, this.y + 13, this.x + this. length - 1, this.y + 13);
+      line(this.x + 1, this.y + 2, this.x + this.length - 2, this.y + 2);
+      line(this.x + 1, this.y + 13, this.x + this. length - 2, this.y + 13);
   } else if(this.wz === true) {
       stroke(255, 130, 0);
       strokeWeight(4);
-      line(this.x + 1, this.y + 1, this.x + this.length - 1, this.y + 1);
-      line(this.x + 1, this.y + 14, this.x + this. length - 1, this.y + 14);
+      line(this.x + 1, this.y + 1, this.x + this.length - 2, this.y + 1);
+      line(this.x + 1, this.y + 14, this.x + this. length - 2, this.y + 14);
   }
   
   strokeWeight(3);
@@ -725,7 +725,7 @@ Menus.prototype.drawStationMenu = function() {
     
     
 /////////////////////////////////////////////////////////////////////Instances
-//stationPositions 130, 420, 540, 800, 1170, r1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
+
 //TrackInstances      x, y, length, number, power, close, tsr, wz, westArrow, eastArrow, lma, mrr, select, menu
 
 var track100 = new Tracks(50,  westY, 80, 100, true, false, 100, false, false, false, false, false, false, false);
@@ -758,8 +758,53 @@ var track126 = new Tracks(1218, westY, 50, 126, true, false, 100, false, false, 
 var track127 = new Tracks(1268, westY, 50, 127, true, false, 100, false, false, false, false, false, false, false);
 var track128 = new Tracks(1318, westY, 22, 128, true, false, 100, false, false, false, false, false, false, false);
 var track129 = new Tracks(1340, westY, 26, 129, true, false, 100, false, false, false, false, false, false, false);
-//22 50 50 22, crossPortalAndGidsUpToSwitch
+var track130 = new Tracks(1366, westY, 19, 130, true, false, 100, false, false, false, false, false, false, false);
+var track131 = new Tracks(1385, westY, 50, 131, true, false, 100, false, false, false, false, false, false, false);
+var track132 = new Tracks(1435, westY, 50, 132, true, false, 100, false, false, false, false, false, false, false);
+var track133 = new Tracks(1485, westY, 20, 133, true, false, 100, false, false, false, false, false, false, false);
+var track134 = new Tracks(1505, westY, 65, 134, true, false, 100, false, false, false, false, false, false, false);
+var track135 = new Tracks(1590, westY, 25, 135, true, false, 100, false, false, false, false, false, false, false);
+var track136 = new Tracks(1635, westY, 65, 136, true, false, 100, false, false, false, false, false, false, false);
+var track137 = new Tracks(1700, westY, 90, 137, true, false, 100, false, false, false, false, false, false, false);
+var track138 = new Tracks(1790, westY, 26, 138, true, false, 100, false, false, false, false, false, false, false);
+var track139 = new Tracks(1816, westY, 27, 139, true, false, 100, false, false, false, false, false, false, false);
+var track140 = new Tracks(1843, westY, 50, 140, true, false, 100, false, false, false, false, false, false, false);
+var track141 = new Tracks(1893, westY, 50, 141, true, false, 100, false, false, false, false, false, false, false);
+var track142 = new Tracks(1943, westY, 27, 142, true, false, 100, false, false, false, false, false, false, false);
+var track143 = new Tracks(1970, westY, 26, 143, true, false, 100, false, false, false, false, false, false, false);
+var track144 = new Tracks(1996, westY, 19, 144, true, false, 100, false, false, false, false, false, false, false);
+var track145 = new Tracks(2015, westY, 20, 145, true, false, 100, false, false, false, false, false, false, false);
+var track146 = new Tracks(2035, westY, 10, 146, true, false, 100, false, false, false, false, false, false, false);
+var track147 = new Tracks(2045, westY, 10, 147, true, false, 100, false, false, false, false, false, false, false);
+var track148 = new Tracks(2055, westY, 25, 148, true, false, 100, false, false, false, false, false, false, false);
+var track149 = new Tracks(2080, westY, 26, 149, true, false, 100, false, false, false, false, false, false, false);
+var track150 = new Tracks(2106, westY, 34, 150, true, false, 100, false, false, false, false, false, false, false);
+var track151 = new Tracks(2140, westY, 35, 151, true, false, 100, false, false, false, false, false, false, false);
+var track152 = new Tracks(2195, westY, 26, 152, true, false, 100, false, false, false, false, false, false, false);
+var track153 = new Tracks(2221, westY, 73, 153, true, false, 100, false, false, false, false, false, false, false);
+var track154 = new Tracks(2294, westY, 26, 154, true, false, 100, false, false, false, false, false, false, false);
+var track155 = new Tracks(2340, westY, 16, 155, true, false, 100, false, false, false, false, false, false, false);
+var track156 = new Tracks(2356, westY, 32, 156, true, false, 100, false, false, false, false, false, false, false);
+var track157 = new Tracks(2388, westY, 32, 157, true, false, 100, false, false, false, false, false, false, false);
+var track158 = new Tracks(2420, westY, 26, 158, true, false, 100, false, false, false, false, false, false, false);
+var track159 = new Tracks(2446, westY, 85, 159, true, false, 100, false, false, false, false, false, false, false);
+var track160 = new Tracks(2531, westY, 44, 160, true, false, 100, false, false, false, false, false, false, false);
+var track161 = new Tracks(2595, westY, 35, 161, true, false, 100, false, false, false, false, false, false, false);
+var track162 = new Tracks(2650, westY, 30, 162, true, false, 100, false, false, false, false, false, false, false);
+var track163 = new Tracks(2680, westY, 195, 163, true, false, 100, false, false, false, false, false, false, false);
+var track164 = new Tracks(2875, westY, 30, 164, true, false, 100, false, false, false, false, false, false, false);
+var track165 = new Tracks(2925, westY, 35, 165, true, false, 100, false, false, false, false, false, false, false);
+var track166 = new Tracks(2980, westY, 90, 166, true, false, 100, false, false, false, false, false, false, false);
+var track167 = new Tracks(3070, westY, 10, 167, true, false, 100, false, false, false, false, false, false, false);
+var track168 = new Tracks(3080, westY, 10, 168, true, false, 100, false, false, false, false, false, false, false);
+var track169 = new Tracks(3090, westY, 26, 169, true, false, 100, false, false, false, false, false, false, false);
 // 20swtgap 25seg 20swtgap
+//stationPositions  STL3090, 3210, 3630
+//t1 2905
+//   2860 2960    3440 3540 swts
+//t2
+//zone3175
+//stl3060-3150portals
 
 var track200 = new Tracks(50,  eastY, 80, 200, true, false, 100, false, false, false, false, false, false, false);
 var track201 = new Tracks(130, eastY, 26, 201, true, false, 100, false, false, false, false, false, false, false);
@@ -791,13 +836,69 @@ var track226 = new Tracks(1218, eastY, 50, 226, true, false, 100, false, false, 
 var track227 = new Tracks(1268, eastY, 50, 227, true, false, 100, false, false, false, false, false, false, false);
 var track228 = new Tracks(1318, eastY, 22, 228, true, false, 100, false, false, false, false, false, false, false);
 var track229 = new Tracks(1340, eastY, 26, 229, true, false, 100, false, false, false, false, false, false, false);
-
+var track230 = new Tracks(1366, eastY, 19, 230, true, false, 100, false, false, false, false, false, false, false);
+var track231 = new Tracks(1385, eastY, 50, 231, true, false, 100, false, false, false, false, false, false, false);
+var track232 = new Tracks(1435, eastY, 50, 232, true, false, 100, false, false, false, false, false, false, false);
+var track233 = new Tracks(1485, eastY, 20, 233, true, false, 100, false, false, false, false, false, false, false);
+var track234 = new Tracks(1505, eastY, 65, 234, true, false, 100, false, false, false, false, false, false, false);
+var track235 = new Tracks(1590, eastY, 25, 235, true, false, 100, false, false, false, false, false, false, false);
+var track236 = new Tracks(1635, eastY, 65, 236, true, false, 100, false, false, false, false, false, false, false);
+var track237 = new Tracks(1700, eastY, 90, 237, true, false, 100, false, false, false, false, false, false, false);
+var track238 = new Tracks(1790, eastY, 26, 238, true, false, 100, false, false, false, false, false, false, false);
+var track239 = new Tracks(1816, eastY, 27, 239, true, false, 100, false, false, false, false, false, false, false);
+var track240 = new Tracks(1843, eastY, 50, 240, true, false, 100, false, false, false, false, false, false, false);
+var track241 = new Tracks(1893, eastY, 50, 241, true, false, 100, false, false, false, false, false, false, false);
+var track242 = new Tracks(1943, eastY, 27, 242, true, false, 100, false, false, false, false, false, false, false);
+var track243 = new Tracks(1970, eastY, 26, 242, true, false, 100, false, false, false, false, false, false, false);
+var track244 = new Tracks(1996, eastY, 19, 244, true, false, 100, false, false, false, false, false, false, false);
+var track245 = new Tracks(2015, eastY, 20, 245, true, false, 100, false, false, false, false, false, false, false);
+var track245 = new Tracks(2015, eastY, 20, 245, true, false, 100, false, false, false, false, false, false, false);
+var track246 = new Tracks(2035, eastY, 10, 246, true, false, 100, false, false, false, false, false, false, false);
+var track247 = new Tracks(2045, eastY, 10, 247, true, false, 100, false, false, false, false, false, false, false);
+var track248 = new Tracks(2055, eastY, 25, 248, true, false, 100, false, false, false, false, false, false, false);
+var track249 = new Tracks(2080, eastY, 26, 249, true, false, 100, false, false, false, false, false, false, false);
+var track250 = new Tracks(2106, eastY, 24, 250, true, false, 100, false, false, false, false, false, false, false);
+var track251 = new Tracks(2150, eastY, 25, 251, true, false, 100, false, false, false, false, false, false, false);
+var track252 = new Tracks(2175, eastY, 165, 252, true, false, 100, false, false, false, false, false, false, false);
+var track253 = new Tracks(2340, eastY, 25, 253, true, false, 100, false, false, false, false, false, false, false);
+var track254 = new Tracks(2385, eastY, 15, 254, true, false, 100, false, false, false, false, false, false, false);
+var track255 = new Tracks(2400, eastY, 20, 255, true, false, 100, false, false, false, false, false, false, false);
+var track256 = new Tracks(2420, eastY, 26, 256, true, false, 100, false, false, false, false, false, false, false);
+var track257 = new Tracks(2446, eastY, 50, 257, true, false, 100, false, false, false, false, false, false, false);
+var track258 = new Tracks(2496, eastY, 34, 258, true, false, 100, false, false, false, false, false, false, false);
+var track259 = new Tracks(2550, eastY, 25, 259, true, false, 100, false, false, false, false, false, false, false);
+var track260 = new Tracks(2575, eastY, 75, 260, true, false, 100, false, false, false, false, false, false, false);
+var track261 = new Tracks(2650, eastY, 25, 261, true, false, 100, false, false, false, false, false, false, false);
+var track262 = new Tracks(2695, eastY, 15, 262, true, false, 100, false, false, false, false, false, false, false);
+var track263 = new Tracks(2730, eastY, 95, 263, true, false, 100, false, false, false, false, false, false, false);
+var track264 = new Tracks(2845, eastY, 15, 264, true, false, 100, false, false, false, false, false, false, false);
+var track265 = new Tracks(2880, eastY, 125, 265, true, false, 100, false, false, false, false, false, false, false);
+var track266 = new Tracks(3025, eastY, 45, 266, true, false, 100, false, false, false, false, false, false, false);
+var track267 = new Tracks(3070, eastY, 10, 267, true, false, 100, false, false, false, false, false, false, false);
+var track268 = new Tracks(3080, eastY, 10, 268, true, false, 100, false, false, false, false, false, false, false);
+var track269 = new Tracks(3090, eastY, 26, 269, true, false, 100, false, false, false, false, false, false, false);
+// 20swtgap 25seg 20swtgap
+//stationPositions  STL3090, 3210, 3630
+//t1
+//     2860 2960     3440 3540 swts
+//t2
+//zone3175
+//stl3060-3150portals
 var tracksArray = [track100, track101, track102, track103, track104, track105, track106, track107, track108, track109,
                   track110, track111, track112, track113, track114, track115, track116, track117, track118, track119,
                   track120, track121, track122, track123, track124, track125, track126, track127, track128, track129,
+                  track130, track131, track132, track133, track134, track135, track136, track137, track138, track139,
+                  track140, track141, track142, track143, track144, track145, track146, track147, track148, track149,
+                  track150, track151, track152, track153, track154, track155, track156, track157, track158, track159,
+                  track160, track161, track162, track163, track164, track165, track166, track167, track168, track169,
+                  
                   track200, track201, track202, track203, track204, track205, track206, track207, track208, track209,
                   track210, track211, track212, track213, track214, track215, track216, track217, track218, track219,
-                  track220, track221, track222, track223, track224, track225, track226, track227, track228, track229
+                  track220, track221, track222, track223, track224, track225, track226, track227, track228, track229,
+                  track230, track231, track232, track233, track234, track235, track236, track237, track238, track239, 
+                  track240, track241, track242, track243, track244, track245, track246, track247, track248, track249,
+                  track250, track251, track252, track253, track254, track255, track256, track257, track258, track259,
+                  track260, track261, track262, track263, track264, track265, track266, track267, track268, track269,
                   ];
 
     
@@ -1007,7 +1108,10 @@ for(var i=1;i<stationsArray.length;i++){
       width: 35,
       height: 35,
       onClick: function(){
-        power = !power;
+        for(var p = 0; p < tracksArray.length; p++) {
+          tracksArray[p].power = !tracksArray[p].power;
+          power = !power;
+        }
       }
     });
     
@@ -1654,7 +1758,7 @@ for(var i=1;i<stationsArray.length;i++){
 	btnSC.handleMouseClick();
 
   	btnTunE.handleMouseClick();
-	btnTunW.handleMouseClick();
+	  btnTunW.handleMouseClick();
   	btnBayE.handleMouseClick();
   	btnBayW.handleMouseClick();
   	btnPimE.handleMouseClick();
