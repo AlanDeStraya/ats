@@ -1,0 +1,1272 @@
+
+<!DOCTYPE html>
+<!-- This is based on DillingerLee's great template here:
+https://github.com/Team-Code/KA_Offline -->
+<html> 
+ <head>
+    <title>Alan's Train Simulator</title> 
+</head>
+ <body>
+    <p align="center"> 
+	<!--This draws the Canvas on the webpage -->
+      <canvas id="mycanvas"></canvas> 
+    </p>
+ </body>
+ 
+ <!-- Run all the JavaScript stuff -->
+ <!-- Include the processing.js library -->
+ <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+ <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+ 
+ <script>
+    var sketchProc = function(processingInstance) {
+     with (processingInstance) {
+        size(3800, 800); 
+        frameRate(60);
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ProgramCodeGoesHere
+
+
+/*A visual of the ATS system*/
+/*By Alan*/
+
+/*
+Interactive features so far: 
+-click train to toggle ATPM
+-click station for menu
+-station holds*
+
+
+Display features:
+-somewhat realistic LMAs
+-dwells
+-run shadows
+-variance-dependent run shadow and label colors
+-signal aspects
+-flank protection
+
+*/
+
+
+
+//Code notes: positions are upper left (train, station)
+
+
+//variables
+
+var eastY = 450;
+var westY = 346;
+
+var speed = 60;         //speed
+var e = 21;             //eastDwell
+var w = 21;             //westDwell
+
+//stationMenus E,W 0=null 1,2=TUN 3,4=BAY 5,6=PIM 7,8=LYO 9,10=PAR 11,12=RID, 13,14=UOT 15,16=LEE 17,18=HUR 19,20=TRE 21,22=STL 23,24=CYR 25,26=BLA
+var stationMenus = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+
+var variance = [0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined];
+
+var lma = [0, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,];
+
+var flankUOTwest;
+var flankUOTeast;
+
+
+//constructors
+
+//trainConstructor
+var Trains = function(position, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb) {
+    this.position = position;
+    this.docked = docked;
+    this.run = run;
+    this.dwell = dwell;
+    this.number = number;
+    this.doorOpen = doorOpen;
+    this.atpm = atpm;
+    this.variance = variance;
+    this.hold = hold;
+    this.eb = eb;
+};
+
+//stationConstructor
+var Stations = function(name, position, centerPlatform, eastHold, westHold, eastClose, westClose) {
+    this.name = name;
+    this.position = position;
+    this.centerPlatform = centerPlatform;
+    this.eastHold = eastHold;
+    this.westHold = westHold;
+    this.eastClose = eastClose;
+    this.westClose = westClose;
+};
+
+//PseudosConstructor
+var Pseudos = function(name, position, both, hold, eastHold, westHold, eastClose, westClose) {
+    this.name = name;
+    this.position = position;
+    this.both = both;
+    this.eastHold = eastHold;
+    this.westHold = westHold;
+    this.eastClose = eastClose;
+    this.westClose = westClose;
+};
+
+//EastShadowConstructor
+var EastShadows = function(run, position, dwell) {
+    this.run = run;
+    this.position = position;
+};
+//WestShadowConstructor
+var WestShadows = function(run, position, dwell) {
+    this.run = run;
+    this.position = position;
+};
+
+//MenusConstructor
+var Menus = function(config) {
+    this.x = config.x || 10;
+    this.y = config.y || 10;
+    this.w = config.w || 80;
+    this.h = config.h || 80;
+};
+
+//ButtonConstructor
+var Button = function(config) {
+    this.x = config.x || 25;
+    this.y = config.y || 0;
+    this.width = config.width || 30;
+    this.height = config.height || 14;
+    this.label = config.label || "";
+    this.onClick = config.onClick || function() {};
+};
+
+
+
+//ButtonMethods
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+Button.prototype.draw = function() {
+    //fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height);
+    fill(0, 0, 0);
+    textSize(19);
+    //textAlign(LEFT, TOP);
+    //text(this.label, this.x+10, this.y+this.height/4);
+    text("test", this.x, this.y);
+};
+
+
+
+
+
+//station instances
+
+//stations(name, position, centerPlatform, eastHold, westHold, eastClose, westClose)
+
+var tun = new Stations("TUN", 130, false, false, false, false, false);
+var bay = new Stations("BAY", 420, false, false, false, false, false);
+var pim = new Stations("PIM", 540, true, false, false, false, false);
+var lyo = new Stations("LYO", 800, false, false, false, false, false);
+var par = new Stations("PAR", 1170, false, false, false, false, false);
+var rid = new Stations("RID", 1340, false, false, false, false, false);
+var uot = new Stations("UOT", 1790, false, false, false, false, false);
+var lee = new Stations("LEE", 1970, false, false, false, false, false);
+var hur = new Stations("HUR", 2080, false, false, false, false, false);
+var tre = new Stations("TRE", 2400, false, false, false, false, false);
+var stl = new Stations("STL", 3090, false, false, false, false, false);
+var cyr = new Stations("CYR", 3210, true, false, false, false, false);
+var bla = new Stations("BLA", 3630, true, false, false, false, false);
+
+
+//pseudos(name, position, both, eastHold, westHold, eastClose, westClose)
+var puot = new Pseudos("PUOT", 1520, true, false, false, false, false);
+
+
+
+
+
+//methods
+
+//eastTrainDrawMethod
+Trains.prototype.drawTrainEast = function() {
+
+    //locatorEast
+    if(this.position >= rid.position + 2 || this.position <= rid.position - 10) {
+        if (frameCount % speed === 0) {
+            this.position += floor(random(3, 13));
+        }
+        this.dwell = 21;
+    } else if(this.position < rid.position + 2 && this.position > rid.position - 10 && this.dwell > 0) {
+        this.position = rid.position;
+        this.docked = true;
+        if (frameCount % speed === 0) {
+            this.dwell -= 1;
+        }
+        
+        //dwellShowEast
+        if(this.dwell < 20) {
+            fill(0, 0, 0);
+            textSize(13);
+            text(this.dwell, rid.position - 35, eastY + 38);
+        }
+    } else if(this.position === rid.position && rid.eastHold === true) {
+            fill(230, 0, 0);
+            textSize(13);
+            text(this.dwell, rid.position - 35, eastY + 38);
+            if (frameCount % speed === 0) {
+                this.dwell -= 1;
+            }
+    } else {
+        this.position = rid.position + 10;
+        this.docked = false;
+    }
+    
+    //drawShapeEast
+    strokeWeight(0.25);
+    stroke(0, 0, 0);
+    fill(0, 250, 250, 150);
+    beginShape(); vertex(this.position, eastY); vertex(this.position + 22, eastY); vertex(this.position + 30, eastY + 8); vertex(this.position + 22, eastY + 15); vertex(this.position, eastY + 15); vertex(this.position, eastY); endShape(); 
+    
+    //doorSetEast
+    if((this.dwell > 4 && this.dwell < 19) || this.hold === true) {
+        this.doorOpen = true;
+    } else {
+        this.doorOpen = false;
+    }
+    
+    //doorShowEast
+    if(this.doorOpen === true) {
+        noStroke();
+        fill(90, 90, 90, 180);
+        rect(this.position + 7, eastY + 2, 8, 8);
+    }
+    
+    //atpmShowEast
+    if((this.atpm === true)&&this.doorOpen === false) {
+        fill(80, 80, 80);
+        textSize(10);
+        text("P", this.position + 6, eastY + 10);
+    }
+    
+    //trainResetEast
+        if(this.position > 2440) {
+        this.position = -50;
+    }
+    
+    //labelEast
+    if(variance[1] > 100) {
+        stroke(0, 0, 0);
+        fill(255, 255, 0);
+    } else if(variance[1] <= 100 && variance[1] > -11) {
+        stroke(255, 255, 255);
+        fill(0, 0, 0);
+    } else {
+        stroke(0, 0, 0);
+        fill(0, 255, 0);
+    }
+    textSize(10);
+    text(this.run + "BLW" + this.number, this.position - 18, eastY - 6);
+    
+    //LMAbooleansEast
+    if(this.position < 100) {
+        lma[9] = true;
+    } else {
+        lma[9] = false;
+    }
+    if(this.position < 100 || (this.position === 100 && this.dwell < 11)) {
+        lma[10] = true;
+    } else {
+        lma[10] = false;
+    }
+    if(this.position < 100 || (this.position === 100 && this.dwell < 11)) {
+        lma[11] = true;
+    } else {
+        lma[11] = false;
+    }
+    if((this.position > 100 && this.position < 258) || (this.position === 100 && this.dwell < 11)) {
+        lma[12] = true;
+    } else {
+        lma[12] = false;
+    }
+    if(this.position > 100 && this.position < 262) {
+        lma[13] = true;
+    } else {
+        lma[13] = false;
+    }
+    if(this.position > 100 && this.position < 285) {
+        lma[14] = true;
+    } else {
+        lma[14] = false;
+    }
+    if(this.position > 100 && this.position < 385) {
+        lma[15] = true;
+    } else {
+        lma[15] = false;
+    }
+    if(this.position > 100 && this.position < 410) {
+        lma[16] = true;
+    } else {
+        lma[16] = false;
+    }
+    
+    //flankEast
+    if(this.position > 100 && this.position < 392) {
+        flankUOTeast = true;
+    } else {
+        flankUOTeast = false;
+    }
+};
+
+
+
+
+//westTrainDrawMethod
+Trains.prototype.drawTrainWest = function() {
+    
+    //locatorWest
+    if(this.position >= rid.position + 10 || this.position <= rid.position - 2) {
+        if (frameCount % speed === 0) {
+            this.position -= floor(random(3, 13));
+        }
+        this.dwell = 21;
+    } else if(this.position < rid.position + 10 && this.position > rid.position - 2 && this.dwell > 0) {
+        this.position = rid.position;
+        this.docked = true;
+        if (frameCount % speed === 0) {
+            this.dwell -= 1;
+        }
+        
+        //dwellShowWest
+        if(this.dwell < 20) {
+            fill(0, 0, 0);
+            textSize(13);
+            text(this.dwell, rid.position - 35, westY - 17);
+        }
+    } else if(this.position === rid.position && rid.westHold === true) {
+            fill(230, 0, 0);
+            textSize(13);
+            text(this.dwell, rid.position - 35, westY - 17);
+            if (frameCount % speed === 0) {
+                this.dwell -= 1;
+            }
+    } else {
+    this.position = rid.position - 10;
+    this.docked = false;
+    }
+    
+    //drawShapeWest
+    strokeWeight(0.25);
+    stroke(0, 0, 0);
+    fill(0, 250, 250, 150);
+    beginShape(); vertex(this.position, westY); vertex(this.position + 22, westY); vertex(this.position + 22, westY + 15); vertex(this.position, westY + 15); vertex(this.position - 8, westY + 8); vertex(this.position, westY); endShape();
+    
+        //doorSetWest
+    if(this.dwell > 3 && this.dwell < 19) {
+        this.doorOpen = true;
+    } else {
+            this.doorOpen = false;
+    }
+    
+    //doorShowWest
+    if(this.doorOpen === true) {
+        noStroke();
+        fill(90, 90, 90, 180);
+        rect(this.position + 5, westY + 2, 8, 8);       /*fix size later? +tracks, flank, run shadows*/
+    }
+    
+    //atpmShowWest
+    if((this.atpm === true)&&this.doorOpen === false) {
+        fill(80, 80, 80);
+        textSize(10);
+        text("P", this.position + 5, westY + 10);
+    }
+    
+    //trainResetWest
+    if(this.position <- 50) {
+        this.position = 2430;
+    }
+
+    //labelWest
+    if(variance[7] > 100) {
+        stroke(0, 0, 0);
+        fill(255, 255, 0);
+    } else if(variance[7] <= 100 && variance[7] >- 11) {
+        stroke(255, 255, 255);
+        fill(0, 0, 0);
+    } else {
+        stroke(0, 0, 0);
+        fill(0, 255, 0);
+    }
+    textSize(10);
+    text("0113" + "TUW" + "26", this.position - 20, westY - 7);
+    
+    //LMAbooleansWest
+    if(this.position < 100 || this.dwell < 10) {
+        lma[1] = true;
+    } else {
+        lma[1] = false;
+    }
+    if((this.position > 100 && this.position < 350) || this.dwell < 10) {
+        lma[2] = true;
+    } else {
+        lma[2] = false;
+    }
+    if((this.position > 100 && this.position < 350) || this.dwell < 10) {
+        lma[3] = true;
+    } else {
+        lma[3] = false;
+    }
+    if(this.position > 110 && this.position < 380) {
+        lma[4] = true;
+    } else {
+        lma[4] = false;
+    }
+    if(this.position > 225) {
+        lma[5] = true;
+    } else {
+        lma[5] = false;
+    }
+    if(this.position > 240) {
+        lma[6] = true;
+    } else {
+        lma[6] = false;
+    }
+    if(this.position > 280) {
+        lma[7] = true;
+    } else {
+        lma[7] = false;
+    }
+    if(this.position > 360) {
+        lma[8] = true;
+    } else {
+        lma[8] = false;
+    }
+    
+    //flankWest 
+    if(this.position > 250) {
+        flankUOTwest = true;
+    } else {
+        flankUOTwest = false;
+    }
+};
+
+
+
+
+
+//eastShadowDrawMethod
+EastShadows.prototype.drawShadowEast = function() {
+    //location/movement
+    if(this.position >= rid.position + 12 || this.position <= rid.position) {
+        if (frameCount % speed === 0) {
+            this.position += floor(random(3, 13));
+        }
+        this.dwell = 15;
+    } else if(this.position < rid.position + 12 && this.position > rid.position && this.dwell > 0) {
+        this.position = rid.position + 10;
+        if (frameCount % speed === 0) {
+            this.dwell -= 1;
+        }
+    } else {
+        this.position = rid.position + 20;
+    }
+    
+    //runResetEast
+    if(this.position > 2410) {
+        this.position = -20;
+    }
+    
+    //shadowColorEast
+    strokeWeight(0.3);
+    if(variance[1] > 100) {
+        stroke(0, 0, 0);
+        fill(255, 255, 0);
+    } else if(variance[1] <= 100 && variance[1] >- 11) {
+        stroke(255, 255, 255);
+        fill(0, 0, 0);
+    } else {
+        stroke(0, 0, 0);
+        fill(0, 255, 0);
+    }
+    ellipse(this.position, eastY + 6, 12, 12);
+};
+
+
+
+//westShadowDrawMethod
+WestShadows.prototype.drawShadowWest = function() {
+    //location/movement
+    if(this.position >= rid.position + 20 || this.position <= rid.position + 8) {
+        if (frameCount % speed === 0) {
+            this.position -= floor(random(3, 13));
+        }
+        this.dwell = 15;
+    } else if(this.position < rid.position + 20 && this.position > rid.position + 8 && this.dwell > 0) { 
+        this.position = rid.position + 10;
+        if (frameCount % speed === 0) {
+            this.dwell -= 1;
+        }
+    } else {
+        this.position = rid.position;
+    }
+    
+    //runResetWest
+    if(this.position <- 20) {
+        this.position = 2420;
+    }
+    
+    //shadowColorWest
+    strokeWeight(0.3);
+    if(variance[7] > 100) {
+        stroke(0, 0, 0);
+        fill(255, 255, 0);
+    } else if(variance[7] <= 100 && variance[7] >- 11) {
+        stroke(255, 255, 255);
+        fill(0, 0, 0);
+    } else {
+        stroke(0, 0, 0);
+        fill(0, 255, 0);
+    }
+    ellipse(this.position, westY + 6, 12, 12);
+};
+
+
+
+var drawEastPortal = function(xPortE) {
+        strokeWeight(4);     //eastPortal
+        noFill();
+        stroke(0, 0, 0);
+        beginShape(); vertex(xPortE + 10, westY - 16); vertex(xPortE, westY - 6); vertex(xPortE, eastY + 20); vertex(xPortE + 10, eastY + 30); endShape();
+    };
+
+var drawWestPortal = function(xPortW) {
+        strokeWeight(4);
+        noFill();
+        stroke(0, 0, 0);
+        beginShape(); vertex(xPortW - 10, westY - 16); vertex(xPortW, westY - 6); vertex(xPortW, eastY + 20); vertex(xPortW - 10, eastY + 30); endShape();
+    };
+
+var markerDraw = function(pointX, pointY) {
+    noFill();
+    stroke(0, 0, 0);
+    strokeWeight(0.4);
+    triangle(pointX - 2.5, pointY - 4, pointX + 2.5, pointY - 4, pointX, pointY);    
+};
+
+var zoneBorderDraw = function(x) {
+	for(i = 0; i < 18; i++) {
+		fill(0, 0, 0);
+		noStroke();
+		rect(x, (westY - 48) + i*12, 3, 10);
+	}
+};
+
+var gidsDraw = function(xPos) {
+    stroke(0, 0, 0);
+    fill(128, 128, 128);
+    strokeWeight(0.2);
+    rect(xPos, westY - 44, 4, 208);
+};
+
+var drawDoubleCross = function(x,y) {
+        quad(x, y + 5, x + 5, y, x + 66, y + 74, x + 62, y + 79);  
+        quad(x, y + 74, x + 5, y + 79, x + 66, y + 5, x + 62, y);    
+    };
+
+
+//StationDrawMethod
+Stations.prototype.drawStation = function() {
+    //GIDS
+    gidsDraw(this.position - 4);
+    gidsDraw(this.position + 28);
+    
+    //markers
+    markerDraw(this.position + 5, westY - 2);
+    markerDraw(this.position + 22, westY - 2);
+    markerDraw(this.position + 5, eastY - 2);
+    markerDraw(this.position + 22, eastY - 2);
+    
+    //platforms
+    strokeWeight(0.5);
+    if(this.centerPlatform === false) {
+        if(this.eastClose === true) {
+            fill(195, 0, 0);
+        } else {
+            fill(0, 0, 255);
+        }
+        stroke(0, 0, 0);
+        rect(this.position, eastY + 26, 26, 12);
+        if(this.eastHold === true) {
+            fill(255, 255, 0);
+            rect(this.position, eastY + 26, 26, 6);
+        }
+        
+        if(this.westClose === true) {
+            fill(195, 0, 0);
+        } else {
+            fill(0, 0, 230);
+        }
+        stroke(0, 0, 0);
+        rect(this.position, westY - 26, 26, 12);
+        if(this.westHold === true) {
+            fill(255, 255, 0);
+            rect(this.position, westY - 20, 26, 6);
+        }
+    } else {                                ///////////centerPlatform
+        if(this.eastClose === true) {
+            fill(195, 0, 0);
+        } else {
+            fill(0, 0, 255);
+        }
+        stroke(0, 0, 0);
+        rect(this.position, eastY - 38, 26, 12);
+        if(this.eastHold === true) {
+            fill(255, 255, 0);
+            rect(this.position, eastY - 32, 26, 6);
+        }
+        
+        if(this.westClose === true) {
+            fill(195, 0, 0);
+        } else {
+            fill(0, 0, 230);
+        }
+        stroke(0, 0, 0);
+        rect(this.position, westY + 42, 26, 12);
+        if(this.westHold === true) {
+            fill(255, 255, 0);
+            rect(this.position, westY + 42, 26, 6);
+        }
+    }
+    
+    //platformLabels
+    fill(0, 255, 0);
+    textSize(13);
+    if(this.centerPlatform === false) {
+        text(this.name + "-E", this.position - 6, eastY + 61);
+        text(this.name + "-W", this.position - 6, westY - 41);
+    } else {
+        text(this.name + "-E", this.position + 38, eastY - 26);
+        text(this.name + "-W", this.position + 38, westY + 53);
+    }
+
+};
+
+//PseudoDrawMethod
+Pseudos.prototype.drawPseudo = function() {
+        noStroke();
+    fill(88, 88, 88);
+    rect(this.position, westY - 28, 26, 12);
+    rect(this.position, eastY + 35, 26, 12);
+    fill(0, 255, 0);
+    textSize(11);
+    text(this.name + "-W", this.position-12, westY - 36);
+    if(this.both === true) {
+        text(this.name + "-E", this.position-12, eastY + 60);
+    }
+    //markers
+    markerDraw(this.position + 1, 344);
+    markerDraw(this.position + 1, 448);
+    markerDraw(this.position + 19, 344);
+    markerDraw(this.position + 19, 448);
+};
+
+
+
+
+//StationMenuMethod
+Menus.prototype.drawStationMenu = function() {
+    fill(210, 210, 210);
+    stroke(0,0,0);
+    strokeWeight(1);
+    rect(this.x + 20, this.y + 10, this.w, this.h);
+    fill(0, 0, 0);
+    textSize(12);
+    text("Set/Clear Hold", this.x + 26, this.y + 26);
+    text("Open/Close", this.x + 26, this.y + 42);
+    text("Adjust Dwells", this.x + 26, this.y + 58);
+};
+    
+
+
+
+//instances
+
+
+//Trains(position, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb)
+
+var trainA = new Trains(-40, false, "0101", 20, "01", false, false, 0, false, false);
+//var trainB = new Trains(undefined, false, "0102", true, "02", false, false, 0, false, false);
+var trainG = new Trains(420, false, "0107", 20, "07", false, false, 0, false, false);
+
+//??var trains = [trainA, trainG];
+
+//runs (run, position)
+var run0101 = new EastShadows("0101", 30);
+var run0107 = new WestShadows("0107", 350);
+
+
+
+
+
+var drawLMAeast = function(eastStart, eastEnd) {
+    var eastMidline = eastY + 6;
+    stroke(0, 255, 0);
+    strokeWeight(3);
+    line(eastStart, eastMidline, eastEnd, eastMidline);
+    noStroke();
+    fill(0, 255, 0);
+    triangle(eastEnd, eastMidline - 4, eastEnd + 5, eastMidline, eastEnd, eastMidline + 4); 
+};  //drawLMAeast
+
+
+var drawLMAwest = function(westStart, westEnd) {
+    var westMidline = westY + 5;
+    stroke(0, 255, 0);
+    strokeWeight(3);
+    line(westStart, westMidline, westEnd, westMidline);
+    noStroke();
+    fill(0, 255, 0);
+    triangle(westStart, westMidline - 4, westStart - 5, westMidline, westStart, westMidline + 4);//LMA
+};  //drawLMAwest
+
+
+var drawMRReast = function(eastStart, eastEnd) {
+        
+    var eastMidline = eastY + 6;
+    stroke(255, 0, 0);
+    strokeWeight(3);
+    line(eastStart, eastMidline, eastEnd, eastMidline);
+    noStroke();
+    fill(255, 0, 0);
+    triangle(eastEnd, eastMidline - 4, eastEnd + 5, eastMidline, eastEnd, eastMidline + 4);   
+};  //drawMRReast
+
+
+var drawMRRwest = function(westStart, westEnd) {
+    var westMidline = westY + 5;
+    stroke(255, 0, 0);
+    strokeWeight(3);
+    line(westStart, westMidline, westEnd, westMidline);
+    noStroke();
+    fill(255, 0, 0);
+    triangle(westStart, westMidline - 4, westStart - 5, westMidline, westStart, westMidline + 4);//LMA
+};  //drawMRRwest
+
+
+
+var stationMenu = new Menus({
+    x: mouseX,
+    y: mouseY,
+    w: 100,
+    h: 80,
+});
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+//                                                              DRAW
+///////////////////////////////////////////////////////////////////////////////////
+
+
+draw = function() {
+    
+    background(112, 112, 112);    
+    
+    
+    var btn1 = new Button({
+        x: trainA.position - 5,
+        y: eastY,
+        onClick: function() {
+            trainA.atpm = !trainA.atpm;
+        },
+    });
+    
+    var btn7 = new Button({
+        x: trainG.position - 5,
+        y: westY,
+        onClick: function() {
+            trainG.atpm = !trainG.atpm;
+        },
+    });
+
+    var btnSH = new Button({
+        x: stationMenu.x + 20,
+        y: stationMenu.y + 10,
+        width: stationMenu.w,
+        height: 16,
+        onClick: function() {
+            if(stationMenus[11] === true) {
+                stationMenus[11] = false;
+                rid.eastHold = !rid.eastHold;
+            }
+            if(stationMenus[12] === true) {
+                stationMenus[12] = false;
+                rid.westHold = !rid.westHold;
+            }
+        }
+    });
+    
+    var btnSC = new Button({
+        x:stationMenu.x + 20,
+        y: stationMenu.y + 26,
+        width: stationMenu.w,
+        height: 16,
+        onClick: function() {
+            if(stationMenus[11] === true) {
+                stationMenus[11] = false;
+                rid.eastClose = !rid.eastClose;
+            }
+            if(stationMenus[12] === true) {
+                stationMenus[12] = false;
+                rid.westClose = !rid.westClose;
+            }
+        }
+    });
+    
+    
+
+
+    var btnRidE = new Button({
+        x: rid.position,
+        y: eastY + 26,
+        width: 20,
+        onClick: function() {
+            stationMenus[11] = true;
+            stationMenu.x = mouseX;
+            stationMenu.y = mouseY;
+        }
+    }); 
+    
+    var btnRidW = new Button({
+        x: rid.position,
+        y: westY - 26,
+        width: 20,
+        onClick: function() {
+            stationMenus[12] = true;
+            stationMenu.x = mouseX;
+            stationMenu.y = mouseY;
+        }
+    });
+    
+
+
+
+
+
+
+    
+    variance[1] = run0101.position - trainA.position;
+    variance[7] = trainG.position - run0107.position;
+    
+
+    
+
+
+    //position, docked, run, directionE, number, doorOpen, atpm, variance, hold, eb
+    /*fill(0,0,0);
+    textSize(10);
+    text(trainA.position+"_"+trainA.docked+"_"+trainA.run+"_"+trainA.dwell+"_"+trainA.number+"_"+trainA.doorOpen+"_"+trainA.atmp+"_"+trainA.variance+"_"+trainA.hold+"_"+trainA.eb,20,20);
+*/
+    
+
+	gidsDraw(puot.position + 25);            //eastPortalGIDS
+	drawEastPortal(puot.position);
+	
+	gidsDraw(642);
+	drawWestPortal(640); //westDtPortal
+
+	zoneBorderDraw(600);
+
+
+	fill(255, 130, 0);
+	textSize(10);
+	
+	text("SW_301", tun.position + 5, 375);
+	text("SW_302", tun.position + 5, 438);
+	text("SW_303", tun.position + 140, 375);
+	text("SW_304", tun.position + 140, 438);
+	
+	text("SW_305", lyo.position + 65, 375);
+	text("SW_306", lyo.position + 65, 438);
+	text("SW_307", lyo.position + 200, 375);
+	text("SW_308", lyo.position + 200, 438);    //+60 lyo
+
+	text("SW_309", puot.position + 5, 375);
+	text("SW_311", puot.position + 5, 438);
+	text("SW_312", puot.position + 140, 375);
+	text("SW_310", puot.position + 140, 438);     //swtNumber
+    
+    
+    //signalAspects
+    strokeWeight(0.8);
+    stroke(0, 0, 0);
+    
+	fill(255, 0, 0);
+	ellipse(tun.position + 37, 372, 7, 7); //301
+
+	fill(255, 0, 0);
+	ellipse(tun.position + 130, 436, 7, 7); //302
+
+	if(lma[12] === true) {
+		fill(0, 255, 0);
+	} else {
+		fill(255, 0, 0);
+	} 
+	ellipse(tun.position + 37, 472, 7, 7); //303
+    
+	if(lma[8] === true) {
+		fill(0, 255, 0);
+	} else {
+		fill(255, 0, 0);
+	}
+	ellipse(tun.position + 130, 332, 7, 7); //304
+
+
+
+	fill(255, 0, 0);
+	ellipse(puot.position + 25, 372, 7, 7); //309
+
+	fill(255, 0, 0);
+	ellipse(puot.position + 130, 436, 7, 7); //310
+
+	if(lma[12] === true) {
+		fill(0, 255, 0);
+	} else {
+		fill(255, 0, 0);
+	} 
+	ellipse(puot.position + 25, 472, 7, 7); //311
+    
+	if(lma[8] === true) {
+		fill(0, 255, 0);
+	} else {
+		fill(255, 0, 0);
+	}
+	ellipse(puot.position + 130, 332, 7, 7); //312
+
+    
+
+    
+    
+	strokeWeight(3);
+	line(tun.position + 31, 368, tun.position + 31, 375);
+	line(tun.position + 31, 468, tun.position + 31, 475);
+	line(tun.position + 134, 328, tun.position + 134, 334);
+	line(tun.position + 134, 432, tun.position + 134, 440);
+
+	line(puot.position + 19, 368, puot.position + 19, 375);
+	line(puot.position + 19, 468, puot.position + 19, 475);
+	line(puot.position + 134, 328, puot.position + 134, 334);
+	line(puot.position + 134, 432, puot.position + 134, 440);      //uotSignalBases
+    
+    
+
+    
+
+	//methodCalls
+
+	tun.drawStation();
+	bay.drawStation();
+	pim.drawStation();
+	lyo.drawStation();
+	par.drawStation();
+	rid.drawStation();
+	uot.drawStation();
+	lee.drawStation();
+	hur.drawStation();
+	tre.drawStation();
+	stl.drawStation();
+	cyr.drawStation();
+	bla.drawStation();
+
+    
+	puot.drawPseudo();
+
+    
+    fill(192, 192, 192);
+    noStroke();
+    rect(20, eastY + 2, 3760, 11);                      //track1
+    rect(20, westY + 2, 3760, 11);                      //track2
+    
+
+	drawDoubleCross(puot.position + 50, 363);
+	drawDoubleCross(tun.position + 50, 363);
+    
+    
+    
+    if(lma[1]=== true) {
+        drawLMAwest(0, 96);     //LMA1            //westLMAs
+    }
+    if(lma[2] === true) {
+        drawLMAwest(105, 109);  //LMA2
+    }
+    if(lma[3] === true) {
+        drawLMAwest(118, 126);  //LMA3
+    }
+    if(lma[4] === true) {
+        drawLMAwest(135, 240);  //LMA4
+    }
+    if(lma[5] === true) {
+        drawLMAwest(249, 258);  //LMA5
+    }
+    if(lma[6] === true){
+        drawLMAwest(265, 280);  //LMA6
+    }
+    if(lma[7] === true) {
+        drawLMAwest(310, 360);  //LMA7
+    }
+    if(lma[8] === true) {
+        drawLMAwest(390, 410);  //LMA8
+    }
+    
+    if(lma[9] === true) {
+        drawLMAeast(0, 96);     //LMA9            //eastLMAs
+    }
+    if(lma[10] === true) {
+        drawLMAeast(105, 109);  //LMA10
+    }
+    if(lma[11] === true) {
+        drawLMAeast(117, 125);  //LMA11
+    }
+    if(lma[12] === true) {
+        drawLMAeast(134, 240);  //LMA12
+    }
+    if(lma[13] === true) {
+        drawLMAeast(249, 258);  //LMA13
+    }
+    if(lma[14] === true) {
+        drawLMAeast(265, 280);  //LMA14
+    }
+    if(lma[15] === true) {
+        drawLMAeast(310, 360);  //LMA15
+    }
+    if(lma[16] === true) {
+        drawLMAeast(390, 410);  //LMA16
+    }
+    
+    if(flankUOTeast === true) {         //switchReservationEast
+        stroke(0, 0, 0);
+        strokeWeight(0.4);
+        fill(250, 37, 225);
+        ellipse(puot.position + 42, eastY + 6, 11, 11);
+        ellipse(puot.position + 126, westY + 6, 11, 11);
+        ellipse(puot.position + 126, eastY + 6, 11, 11);
+        ellipse(puot.position + 42, westY + 6, 11, 11);
+    }   //flank
+    
+    if(flankUOTwest === true) {         //switchReservationWest
+        stroke(0, 0, 0);
+        strokeWeight(0.4);
+        fill(250, 37, 225);
+        ellipse(puot.position + 42, eastY + 6, 11, 11);
+        ellipse(puot.position + 126, westY + 6, 11, 11);
+        ellipse(puot.position + 126, eastY + 6, 11, 11);
+        ellipse(puot.position + 42, westY + 6, 11, 11);
+    }   //flank
+
+
+
+
+
+
+    //var trains = [trainA, trainG];
+    //trains[0].drawEast();
+    //for loop through train array (array east, array west? or alternate?)
+
+
+
+
+
+    //moreMethodCalls    
+    
+    trainA.drawTrainEast();
+    trainG.drawTrainWest();
+    //trainB.drawEastTrain();
+    
+    run0101.drawShadowEast();
+    run0107.drawShadowWest();
+    
+    //btn1.draw();
+    //btn7.draw();
+
+    mouseClicked = function() {
+    btn1.handleMouseClick();
+    btn7.handleMouseClick();
+    btnRidE.handleMouseClick();
+    btnRidW.handleMouseClick();
+    btnSH.handleMouseClick();
+    btnSC.handleMouseClick();
+    };
+    
+    
+    if(stationMenus[11] === true) {
+        stationMenu.drawStationMenu();
+    }
+    
+    if(stationMenus[12] === true) {
+        stationMenu.drawStationMenu();
+    }
+    
+    
+};
+
+
+//planned features to add
+    //update eastY/westY
+    //buttons-x,y,w,h - functions!
+    //subdivide LMAs
+    //stnHold
+    //stnClose
+    //sysHold
+    //disturb switch
+    //MRR
+    //powerStatus
+    //eb
+    //alt TDT
+    
+    //dwell+/-
+    
+    //cross switches?
+
+
+
+//if (frameCount % 60 === 0)      <--slow movement?
+//if (random(1) < 0.5)          <--50/50 random?
+
+
+
+
+
+//button constructor-> config construction
+//config object into the constructor
+//allows defaults for undefined properties
+
+/*
+if a drawn button is needed
+Button.prototype.draw = function() {
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+}; --> btn1.draw();
+
+
+
+var btn1 = new Button({
+    x: this.position,
+    y: 100,
+    onClick: function() {
+        text/rect
+    }
+});
+
+
+
+
+var btn2 = new Button({
+    x: 100,
+    y: 213,
+    label: "No! Click ME!",
+    onClick: function() {
+        text("Yay, you picked me!", this.x, this.y+this.height);
+    }
+});
+btn2.draw();
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }};
+
+    // Get the canvas that Processing-js will use
+    var canvas = document.getElementById("mycanvas"); 
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    var processingInstance = new Processing(canvas, sketchProc); 
+ </script>
+
+</html>
