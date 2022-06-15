@@ -12,9 +12,9 @@ This is a simulation of the Automatic Train Control simulator, with added featur
 I am a new programmer and this is my first major project. I have been learning JavaScript, HTML and CSS while working on this.
 
 There are a lot of features I still hope to add, and a lot of work still to do.
+  
 
-
-## 1.0 - Proof of Concept - 2022-06-15
+### 1.0 - Proof of Concept - 2022-06-15
 
 At the point now where it looks reasonably realistic and there is some basic functionality.
 Working interactive features include: station hold/close, track close, system hold/power.
