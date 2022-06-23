@@ -1,0 +1,215 @@
+canvas {
+  position: absolute;
+  top: 102px;
+  left: -2px;
+  border: none;
+}
+
+body {
+  background-color: rgb(238, 238, 238);
+  font-family: sans-serif;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  height: 102px;
+  width: 100vw;
+  background-color: rgb(232, 232, 232);
+  z-index: 1;
+}
+
+.outline {
+  border: 1px inset rgb(235, 235, 235);
+}
+
+#left-block {
+  display: flex;
+  flex-wrap: wrap;
+  width: 262px;
+  height: 75px;
+  background-color: transparent;
+}
+#ack {
+  border: 1px solid rgb(220, 220, 220);
+  background-color: rgb(232, 232, 232);
+  font-family: tahoma, sans-serif;
+  font-size: 11px;
+  text-align: center;
+  width: 95px;
+  height: 40px;
+  margin-left: 3px;
+  margin-bottom: 0px;
+}
+#ack .outline {
+  width: 40px;
+}
+#thales {
+  font-family: sans-serif;
+  font-size: 18px;
+  letter-spacing: 8px;
+  text-align: center;
+  border: 4px double rgb(220, 220, 220);
+  background-color: rgb(251, 251, 251);
+  color: rgb(0, 0, 100);
+  padding: 6px 4px;
+  width: 140px;
+  height: 22px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+#date-time {
+  border: 0.5px inset rgb(245, 245, 245);
+  background-color: rgb(232, 232, 232);
+  font-family: tahoma, sans-serif;
+  font-size: 12px;
+  text-align: center;
+  padding: 6px;
+  width: 240px;
+  margin-top: 2px;
+}
+
+#alarms {
+  background-color: white;
+  color: white;
+  height: 70px;
+  overflow: auto;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  margin: 0px;
+  border: 1px solid grey;
+  font-family: tahoma, sans-serif;
+  font-size: 13px;
+  line-height: 1.6em;
+  flex-grow: 1;
+}
+#alarms span {
+  margin-right: 42px;
+}
+#alarms p {
+  background-color: red;
+  margin: 0;
+  padding-left: 5px;
+  border: 0;
+}
+.alarm {
+  user-select: none;
+}
+
+#servers {
+  font-size: 14px;
+  width: 408px;
+  height: 75px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+#servers div {
+  display: inline-block;
+  border: 1px inset rgb(235, 235, 235);
+  margin: 1.5px;
+  text-align: center;
+  vertical-align: center;
+  height: 16px;
+  padding: 2px;
+  background-color: rgb(241, 241, 241);
+}
+#servers div.green {
+  background-color: rgb(0, 155, 0);
+  color: white;
+}
+#servers div.grey {
+  background-color: rgb(200, 200, 200);
+}      
+.grey {
+  color: grey;
+}
+.categories {
+  width: 38px;
+}
+.topserv {
+  width: 100px;
+}
+.numserv {
+  width: 50px;
+}
+#log-on-icon {
+ width: 14px;
+ height: 16px;
+ color: transparent;
+ background-color: rgb(200, 200, 200);
+}
+#icon-head {
+  width: 3px;
+  height: 3px;
+  background-color: rgb(0, 128, 255);
+  border-radius: 50%;
+  border: 3px solid rgb(0, 128, 255);
+  position: relative;
+  bottom: 14px;
+  left: 3.1px;
+}
+#icon-body {
+  width: 0px;
+  height: 8px;
+  border-radius: 10%;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 14px solid rgb(0, 128, 255);
+  position: relative;
+  bottom: 28px;
+  left: 1.8px;
+}
+#icon-check {
+  width: 10px;
+  height: 3px;
+  border: 2px solid lightgreen;
+  border-top: 0;
+  border-right: 0;
+  transform: rotate(-45deg);
+  position: relative;
+  bottom: 39px;
+  left: 2px;
+}
+  
+#menus {
+  position: fixed;
+  top: 66px;
+  z-index: 2;
+  font-family: segoe ui;
+  font-size: 0.8em;
+}
+
+.reduced-link {
+  text-decoration: none;
+  color: black;
+  padding: 2px;
+}
+
+.reduced-link:hover {
+  background-color: navy;
+  color: white;
+  padding: 2px;
+}
+
+
+.footer {
+  background-color: rgb(232, 232, 232);
+  width: 100%;
+  height: 160px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  display: flex;
+}
+.footer p {
+  margin-right: 35px;
+  font-size: 12px;
+  font-family: monospace;
+  background-color: rgb(255, 255, 255);
+  border: 2px inset rgb(200, 200, 200);
+  padding: 3px;
+}
