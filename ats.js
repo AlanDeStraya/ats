@@ -2302,33 +2302,6 @@ draw = function() {
 }; //endDrawFunction
 
 
-//planned features to add
-  //more lines
-  //# of trains
-	//swt fn
-	//disturb switch
-	//track fns
-    //MRR
-    //powerStatus
-    //TSR
-    //WZ
-  //eb
-  //additional lines
-  //alt TDT
-  //dwell+/-
-  //cross switches?
-  //htmlfurnishing
-  //windows dialogue?
-  //local processingJS source?
-  
-
-
-
-//if (frameCount % 60 === 0)      <--slow movement?
-//if (random(0,1) < 0.5)          <--50/50 random?
-
-
-
 
 			}
 		};  //endProcessing/sketchFunctions
@@ -2420,6 +2393,11 @@ draw = function() {
 
     //  window.  setInterval, clearInterval 
 
-
-
+  //htmlfurnishing
+  //windows dialogue?
+  //local processingJS source?
   
+//if (frameCount % 60 === 0)      <--slow movement?
+//if (random(0,1) < 0.5)          <--50/50 random?
+
+
