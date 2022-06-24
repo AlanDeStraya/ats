@@ -1,4 +1,4 @@
-
+b
 var sketchProc = function(processingInstance) {
 	with (processingInstance) {
 		size(3800, 800); 
@@ -2374,7 +2374,9 @@ draw = function() {
       let time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds();
       let category = "Train";
       let region = "Yard";
-      let message = "Hello world";
+      
+      let messageIndex = Math.random(alarmMessages.length)
+      let message = alarmMessages[messageIndex];
       
       let alarmEl = document.createElement('p');
       alarmEl.setAttribute("class", "alarm");
@@ -2384,11 +2386,11 @@ draw = function() {
       document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
     }
     
-    generateAlarm();
-    generateAlarm();
-    generateAlarm();
-    generateAlarm();
-    generateAlarm();
+    window.setTimeout(generateAlarm, 5000);
+    window.setTimeout(generateAlarm, 8000);
+    window.setTimeout(generateAlarm, 10000);
+    window.setTimeout(generateAlarm, 22000);
+    window.setTimeout(generateAlarm, 50000);
     
 
     //  window.  setInterval, clearInterval 

@@ -20,3 +20,8 @@ At the point now where it looks reasonably realistic and there is some basic fun
 Working interactive features include: station hold/close, track close, system hold/power.
 The trains run line 1 without overlapping, and the signals and switches operate at the terminus stations.
 The rest of the signals don't work yet, and only one platform is used at the termini.
+
+### 1.1 - Multi-File - 2022-06-23
+
+Converted to a multi-file repository. Working on modifying DOM (alarms) with js.
+Added train EB visual and functionality.
