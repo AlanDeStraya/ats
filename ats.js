@@ -1,4 +1,3 @@
-
 var sketchProc = function(processingInstance) {
 	with (processingInstance) {
 		size(3800, 800); 
@@ -2261,8 +2260,8 @@ draw = function() {
 
 
 
-    // Clock
-    var now = new Date();
+    // Clock time
+    let clock = new Date();
     var day = new Array();
     day[0] = "Sunday";
     day[1] = "Monday";
@@ -2284,16 +2283,16 @@ draw = function() {
     month[9] = "October";
     month[10] = "November";
     month[11] = "December";
-    var hours = now.getHours();
-    var minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var seconds = now.getSeconds();
-    seconds = seconds < 10 ? '0' + seconds : seconds;
+    var cHours = clock.getHours();
+    var cMinutes = clock.getMinutes();
+    cMinutes = cMinutes < 10 ? '0' + cMinutes : cMinutes;
+    var cSeconds = clock.getSeconds();
+    cSeconds = cSeconds < 10 ? '0' + cSeconds : cSeconds;
     
     let clockDateEl = document.querySelector('#date-span');
     let clockTimeEl = document.querySelector('#time-span');
-    clockDateEl.textContent = (day[now.getDay()] + ", " + month[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear() + ".");
-    clockTimeEl.textContent = (hours + ':' + minutes + ':' + seconds);
+    clockDateEl.textContent = (day[clock.getDay()] + ", " + month[clock.getMonth()] + " " + clock.getDate() + ", " + clock.getFullYear() + ".");
+    clockTimeEl.textContent = (cHours + ':' + cMinutes + ':' + cSeconds);
 
 
     
@@ -2311,53 +2310,44 @@ draw = function() {
     // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
     var processingInstance = new Processing(canvas, sketchProc); 
 
-//  /script>
-//  script> 
 
-    // This is the DOM manipulation script 
+    // DOM manipulations, except clock
 
-    var now = new Date();
-    let dtISO = now.toISOString();
+    let activeAlarmsEl = document.getElementById('activeAlarms');
+    activeAlarmsEl.textContent = 0;
     
-    var month = now.getMonth() + 1;
-    var dt = now.getDate();
-    var hours = now.getHours();
-    var minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var seconds = now.getSeconds();
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    var milliseconds = now.getMilliseconds();
-    milliseconds = milliseconds < 100 && milliseconds >= 10 ? '0' + milliseconds : milliseconds < 10 && milliseconds >= 1 ? '00' + milliseconds : '000';
-    var strTime = hours + ':' + minutes + ':' + seconds + "." + milliseconds;
-    let dateEl = document.querySelector('#date-span');
-    let timeEl = document.querySelector('#time-span');
-    dateEl.textContent = (now.getFullYear() + "-" + month[now.getMonth()] + "-" + now.getDate() + ".");
-    timeEl.textContent = (strTime);
+    let randomYardTrains = [];
+    for(let i = 0; i < 5; i++) {
+      randomYardTrains.push(Math.floor(Math.random() * (56 - 35 + 1)) + 35);
+    }
 
+    let randomYardSwitch = Math.floor(Math.random() * (532-510 + 1)) + 510;
 
+    // Math.floor(Math.random() * yardTrainsArray.length);
+    // Math.floor(Math.random() * (56 - 35 + 1)) + 35;
     //Time Category Region Message
-    //Train 22 [022](1022) front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = 2022-06-21 15:01:42.762
-    //Wayside //Yard //Switch SW_512 is disturbed // - Cleared
-    //Wayside //ZC5 //ZC5 repots: NCO in area NCO_Transition_Area_1 has been removed, at time = 2022-06-21 15:01:42.762
-    //VOBC 1010 cannot establish communication with ATS. - Cleared
-
-    //split into Region and Category?
-    let alarmMessages = [
-      "Train xx [0xx](10xx) front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time =",
-      "Train xx[0xx](10xx) front position at chainage 0: 0 reports: Train integrity is reestablished, at time =",
-      "Train xx [0xx] Manually driven (RM) without MRR",
-      "Switch SW_yyy is disturbed",
-      "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time =",
-      "VOBC 1010 cannot establish communication with ATS.",
-      "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time =",
-      "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time =",
-      "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time =",
+    // Array of arrays of alarm messages [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
+    const falseAlarms = [
+      [
+      "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = " + edt,
+      "Train " + randomYardTrain0[0] + " [0" + randomYardTrain0[0] + "](10" + randomYardTrain0[0] + ") front position at chainage 0: 0 reports: Train integrity is reestablished, at time = " + edt,
+      "Train " + randomYardTrains[1] + " [0" + randomYardTrains[1] + "] Manually driven (RM) without MRR",
+      "VOBC 10" + randomYardTrains[2] + " cannot establish communication with ATS.",
+      "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0",
+    ], [
+      "Switch SW_" + randomYardSwitch + " is disturbed",
+    ], [
+      "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time = " + edt,
+      "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time = " + edt,
+      "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time = " + edt,
+      "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time = " + edt,
       "ZC ZC5 Rack Fan Failure Detected",
       "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected",
-      "External Fire and Smoke Detected on Train 47 [047] front position at chainage 0 : 0"
+    ]
     ];
+    const realAlarms = [];
             
-    let trainsArray = ["01", "02", "03", "04", "05"];
+
     
     function clearAlarm(event) {
       if(event.target.tagName === "P") {
@@ -2365,31 +2355,64 @@ draw = function() {
       } else {
         event.target.parentNode.remove();
       }
-      // window.setTimeout(generateAlarm, 5000);
+      // activeAlarmsEl.textContent --;
+      window.setTimeout(generateAlarm, 200000);
     };
     
+
     function generateAlarm() {
-      let d = new Date();
-      let dt = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
-      let time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds();
-      let category = "Train";
-      let region = "Yard";
-      let message = "Hello world";
+
+      // Start of Alarm Time
+      let aDate = new Date();
+      let aHours = aDate.getHours();
+      aHours = aHours < 10 ? '0' + aHours : aHours;
+      let aMinutes = aDate.getMinutes();
+      aMinutes = aMinutes < 10 ? '0' + aMinutes : aMinutes;
+      let aSeconds = aDate.getSeconds();
+      aSeconds = aSeconds < 10 ? '0' + aSeconds : aSeconds;
+      let adt = aDate.getMonth() + "/" + aDate.getDate() + "/" + aDate.getFullYear();
+      let aTime = aHours + ":" + aMinutes + ":" + aSeconds;
+
+      // End of message time
+      var aUTC = new Date();    
+      var eYear = aUTC.getFullYear();
+      var eMonth = aUTC.getMonth() + 1;
+      eMonth = eMonth < 10 ? '0' + eMonth : eMonth;
+      var eDate = aUTC.getDate();
+      eDate = eDate < 10 ? '0' + eDate : eDate;
+      var eHours = aUTC.getHours();
+      var eMinutes = aUTC.getMinutes();
+      eMinutes = eMinutes < 10 ? '0' + eMinutes : eMinutes;
+      var eSeconds = aUTC.getSeconds();
+      eSeconds = eSeconds < 10 ? '0' + eSeconds : eSeconds;
+      var eMilliseconds = aUTC.getMilliseconds();
+      eMilliseconds = eMilliseconds < 100 && eMilliseconds >= 10 ? '0' + eMilliseconds : eMilliseconds < 10 && eMilliseconds >= 1 ? '00' + eMilliseconds : '000';
+      var edt = eYear + '-' + eMonth + '-' + eDate + ' ' + eHours + ':' + eMinutes + ':' + eSeconds + "." + eMilliseconds;
+      
+      let messageI1 = Math.floor(Math.random() * falseAlarms.length);
+      let messageSet = falseAlarms[messageI1];
+      let messageI2 = Math.floor(Math.random() * messageSet.length);
+      let message = falseAlarms[messageI1][messageI2];
+      
+      // [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
+      let category = messageI1 == 0 ? "Train" : "Wayside";
+      let region = messageI1 == 2 ? "ZC5" : "Yard";
       
       let alarmEl = document.createElement('p');
       alarmEl.setAttribute("class", "alarm");
-      alarmEl.innerHTML = "<span>" + dt + " " + time + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
+      alarmEl.innerHTML = "<span>" + adt + " " + aTime + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
       let alarmsEl = document.getElementById('alarms');
       alarmsEl.prepend(alarmEl);
+      // activeAlarmsEl.textContent ++;
       document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
     }
     
+    window.setTimeout(generateAlarm, 5000);
+    window.setTimeout(generateAlarm, 8000);
+    window.setTimeout(generateAlarm, 10000);
+    window.setTimeout(generateAlarm, 22000);
+    window.setTimeout(generateAlarm, 50000);
     generateAlarm();
-    generateAlarm();
-    generateAlarm();
-    generateAlarm();
-    generateAlarm();
-    
 
     //  window.  setInterval, clearInterval 
 
