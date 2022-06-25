@@ -2321,28 +2321,41 @@ draw = function() {
       randomYardTrains.push(Math.floor(Math.random() * (56 - 35 + 1)) + 35);
     }
 
-    let randomYardSwitch = Math.floor(Math.random() * (532-510 + 1)) + 510;
+    let randomYardSwitch = Math.floor(Math.random() * (532 - 501 + 1)) + 501;
 
-    // Math.floor(Math.random() * yardTrainsArray.length);
-    // Math.floor(Math.random() * (56 - 35 + 1)) + 35;
-    //Time Category Region Message
+    // End of message time
+    var aUTC = new Date();
+    var eYear = aUTC.getFullYear();
+    var eMonth = aUTC.getMonth() + 1;
+    eMonth = eMonth < 10 ? '0' + eMonth : eMonth;
+    var eDate = aUTC.getDate();
+    eDate = eDate < 10 ? '0' + eDate : eDate;
+    var eHours = aUTC.getHours();
+    var eMinutes = aUTC.getMinutes();
+    eMinutes = eMinutes < 10 ? '0' + eMinutes : eMinutes;
+    var eSeconds = aUTC.getSeconds();
+    eSeconds = eSeconds < 10 ? '0' + eSeconds : eSeconds;
+    var eMilliseconds = aUTC.getMilliseconds();
+    eMilliseconds = eMilliseconds < 100 && eMilliseconds >= 10 ? '0' + eMilliseconds : eMilliseconds < 10 && eMilliseconds >= 1 ? '00' + eMilliseconds : '000';
+    var edt = eYear + '-' + eMonth + '-' + eDate + ' ' + eHours + ':' + eMinutes + ':' + eSeconds + "." + eMilliseconds;
+
     // Array of arrays of alarm messages [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
     const falseAlarms = [
       [
       "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = " + edt,
-      "Train " + randomYardTrain0[0] + " [0" + randomYardTrain0[0] + "](10" + randomYardTrain0[0] + ") front position at chainage 0: 0 reports: Train integrity is reestablished, at time = " + edt,
+      "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage 0: 0 reports: Train integrity is reestablished, at time = " + edt,
       "Train " + randomYardTrains[1] + " [0" + randomYardTrains[1] + "] Manually driven (RM) without MRR",
       "VOBC 10" + randomYardTrains[2] + " cannot establish communication with ATS.",
-      "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0",
+      "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0"
     ], [
-      "Switch SW_" + randomYardSwitch + " is disturbed",
+      "Switch SW_" + randomYardSwitch + " is disturbed"
     ], [
       "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time = " + edt,
       "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time = " + edt,
       "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time = " + edt,
       "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time = " + edt,
       "ZC ZC5 Rack Fan Failure Detected",
-      "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected",
+      "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected"
     ]
     ];
     const realAlarms = [];
@@ -2373,26 +2386,11 @@ draw = function() {
       let adt = aDate.getMonth() + "/" + aDate.getDate() + "/" + aDate.getFullYear();
       let aTime = aHours + ":" + aMinutes + ":" + aSeconds;
 
-      // End of message time
-      var aUTC = new Date();    
-      var eYear = aUTC.getFullYear();
-      var eMonth = aUTC.getMonth() + 1;
-      eMonth = eMonth < 10 ? '0' + eMonth : eMonth;
-      var eDate = aUTC.getDate();
-      eDate = eDate < 10 ? '0' + eDate : eDate;
-      var eHours = aUTC.getHours();
-      var eMinutes = aUTC.getMinutes();
-      eMinutes = eMinutes < 10 ? '0' + eMinutes : eMinutes;
-      var eSeconds = aUTC.getSeconds();
-      eSeconds = eSeconds < 10 ? '0' + eSeconds : eSeconds;
-      var eMilliseconds = aUTC.getMilliseconds();
-      eMilliseconds = eMilliseconds < 100 && eMilliseconds >= 10 ? '0' + eMilliseconds : eMilliseconds < 10 && eMilliseconds >= 1 ? '00' + eMilliseconds : '000';
-      var edt = eYear + '-' + eMonth + '-' + eDate + ' ' + eHours + ':' + eMinutes + ':' + eSeconds + "." + eMilliseconds;
       
-      let messageI1 = Math.floor(Math.random() * falseAlarms.length);
-      let messageSet = falseAlarms[messageI1];
-      let messageI2 = Math.floor(Math.random() * messageSet.length);
-      let message = falseAlarms[messageI1][messageI2];
+      var messageI1 = Math.floor(Math.random() * falseAlarms.length + 1);
+      var messageSet = falseAlarms[messageI1];
+      var messageI2 = Math.floor(Math.random() * messageSet.length + 1);
+      var message = falseAlarms[messageI1][messageI2];
       
       // [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
       let category = messageI1 == 0 ? "Train" : "Wayside";
@@ -2406,13 +2404,17 @@ draw = function() {
       // activeAlarmsEl.textContent ++;
       document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
     }
+
     
-    window.setTimeout(generateAlarm, 5000);
+    window.setTimeout(generateAlarm, 2000);
     window.setTimeout(generateAlarm, 8000);
     window.setTimeout(generateAlarm, 10000);
     window.setTimeout(generateAlarm, 22000);
     window.setTimeout(generateAlarm, 50000);
+    
     generateAlarm();
+    generateAlarm();
+    generateAlarm();generateAlarm();
 
     //  window.  setInterval, clearInterval 
 

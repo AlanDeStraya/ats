@@ -76,8 +76,8 @@ header {
   background-color: white;
   color: white;
   height: 70px;
-  overflow: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
+  white-space: nowrap;
   text-overflow: ellipsis;
   margin: 0px;
   border: 1px solid grey;
