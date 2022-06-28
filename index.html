@@ -4,6 +4,12 @@
 	  <meta charset="utf-8" />
 	  <meta name='viewport' content='width=device-width, initial-scale=1.0 user-scalable=no' />
     <link rel='stylesheet' type='text/css' href='ats.css' />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+      crossorigin="anonymous"
+    />
 		<title>ATS++</title> 
 	</head>
 	<body>
@@ -40,15 +46,22 @@
     <div id='menus'>
     <p> <span class='grey'>Window &nbsp; Train &nbsp; Guideway &nbsp; Regulation &nbsp; View &nbsp;</span> <a href='ios-reference.html' class='reduced-link' target='_blank'>IOS Reference</a></p>
     </div>
+    <div id='option-bar'>
+      <button id='system-hold' class='option-button'><div class='pause-stripe'></div><div class='pause-stripe'></div></button>
+      <button id='system-power' class='option-button'><div class='lightning'>Z</div></button>
+      <button id='tortoise' class='option-button'><i class="fa fa-backward" aria-hidden="true"></i></button>
+      <div id='speed-display'><p id='speed'></p></div>
+      <button id='hare' class='option-button'><i class="fa fa-forward" aria-hidden="true"></i></button>
+    </div>
     
     
 		<canvas id="mycanvas"></canvas> 
 		
 		
     <div class='footer'>
-      <p>Welcome to A. Train Simulator (in development). Features so far:<br>
+      <p>Welcome to A.T.S.++ (in development). Features so far:<br>
       Line 1 (single terminus) with signals, LMAs, switch movements<br>
-      Track: Close, WZ. Station: Hold, close. Train: EB. System: power, hold.<br>
+      Track: Close, WZ. Station: Hold, close, dwell. Train: EB. System: power, hold.<br>
       Visual only-- Train: ATPM. Track: TSR. Acknowledge alarms.</p>
       <p>Working on: obstruction plan tool, depart command, drawing connectors,<br>
         lines/diversions, adjust # of trains, switch commands, fix runs/variance<br>
