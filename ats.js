@@ -18,10 +18,10 @@ var sketchProc = function(processingInstance) {
 // Variables
 const eastY = 350; //450
 const westY = 246; //346
-var power = true;
-var systemH = false;
-var speed = 60;         //speed
-var speedf = 3;
+let power = true;
+let systemH = false;
+let speed = 60;         //speed
+let speedf = 3;
 
 // Constructors
 
@@ -1624,6 +1624,47 @@ var trackMenu = new Menus({
 });
 
 
+let systemHoldButtonEl = document.getElementById('system-hold');
+systemHoldButtonEl.addEventListener('click', () => {
+  systemH = !systemH;
+  systemH == true ? systemHoldButtonEl.style.backgroundColor = 'rgb(210, 210, 210)' : systemHoldButtonEl.style.backgroundColor = 'rgb(232, 232, 232)';
+});
+
+let systemPowerButtonEl = document.getElementById('system-power');
+systemPowerButtonEl.addEventListener('click', () => {
+  power = !power;
+  power == false ? systemPowerButtonEl.style.backgroundColor = 'rgb(210, 210, 210)' : systemPowerButtonEl.style.backgroundColor = 'rgb(232, 232, 232)';
+  for(var p = 0; p < tracksArray.length; p++) {
+    tracksArray[p].power = !tracksArray[p].power;
+  }
+});
+
+let tortoiseEl = document.getElementById('tortoise');
+tortoiseEl.addEventListener('click', () => {
+  if(speedf > 0) {
+    speedf -= 1;
+  }
+  if(speedf == 0) {
+    tortoiseEl.style.backgroundColor = 'rgb(190, 180, 180)';
+  } else {
+    hareEl.style.backgroundColor = 'rgb(232, 232, 232)';
+  }
+});
+
+let hareEl = document.getElementById('hare');
+hareEl.addEventListener('click', () => {
+  if(speedf < 8) {
+    speedf += 1;
+  }
+  if(speedf == 8) {
+    hareEl.style.backgroundColor = 'rgb(245, 255, 245)';
+  } else {
+    tortoiseEl.style.backgroundColor = 'rgb(232, 232, 232)';
+  }
+});
+
+let speedEl = document.getElementById('speed');
+
 ///////////////////////////////////////////////////////////////////////////////////
 //                                                              DRAW
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1631,113 +1672,13 @@ var trackMenu = new Menus({
 draw = function() {
     
     background(112, 112, 112); 
-    fill(232, 232, 232);
-    noStroke();
-    rect(0, 0, 3800, 37);
-    
-    fill(0, 0, 0);
     
     
     // if(trackSelect.length !== 0) {
     //   text(trackSelect[0].number + " " + trackSelect[0].x + " and " + trackSelect[0].length, 3250, 200);
     // }
 
-    
-    var systemHoldButton = new Button({
-      x: 1,
-      y: 1,
-      width: 35,
-      height: 35,
-      onClick: function() {
-        systemH = !systemH;
-      }
-    });
-    
-    if(systemH === true) {
-      fill(190, 190, 190);
-    } else {
-      fill(232, 232, 232);
-    }
-    stroke(0, 0, 0);
-    strokeWeight(1);
-    rect(systemHoldButton.x, systemHoldButton.y, systemHoldButton.width, systemHoldButton.height);
-    fill(255, 255, 0);
-    rect(systemHoldButton.x + 7, systemHoldButton.y + 7, 7, 19);
-    rect(systemHoldButton.x + 21, systemHoldButton.y + 7, 7, 19);
-    
-    
-    var powerButton = new Button({
-      x: 36,
-      y: 1,
-      width: 35,
-      height: 35,
-      onClick: function(){
-        power = !power;
-        for(var p = 0; p < tracksArray.length; p++) {
-          tracksArray[p].power = !tracksArray[p].power;
-        }
-      }
-    });
-    
-    if(power === false) {
-      fill(190, 190, 190);
-    } else {
-      fill(232, 232, 232);
-    }
-    stroke(0, 0, 0);
-    strokeWeight(1);
-    rect(powerButton.x, powerButton.y, powerButton.width, powerButton.height);
-    strokeWeight(0.5);
-    fill(255, 255, 0);
-    beginShape(); vertex(powerButton.x + 19, powerButton.y + 4); vertex(powerButton.x + 8, powerButton.y + 19); vertex(powerButton.x + 16, powerButton.y + 17); vertex(powerButton.x + 13, powerButton.y + 32); vertex(powerButton.x + 23, powerButton.y + 13); vertex(powerButton.x + 16, powerButton.y + 14); vertex(powerButton.x + 19, powerButton.y + 4); endShape();
-
-    
-    var speedDown = new Button({
-      x: 71,
-      y: 1,
-      width: 35,
-      height: 35,
-      onClick: function(){
-        if(speedf > 0) {
-          speedf -= 1;
-        }
-      }
-    });
-    
-    fill(232, 232, 232);
-    stroke(0, 0, 0);
-    strokeWeight(1);
-    rect(speedDown.x, speedDown.y, speedDown.width, speedDown.height);
-    strokeWeight(3);
-    line(speedDown.x + 7, speedDown.y + 17.5, speedDown.x + 28, speedDown.y + 17.5);
-    
-    strokeWeight(1);
-    rect(speedDown.x + speedDown.width, 1, 94, 35);
-    fill(0, 0, 0);
-    textSize(18);
-    text("SPEED=" + speedf, speedDown.x + speedDown.width + 7, 25);
-      
-    var speedUp = new Button({
-      x: 200,
-      y: 1,
-      width: 35,
-      height: 35,
-      onClick: function(){
-        if(speedf < 8) {
-          speedf += 1;
-        }
-      }
-    });
-    
-    fill(232, 232, 232);
-    stroke(0, 0, 0);
-    strokeWeight(1);
-    rect(speedUp.x, speedUp.y, speedUp.width, speedUp.height);
-    strokeWeight(3);
-    line(speedUp.x + 7, speedUp.y + 17.5, speedUp.x + 28, speedUp.y + 17.5);
-    line(speedUp.x + 17.5, speedUp.y + 7, speedUp.x + 17.5, speedUp.y + 28);
-    
-    
+       
     if(speedf === 0) {
       speed = 0;
     } else if(speedf === 1) {
@@ -1757,6 +1698,7 @@ draw = function() {
     } else if(speedf === 8) {
       speed = 1;
     }
+    speedEl.textContent = speedf;
     
     //speed
     //runShadowsVisible
@@ -2036,6 +1978,17 @@ draw = function() {
     }
   });
 
+  var btnPlatDwell = new Button({
+    x: platformMenu.x + 20,
+    y: platformMenu.y + 49,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      platformMenuActive[0].dwell = prompt("Enter new dwell:", "23");
+      platformMenuActive = [];
+    }
+  });
+  
 	gidsDraw(puot.x + 35);		//portals
 	drawEastPortal(puot.x - 2);
 	
@@ -2234,13 +2187,14 @@ draw = function() {
 	  btnTrnAtpm.handleMouseClick();
     btnTrnEb.handleMouseClick();
 	  
-  	systemHoldButton.handleMouseClick();
-  	powerButton.handleMouseClick();
-  	speedUp.handleMouseClick();
-  	speedDown.handleMouseClick();
+  // 	systemHoldButton.handleMouseClick();
+  // 	powerButton.handleMouseClick();
+  // 	speedUp.handleMouseClick();
+  // 	speedDown.handleMouseClick();
   	
   	btnPlatHold.handleMouseClick();
   	btnPlatClose.handleMouseClick();
+  	btnPlatDwell.handleMouseClick();
   	
 
   };//endMouseClicked
@@ -2363,15 +2317,17 @@ draw = function() {
 
     
     function clearAlarm(event) {
-      if(event.target.tagName === "P") {
+      if(event.target.tagName === "p") {
         event.target.remove();
-      } else {
+      } else { //else if(event.target.tagName === "span") 
         event.target.parentNode.remove();
       }
-      // activeAlarmsEl.textContent --;
+      activeAlarmsEl.textContent --;
       window.setTimeout(generateAlarm, 200000);
     };
     
+    //VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=
+    //VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected - cleared, at time =
 
     function generateAlarm() {
 
@@ -2387,11 +2343,10 @@ draw = function() {
       let aTime = aHours + ":" + aMinutes + ":" + aSeconds;
 
       
-      var messageI1 = Math.floor(Math.random() * falseAlarms.length + 1);
+      var messageI1 = Math.floor(Math.random() * 3);
       var messageSet = falseAlarms[messageI1];
-      var messageI2 = Math.floor(Math.random() * messageSet.length + 1);
+      var messageI2 = Math.floor(Math.random() * messageSet.length);
       var message = falseAlarms[messageI1][messageI2];
-      
       // [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
       let category = messageI1 == 0 ? "Train" : "Wayside";
       let region = messageI1 == 2 ? "ZC5" : "Yard";
@@ -2401,7 +2356,7 @@ draw = function() {
       alarmEl.innerHTML = "<span>" + adt + " " + aTime + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
       let alarmsEl = document.getElementById('alarms');
       alarmsEl.prepend(alarmEl);
-      // activeAlarmsEl.textContent ++;
+      activeAlarmsEl.textContent ++;
       document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
     }
 
@@ -2413,8 +2368,6 @@ draw = function() {
     window.setTimeout(generateAlarm, 50000);
     
     generateAlarm();
-    generateAlarm();
-    generateAlarm();generateAlarm();
 
     //  window.  setInterval, clearInterval 
 
@@ -2426,3 +2379,4 @@ draw = function() {
 //if (random(0,1) < 0.5)          <--50/50 random?
 
 
+// plat menu opens when track menu attempted
