@@ -1,16 +1,12 @@
-var sketchProc = function(processingInstance) {
-	with (processingInstance) {
-		size(3800, 800); 
-		frameRate(60);
-        
-
-
-/////////////////////ProgramCodeGoesHere/////////////////////////////////////
-
 
 // A visual of the ATS system
 // By Alan
 // Based on ProcessingJS library
+
+const sketchProc = function(processingInstance) {
+	with (processingInstance) {
+		size(3800, 800); 
+		frameRate(60);
 
 //Code notes: xpositions are upper left (train, station)
 //stationxPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
@@ -26,7 +22,7 @@ let speedf = 3;
 // Constructors
 
 // TrainConstructor
-var Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe) {
+let Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe) {
 	this.x = x;
 	this.y = y;
 	this.docked = docked;
@@ -50,7 +46,7 @@ var Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance
 };
 
 // StationConstructor
-var Stations = function(name, x, centerPlatform, ePlatform, wPlatform) {
+let Stations = function(name, x, centerPlatform, ePlatform, wPlatform) {
 	this.name = name;
 	this.x = x;
 	this.centerPlatform = centerPlatform;
@@ -60,7 +56,7 @@ var Stations = function(name, x, centerPlatform, ePlatform, wPlatform) {
 
 // PlatformConstructor
 // {p: 555, y: westY - 36, hold: false, close: false, occupied: false, dwell: 23, menu: false}
-var Platforms = function(p, y, hold, close, occupied, dwell, menu) {
+let Platforms = function(p, y, hold, close, occupied, dwell, menu) {
   this.p = p;
   this.y = y;
   this.hold = hold;
@@ -71,7 +67,7 @@ var Platforms = function(p, y, hold, close, occupied, dwell, menu) {
 };
 
 // PseudoConstructor
-var Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westClose) {
+let Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westClose) {
 	this.name = name;
 	this.x = x;
 	this.both = both;
@@ -82,7 +78,7 @@ var Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westC
 };
 
 // ShadowConstructor
-var Shadows = function(run, x, y, dwell, docked, near, jump, direction, track) {
+let Shadows = function(run, x, y, dwell, docked, near, jump, direction, track) {
     this.run = run;
     this.x = x;
     this.y = y;
@@ -96,7 +92,7 @@ var Shadows = function(run, x, y, dwell, docked, near, jump, direction, track) {
 
 
 // SignalConstructor
-var Signals = function(x, y, aspect, direction, label) {
+let Signals = function(x, y, aspect, direction, label) {
 	this.x = x;
 	this.y = y;
 	this.aspect = aspect;
@@ -105,7 +101,7 @@ var Signals = function(x, y, aspect, direction, label) {
 };
 
 // MenuConstructor
-var Menus = function(config) {
+let Menus = function(config) {
     this.x = config.x || 10;
     this.y = config.y || 10;
     this.w = config.w || 80;
@@ -113,7 +109,7 @@ var Menus = function(config) {
 };
 
 // ButtonConstructor
-var Button = function(config) {
+let Button = function(config) {
     this.x = config.x || 25;
     this.y = config.y || 0;
     this.width = config.width || 26;
@@ -123,7 +119,7 @@ var Button = function(config) {
 };
 
 // TrackConstructor
-var Tracks = function(x, y, length, number, power, close, tsr, wz, westArrow, eastArrow, lma, mrr, select, menu) {
+let Tracks = function(x, y, length, number, power, close, tsr, wz, westArrow, eastArrow, lma, mrr, select, menu) {
   this.x = x;
   this.y = y;
   this.length = length;
@@ -141,7 +137,7 @@ var Tracks = function(x, y, length, number, power, close, tsr, wz, westArrow, ea
 };
 
 // CrossoverConstructor
-var Crossover = function(x, y, up, lma) {
+let Crossover = function(x, y, up, lma) {
 	this.x = x;
 	this.y = y;
 	this.up = up;
@@ -149,7 +145,7 @@ var Crossover = function(x, y, up, lma) {
 };
 
 // SwitchConstructor
-var Switches = function(x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner) {
+let Switches = function(x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner) {
   this.x = x;
   this.track = track;
   this.number = number;
@@ -164,59 +160,59 @@ var Switches = function(x, track, number, tangent, disturbed, manual, reserved, 
 };
 
 
-var tunw = new Platforms(130, westY - 36, false, false, false, 90, false);
-var tune = new Platforms(130, eastY + 36, false, false, false, 23, false);
-var bayw = new Platforms(420, westY - 36, false, false, false, 23, false);
-var baye = new Platforms(420, eastY + 36, false, false, false, 23, false);
-var pimw = new Platforms(540, westY + 42, false, false, false, 23, false);
-var pime = new Platforms(540, eastY - 38, false, false, false, 23, false);
-var lyow = new Platforms(800, westY - 36, false, false, false, 23, false);
-var lyoe = new Platforms(800, eastY + 36, false, false, false, 23, false);
-var parw = new Platforms(1170, westY - 36, false, false, false, 23, false);
-var pare = new Platforms(1170, eastY + 36, false, false, false, 23, false);
-var ridw = new Platforms(1340, westY - 36, false, false, false, 23, false);
-var ride = new Platforms(1340, eastY + 36, false, false, false, 23, false);
-var uotw = new Platforms(1790, westY - 36, false, false, false, 23, false);
-var uote = new Platforms(1790, eastY + 36, false, false, false, 23, false);
-var leew = new Platforms(1970, westY - 36, false, false, false, 23, false);
-var leee = new Platforms(1970, eastY + 36, false, false, false, 23, false);
-var hurw = new Platforms(2080, westY - 36, false, false, false, 23, false);
-var hure = new Platforms(2080, eastY + 36, false, false, false, 23, false);
-var trew = new Platforms(2420, westY - 36, false, false, false, 23, false);
-var tree = new Platforms(2420, eastY + 36, false, false, false, 23, false);
-var stlw = new Platforms(3090, westY - 36, false, false, false, 23, false);
-var stle = new Platforms(3090, eastY + 36, false, false, false, 23, false);
-var cyrw = new Platforms(3210, westY + 42, false, false, false, 23, false);
-var cyre = new Platforms(3210, eastY - 38, false, false, false, 23, false);
-var blaw = new Platforms(3630, westY + 42, false, false, false, 90, false);
-var blae = new Platforms(3630, eastY - 38, false, false, false, 90, false);
+let tunw = new Platforms(130, westY - 36, false, false, false, 90, false);
+let tune = new Platforms(130, eastY + 36, false, false, false, 23, false);
+let bayw = new Platforms(420, westY - 36, false, false, false, 23, false);
+let baye = new Platforms(420, eastY + 36, false, false, false, 23, false);
+let pimw = new Platforms(540, westY + 42, false, false, false, 23, false);
+let pime = new Platforms(540, eastY - 38, false, false, false, 23, false);
+let lyow = new Platforms(800, westY - 36, false, false, false, 23, false);
+let lyoe = new Platforms(800, eastY + 36, false, false, false, 23, false);
+let parw = new Platforms(1170, westY - 36, false, false, false, 23, false);
+let pare = new Platforms(1170, eastY + 36, false, false, false, 23, false);
+let ridw = new Platforms(1340, westY - 36, false, false, false, 23, false);
+let ride = new Platforms(1340, eastY + 36, false, false, false, 23, false);
+let uotw = new Platforms(1790, westY - 36, false, false, false, 23, false);
+let uote = new Platforms(1790, eastY + 36, false, false, false, 23, false);
+let leew = new Platforms(1970, westY - 36, false, false, false, 23, false);
+let leee = new Platforms(1970, eastY + 36, false, false, false, 23, false);
+let hurw = new Platforms(2080, westY - 36, false, false, false, 23, false);
+let hure = new Platforms(2080, eastY + 36, false, false, false, 23, false);
+let trew = new Platforms(2420, westY - 36, false, false, false, 23, false);
+let tree = new Platforms(2420, eastY + 36, false, false, false, 23, false);
+let stlw = new Platforms(3090, westY - 36, false, false, false, 23, false);
+let stle = new Platforms(3090, eastY + 36, false, false, false, 23, false);
+let cyrw = new Platforms(3210, westY + 42, false, false, false, 23, false);
+let cyre = new Platforms(3210, eastY - 38, false, false, false, 23, false);
+let blaw = new Platforms(3630, westY + 42, false, false, false, 90, false);
+let blae = new Platforms(3630, eastY - 38, false, false, false, 90, false);
 
-var platformsArray = [tunw, tune, bayw, baye, pimw, pime, lyow, lyoe, parw, pare, ridw, ride, uotw, uote, leew, leee, hurw, hure, trew, tree, stlw, stle, cyrw, cyre, blaw, blae];
+const platformsArray = [tunw, tune, bayw, baye, pimw, pime, lyow, lyoe, parw, pare, ridw, ride, uotw, uote, leew, leee, hurw, hure, trew, tree, stlw, stle, cyrw, cyre, blaw, blae];
 
-var platformMenuActive = [];
+let platformMenuActive = [];
 
 // name, x, centerPlatform, ePlatform, wPlatform
 // {p: 555, y: westY - 36, hold: false, close: false, occupied: false, dwell: 23, menu: false}
-var tun = new Stations("TUN", 130,  false, tune, tunw);
-var bay = new Stations("BAY", 420,  false, baye, bayw);
-var pim = new Stations("PIM", 540,  true,  pime, pimw);
-var lyo = new Stations("LYO", 800,  false, lyoe, lyow);
-var par = new Stations("PAR", 1170, false, pare, parw);
-var rid = new Stations("RID", 1340, false, ride, ridw);
-var uot = new Stations("UOT", 1790, false, uote, uotw);
-var lee = new Stations("LEE", 1970, false, leee, leew);
-var hur = new Stations("HUR", 2080, false, hure, hurw);
-var tre = new Stations("TRE", 2420, false, tree, trew);
-var stl = new Stations("STL", 3090, false, stle, stlw);
-var cyr = new Stations("CYR", 3210, true,  cyre, cyrw);
-var bla = new Stations("BLA", 3630, true,  blae, blaw);
+let tun = new Stations("TUN", 130,  false, tune, tunw);
+let bay = new Stations("BAY", 420,  false, baye, bayw);
+let pim = new Stations("PIM", 540,  true,  pime, pimw);
+let lyo = new Stations("LYO", 800,  false, lyoe, lyow);
+let par = new Stations("PAR", 1170, false, pare, parw);
+let rid = new Stations("RID", 1340, false, ride, ridw);
+let uot = new Stations("UOT", 1790, false, uote, uotw);
+let lee = new Stations("LEE", 1970, false, leee, leew);
+let hur = new Stations("HUR", 2080, false, hure, hurw);
+let tre = new Stations("TRE", 2420, false, tree, trew);
+let stl = new Stations("STL", 3090, false, stle, stlw);
+let cyr = new Stations("CYR", 3210, true,  cyre, cyrw);
+let bla = new Stations("BLA", 3630, true,  blae, blaw);
 
-var stationsArray = [tun, bay, pim, lyo, par, rid, uot, lee, hur, tre, stl, cyr, bla];
+const stationsArray = [tun, bay, pim, lyo, par, rid, uot, lee, hur, tre, stl, cyr, bla];
 
 // pseudos(name, x, both, eastHold, westHold, eastClose, westClose)
-var puot = new Pseudos("PUOT", 1520, true, false, false, false, false);
-var phur = new Pseudos("PHUR", 2210, false, false, false, false, false);
-var ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
+let puot = new Pseudos("PUOT", 1520, true, false, false, false, false);
+let phur = new Pseudos("PHUR", 2210, false, false, false, false, false);
+let ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 
 
 // Methods
@@ -224,7 +220,7 @@ var ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 // trainDrawMethod
 
 Trains.prototype.drawTrain = function() {	
-	for(var j = 0; j < stationsArray.length; j++) {  //cycle stations
+	for(let j = 0; j < stationsArray.length; j++) {  //cycle stations
 		if(this.x >= stationsArray[j].x - 10 && 
 		this.x <= stationsArray[j].x + 10 &&
 		this.x !== stationsArray[j].x) {  //if near, set dwell
@@ -243,7 +239,7 @@ Trains.prototype.drawTrain = function() {
 			this.near = false;
 		}
 	}
-	for(var d = 0; d < stationsArray.length; d++) {
+	for(let d = 0; d < stationsArray.length; d++) {
 		if(this.x === stationsArray[d].x && ((this.track === 1 && stationsArray[d].wPlatform.close === false) || (this.track === 2 && stationsArray[d].ePlatform.close === false))) {
 			this.docked = true;
 			if((this.track === 2 && stationsArray[d].ePlatform.hold === true) || (this.track === 1 && stationsArray[d].wPlatform.hold === true) || systemH === true) {
@@ -480,7 +476,7 @@ Trains.prototype.drawTrain = function() {
   // LMA Controls
   
   if(this.direction === 0 && this.track === 2) {
-    for(var t = tracksArray.length / 2; t < tracksArray.length - 3; t++) {                    //this.x < 3410?
+    for(let t = tracksArray.length / 2; t < tracksArray.length - 3; t++) {                    //this.x < 3410?
       if(this.x > tracksArray[t].x - 100 && this.x < tracksArray[t].x + tracksArray[t].length && this.x < 3410 && (this.docked === false || this.dwell <= 10)) {
         tracksArray[t].lma = true;
         tracksArray[t].eastArrow = true;
@@ -498,7 +494,7 @@ Trains.prototype.drawTrain = function() {
   
   
   if(this.direction === 1 && this.track === 1) {
-    for(var t = 0; t < tracksArray.length / 2; t++) {                                         //this.x > 290?
+    for(let t = 0; t < tracksArray.length / 2; t++) {                                         //this.x > 290?
       if(this.x < tracksArray[t].x + tracksArray[t].length + 74 && this.x > tracksArray[t].x - 26 && this.x > 290 && (this.docked === false || this.dwell <= 10)) {
         tracksArray[t].lma = true;
         tracksArray[t].westArrow = true;
@@ -629,6 +625,17 @@ Trains.prototype.drawTrain = function() {
 
 };
 
+/*
+draw function
+line 1 function
+line 2 function
+
+if line=1 call line 1
+if line=2 call line 2
+call draw
+*/
+
+
 
 // shorten conditions to 'return false'? save processing - shorter arrays first
 Trains.prototype.checkSafeDistance = function() {
@@ -714,7 +721,7 @@ Trains.prototype.checkSafeDistance = function() {
 
 //shadowDrawMethod  run, x, y, dwell, docked, near, jump, direction, track
 Shadows.prototype.drawShadow = function() {
-  for(var j = 0; j < stationsArray.length; j++) {
+  for(let j = 0; j < stationsArray.length; j++) {
 		if(this.x >= stationsArray[j].x +3 && 
 		this.x <= stationsArray[j].x + 26 &&
 		this.x !== stationsArray[j].x + 13) {
@@ -731,7 +738,7 @@ Shadows.prototype.drawShadow = function() {
 			this.near = false;
 		}
 	}
-	for(var d = 0; d < stationsArray.length; d++) {
+	for(let d = 0; d < stationsArray.length; d++) {
 		if(this.x === stationsArray[d].x + 13) {
 			this.docked = true;
 			d = stationsArray.length;
@@ -982,28 +989,28 @@ Signals.prototype.drawSignal = function() {
 
 
 
-var drawEastPortal = function(x) {
+function drawEastPortal(x) {
         strokeWeight(4);     //eastPortal
         noFill();
         stroke(0, 0, 0);
         beginShape(); vertex(x + 10, westY - 16); vertex(x, westY - 6); vertex(x, eastY + 20); vertex(x + 10, eastY + 30); endShape();
 };
 
-var drawWestPortal = function(x) {
+function drawWestPortal(x) {
         strokeWeight(4);
         noFill();
         stroke(0, 0, 0);
         beginShape(); vertex(x - 10, westY - 16); vertex(x, westY - 6); vertex(x, eastY + 20); vertex(x - 10, eastY + 30); endShape();
 };
 
-var markerDraw = function(x, y) {
+function markerDraw(x, y) {
     noFill();
     stroke(0, 0, 0);
     strokeWeight(0.4);
     triangle(x - 2.5, y - 4, x + 2.5, y - 4, x, y);    
 };
 
-var zoneBorderDraw = function(x) {
+function zoneBorderDraw(x) {
 	for(i = 0; i < 18; i++) {
 		fill(0, 0, 0);
 		noStroke();
@@ -1011,7 +1018,7 @@ var zoneBorderDraw = function(x) {
 	}
 };
 
-var gidsDraw = function(x) {
+function gidsDraw(x) {
     stroke(0, 0, 0);
     fill(128, 128, 128);
     strokeWeight(0.2);
@@ -1195,7 +1202,7 @@ Platforms.prototype.drawPlatformMenu = function() {
 };
 
 Tracks.prototype.isUnderMouse = function(mx, y) {
-  var go = true;
+  let go = true;
   if(platformMenuActive.length > 0) {
     go = false;
   }
@@ -1218,7 +1225,7 @@ Tracks.prototype.drawTrackMenu = function() {
 };
 
 Trains.prototype.isUnderMouse = function(mx, y) {
-  var go = true;
+  let go = true;
   if(platformMenuActive.length > 0) {
     go = false;
   }
@@ -1244,180 +1251,179 @@ Trains.prototype.drawTrainMenu = function() {
 
 //TrackInstances      x, y, length, number, power, close, tsr, wz, westArrow, eastArrow, lma, mrr, select, menu
 
-var track100 = new Tracks(50,  westY, 80, 100, true, false, 100, false, false, false, false, false, false, false);
-var track101 = new Tracks(130, westY, 26, 101, true, false, 100, false, false, false, false, false, false, false);
-var track102 = new Tracks(156, westY, 24, 102, true, false, 100, false, false, false, false, false, false, false);
-var track103 = new Tracks(200, westY, 25, 103, true, false, 100, false, false, false, false, false, false, false);
-var track104 = new Tracks(245, westY, 40, 104, true, false, 100, false, false, false, false, false, false, false);
-var track105 = new Tracks(285, westY, 47, 105, true, false, 100, false, false, false, false, false, false, false);
-var track106 = new Tracks(332, westY, 47, 106, true, false, 100, false, false, false, false, false, false, false);
-var track107 = new Tracks(379, westY, 41, 107, true, false, 100, false, false, false, false, false, false, false);
-var track108 = new Tracks(420, westY, 26, 108, true, false, 100, false, false, false, false, false, false, false);
-var track109 = new Tracks(446, westY, 30, 109, true, false, 100, false, false, false, false, false, false, false);
-var track110 = new Tracks(476, westY, 34, 110, true, false, 100, false, false, false, false, false, false, false);
-var track111 = new Tracks(510, westY, 30, 111, true, false, 100, false, false, false, false, false, false, false);
-var track112 = new Tracks(540, westY, 26, 112, true, false, 100, false, false, false, false, false, false, false);
-var track113 = new Tracks(566, westY, 34, 113, true, false, 100, false, false, false, false, false, false, false);
-var track114 = new Tracks(600, westY, 60, 114, true, false, 100, false, false, false, false, false, false, false);
-var track115 = new Tracks(660, westY, 60, 115, true, false, 100, false, false, false, false, false, false, false);
-var track116 = new Tracks(720, westY, 50, 116, true, false, 100, false, false, false, false, false, false, false);
-var track117 = new Tracks(770, westY, 30, 117, true, false, 100, false, false, false, false, false, false, false);
-var track118 = new Tracks(800, westY, 26, 118, true, false, 100, false, false, false, false, false, false, false);
-var track119 = new Tracks(826, westY, 72, 119, true, false, 100, false, false, false, false, false, false, false);
-var track120 = new Tracks(898, westY, 72, 120, true, false, 100, false, false, false, false, false, false, false);
-var track121 = new Tracks(990, westY, 25, 121, true, false, 100, false, false, false, false, false, false, false);
-var track122 = new Tracks(1035, westY, 72, 122, true, false, 100, false, false, false, false, false, false, false);
-var track123 = new Tracks(1107, westY, 63, 123, true, false, 100, false, false, false, false, false, false, false);
-var track124 = new Tracks(1170, westY, 26, 124, true, false, 100, false, false, false, false, false, false, false);
-var track125 = new Tracks(1196, westY, 22, 125, true, false, 100, false, false, false, false, false, false, false);
-var track126 = new Tracks(1218, westY, 50, 126, true, false, 100, false, false, false, false, false, false, false);
-var track127 = new Tracks(1268, westY, 50, 127, true, false, 100, false, false, false, false, false, false, false);
-var track128 = new Tracks(1318, westY, 22, 128, true, false, 100, false, false, false, false, false, false, false);
-var track129 = new Tracks(1340, westY, 26, 129, true, false, 100, false, false, false, false, false, false, false);
-var track130 = new Tracks(1366, westY, 19, 130, true, false, 100, false, false, false, false, false, false, false);
-var track131 = new Tracks(1385, westY, 50, 131, true, false, 100, false, false, false, false, false, false, false);
-var track132 = new Tracks(1435, westY, 50, 132, true, false, 100, false, false, false, false, false, false, false);
-var track133 = new Tracks(1485, westY, 20, 133, true, false, 100, false, false, false, false, false, false, false);
-var track134 = new Tracks(1505, westY, 65, 134, true, false, 100, false, false, false, false, false, false, false);
-var track135 = new Tracks(1590, westY, 25, 135, true, false, 100, false, false, false, false, false, false, false);
-var track136 = new Tracks(1635, westY, 65, 136, true, false, 100, false, false, false, false, false, false, false);
-var track137 = new Tracks(1700, westY, 90, 137, true, false, 100, false, false, false, false, false, false, false);
-var track138 = new Tracks(1790, westY, 26, 138, true, false, 100, false, false, false, false, false, false, false);
-var track139 = new Tracks(1816, westY, 27, 139, true, false, 100, false, false, false, false, false, false, false);
-var track140 = new Tracks(1843, westY, 50, 140, true, false, 100, false, false, false, false, false, false, false);
-var track141 = new Tracks(1893, westY, 50, 141, true, false, 100, false, false, false, false, false, false, false);
-var track142 = new Tracks(1943, westY, 27, 142, true, false, 100, false, false, false, false, false, false, false);
-var track143 = new Tracks(1970, westY, 26, 143, true, false, 100, false, false, false, false, false, false, false);
-var track144 = new Tracks(1996, westY, 19, 144, true, false, 100, false, false, false, false, false, false, false);
-var track145 = new Tracks(2015, westY, 20, 145, true, false, 100, false, false, false, false, false, false, false);
-var track146 = new Tracks(2035, westY, 10, 146, true, false, 100, false, false, false, false, false, false, false);
-var track147 = new Tracks(2045, westY, 10, 147, true, false, 100, false, false, false, false, false, false, false);
-var track148 = new Tracks(2055, westY, 25, 148, true, false, 100, false, false, false, false, false, false, false);
-var track149 = new Tracks(2080, westY, 26, 149, true, false, 100, false, false, false, false, false, false, false);
-var track150 = new Tracks(2106, westY, 34, 150, true, false, 100, false, false, false, false, false, false, false);
-var track151 = new Tracks(2140, westY, 35, 151, true, false, 100, false, false, false, false, false, false, false);
-var track152 = new Tracks(2195, westY, 26, 152, true, false, 100, false, false, false, false, false, false, false);
-var track153 = new Tracks(2221, westY, 73, 153, true, false, 100, false, false, false, false, false, false, false);
-var track154 = new Tracks(2294, westY, 26, 154, true, false, 100, false, false, false, false, false, false, false);
-var track155 = new Tracks(2340, westY, 16, 155, true, false, 100, false, false, false, false, false, false, false);
-var track156 = new Tracks(2356, westY, 32, 156, true, false, 100, false, false, false, false, false, false, false);
-var track157 = new Tracks(2388, westY, 32, 157, true, false, 100, false, false, false, false, false, false, false);
-var track158 = new Tracks(2420, westY, 26, 158, true, false, 100, false, false, false, false, false, false, false);
-var track159 = new Tracks(2446, westY, 85, 159, true, false, 100, false, false, false, false, false, false, false);
-var track160 = new Tracks(2531, westY, 44, 160, true, false, 100, false, false, false, false, false, false, false);
-var track161 = new Tracks(2595, westY, 35, 161, true, false, 100, false, false, false, false, false, false, false);
-var track162 = new Tracks(2650, westY, 30, 162, true, false, 100, false, false, false, false, false, false, false);
-var track163 = new Tracks(2680, westY, 195, 163, true, false, 100, false, false, false, false, false, false, false);
-var track164 = new Tracks(2875, westY, 30, 164, true, false, 100, false, false, false, false, false, false, false);
-var track165 = new Tracks(2925, westY, 35, 165, true, false, 100, false, false, false, false, false, false, false);
-var track166 = new Tracks(2980, westY, 90, 166, true, false, 100, false, false, false, false, false, false, false);
-var track167 = new Tracks(3070, westY, 10, 167, true, false, 100, false, false, false, false, false, false, false);
-var track168 = new Tracks(3080, westY, 10, 168, true, false, 100, false, false, false, false, false, false, false);
-var track169 = new Tracks(3090, westY, 26, 169, true, false, 100, false, false, false, false, false, false, false);
-var track170 = new Tracks(3116, westY, 44, 170, true, false, 100, false, false, false, false, false, false, false);
-var track171 = new Tracks(3160, westY, 15, 171, true, false, 100, false, false, false, false, false, false, false);
-var track172 = new Tracks(3175, westY, 20, 172, true, false, 100, false, false, false, false, false, false, false);
-var track173 = new Tracks(3195, westY, 15, 173, true, false, 100, false, false, false, false, false, false, false);
-var track174 = new Tracks(3210, westY, 26, 174, true, false, 100, false, false, false, false, false, false, false);
-var track175 = new Tracks(3236, westY, 34, 175, true, false, 100, false, false, false, false, false, false, false);
-var track176 = new Tracks(3270, westY, 30, 176, true, false, 100, false, false, false, false, false, false, false);
-var track177 = new Tracks(3300, westY, 30, 177, true, false, 100, false, false, false, false, false, false, false);
-var track178 = new Tracks(3330, westY, 10, 178, true, false, 100, false, false, false, false, false, false, false);
-var track179 = new Tracks(3340, westY, 50, 179, true, false, 100, false, false, false, false, false, false, false);
+let track100 = new Tracks(50,  westY, 80, 100, true, false, 100, false, false, false, false, false, false, false);
+let track101 = new Tracks(130, westY, 26, 101, true, false, 100, false, false, false, false, false, false, false);
+let track102 = new Tracks(156, westY, 24, 102, true, false, 100, false, false, false, false, false, false, false);
+let track103 = new Tracks(200, westY, 25, 103, true, false, 100, false, false, false, false, false, false, false);
+let track104 = new Tracks(245, westY, 40, 104, true, false, 100, false, false, false, false, false, false, false);
+let track105 = new Tracks(285, westY, 47, 105, true, false, 100, false, false, false, false, false, false, false);
+let track106 = new Tracks(332, westY, 47, 106, true, false, 100, false, false, false, false, false, false, false);
+let track107 = new Tracks(379, westY, 41, 107, true, false, 100, false, false, false, false, false, false, false);
+let track108 = new Tracks(420, westY, 26, 108, true, false, 100, false, false, false, false, false, false, false);
+let track109 = new Tracks(446, westY, 30, 109, true, false, 100, false, false, false, false, false, false, false);
+let track110 = new Tracks(476, westY, 34, 110, true, false, 100, false, false, false, false, false, false, false);
+let track111 = new Tracks(510, westY, 30, 111, true, false, 100, false, false, false, false, false, false, false);
+let track112 = new Tracks(540, westY, 26, 112, true, false, 100, false, false, false, false, false, false, false);
+let track113 = new Tracks(566, westY, 34, 113, true, false, 100, false, false, false, false, false, false, false);
+let track114 = new Tracks(600, westY, 60, 114, true, false, 100, false, false, false, false, false, false, false);
+let track115 = new Tracks(660, westY, 60, 115, true, false, 100, false, false, false, false, false, false, false);
+let track116 = new Tracks(720, westY, 50, 116, true, false, 100, false, false, false, false, false, false, false);
+let track117 = new Tracks(770, westY, 30, 117, true, false, 100, false, false, false, false, false, false, false);
+let track118 = new Tracks(800, westY, 26, 118, true, false, 100, false, false, false, false, false, false, false);
+let track119 = new Tracks(826, westY, 72, 119, true, false, 100, false, false, false, false, false, false, false);
+let track120 = new Tracks(898, westY, 72, 120, true, false, 100, false, false, false, false, false, false, false);
+let track121 = new Tracks(990, westY, 25, 121, true, false, 100, false, false, false, false, false, false, false);
+let track122 = new Tracks(1035, westY, 72, 122, true, false, 100, false, false, false, false, false, false, false);
+let track123 = new Tracks(1107, westY, 63, 123, true, false, 100, false, false, false, false, false, false, false);
+let track124 = new Tracks(1170, westY, 26, 124, true, false, 100, false, false, false, false, false, false, false);
+let track125 = new Tracks(1196, westY, 22, 125, true, false, 100, false, false, false, false, false, false, false);
+let track126 = new Tracks(1218, westY, 50, 126, true, false, 100, false, false, false, false, false, false, false);
+let track127 = new Tracks(1268, westY, 50, 127, true, false, 100, false, false, false, false, false, false, false);
+let track128 = new Tracks(1318, westY, 22, 128, true, false, 100, false, false, false, false, false, false, false);
+let track129 = new Tracks(1340, westY, 26, 129, true, false, 100, false, false, false, false, false, false, false);
+let track130 = new Tracks(1366, westY, 19, 130, true, false, 100, false, false, false, false, false, false, false);
+let track131 = new Tracks(1385, westY, 50, 131, true, false, 100, false, false, false, false, false, false, false);
+let track132 = new Tracks(1435, westY, 50, 132, true, false, 100, false, false, false, false, false, false, false);
+let track133 = new Tracks(1485, westY, 20, 133, true, false, 100, false, false, false, false, false, false, false);
+let track134 = new Tracks(1505, westY, 65, 134, true, false, 100, false, false, false, false, false, false, false);
+let track135 = new Tracks(1590, westY, 25, 135, true, false, 100, false, false, false, false, false, false, false);
+let track136 = new Tracks(1635, westY, 65, 136, true, false, 100, false, false, false, false, false, false, false);
+let track137 = new Tracks(1700, westY, 90, 137, true, false, 100, false, false, false, false, false, false, false);
+let track138 = new Tracks(1790, westY, 26, 138, true, false, 100, false, false, false, false, false, false, false);
+let track139 = new Tracks(1816, westY, 27, 139, true, false, 100, false, false, false, false, false, false, false);
+let track140 = new Tracks(1843, westY, 50, 140, true, false, 100, false, false, false, false, false, false, false);
+let track141 = new Tracks(1893, westY, 50, 141, true, false, 100, false, false, false, false, false, false, false);
+let track142 = new Tracks(1943, westY, 27, 142, true, false, 100, false, false, false, false, false, false, false);
+let track143 = new Tracks(1970, westY, 26, 143, true, false, 100, false, false, false, false, false, false, false);
+let track144 = new Tracks(1996, westY, 19, 144, true, false, 100, false, false, false, false, false, false, false);
+let track145 = new Tracks(2015, westY, 20, 145, true, false, 100, false, false, false, false, false, false, false);
+let track146 = new Tracks(2035, westY, 10, 146, true, false, 100, false, false, false, false, false, false, false);
+let track147 = new Tracks(2045, westY, 10, 147, true, false, 100, false, false, false, false, false, false, false);
+let track148 = new Tracks(2055, westY, 25, 148, true, false, 100, false, false, false, false, false, false, false);
+let track149 = new Tracks(2080, westY, 26, 149, true, false, 100, false, false, false, false, false, false, false);
+let track150 = new Tracks(2106, westY, 34, 150, true, false, 100, false, false, false, false, false, false, false);
+let track151 = new Tracks(2140, westY, 35, 151, true, false, 100, false, false, false, false, false, false, false);
+let track152 = new Tracks(2195, westY, 26, 152, true, false, 100, false, false, false, false, false, false, false);
+let track153 = new Tracks(2221, westY, 73, 153, true, false, 100, false, false, false, false, false, false, false);
+let track154 = new Tracks(2294, westY, 26, 154, true, false, 100, false, false, false, false, false, false, false);
+let track155 = new Tracks(2340, westY, 16, 155, true, false, 100, false, false, false, false, false, false, false);
+let track156 = new Tracks(2356, westY, 32, 156, true, false, 100, false, false, false, false, false, false, false);
+let track157 = new Tracks(2388, westY, 32, 157, true, false, 100, false, false, false, false, false, false, false);
+let track158 = new Tracks(2420, westY, 26, 158, true, false, 100, false, false, false, false, false, false, false);
+let track159 = new Tracks(2446, westY, 85, 159, true, false, 100, false, false, false, false, false, false, false);
+let track160 = new Tracks(2531, westY, 44, 160, true, false, 100, false, false, false, false, false, false, false);
+let track161 = new Tracks(2595, westY, 35, 161, true, false, 100, false, false, false, false, false, false, false);
+let track162 = new Tracks(2650, westY, 30, 162, true, false, 100, false, false, false, false, false, false, false);
+let track163 = new Tracks(2680, westY, 195, 163, true, false, 100, false, false, false, false, false, false, false);
+let track164 = new Tracks(2875, westY, 30, 164, true, false, 100, false, false, false, false, false, false, false);
+let track165 = new Tracks(2925, westY, 35, 165, true, false, 100, false, false, false, false, false, false, false);
+let track166 = new Tracks(2980, westY, 90, 166, true, false, 100, false, false, false, false, false, false, false);
+let track167 = new Tracks(3070, westY, 10, 167, true, false, 100, false, false, false, false, false, false, false);
+let track168 = new Tracks(3080, westY, 10, 168, true, false, 100, false, false, false, false, false, false, false);
+let track169 = new Tracks(3090, westY, 26, 169, true, false, 100, false, false, false, false, false, false, false);
+let track170 = new Tracks(3116, westY, 44, 170, true, false, 100, false, false, false, false, false, false, false);
+let track171 = new Tracks(3160, westY, 15, 171, true, false, 100, false, false, false, false, false, false, false);
+let track172 = new Tracks(3175, westY, 20, 172, true, false, 100, false, false, false, false, false, false, false);
+let track173 = new Tracks(3195, westY, 15, 173, true, false, 100, false, false, false, false, false, false, false);
+let track174 = new Tracks(3210, westY, 26, 174, true, false, 100, false, false, false, false, false, false, false);
+let track175 = new Tracks(3236, westY, 34, 175, true, false, 100, false, false, false, false, false, false, false);
+let track176 = new Tracks(3270, westY, 30, 176, true, false, 100, false, false, false, false, false, false, false);
+let track177 = new Tracks(3300, westY, 30, 177, true, false, 100, false, false, false, false, false, false, false);
+let track178 = new Tracks(3330, westY, 10, 178, true, false, 100, false, false, false, false, false, false, false);
+let track179 = new Tracks(3340, westY, 50, 179, true, false, 100, false, false, false, false, false, false, false);
 var track180 = new Tracks(3390, westY, 50, 180, true, false, 100, false, false, false, false, false, false, false);
 var track181 = new Tracks(3460, westY, 125, 181, true, false, 100, false, false, false, false, false, false, false);
 var track182 = new Tracks(3605, westY, 25, 182, true, false, 100, false, false, false, false, false, false, false);
 var track183 = new Tracks(3630, westY, 26, 183, true, false, 100, false, false, false, false, false, false, false);
 var track184 = new Tracks(3656, westY, 80, 184, true, false, 100, false, false, false, false, false, false, false);
 
-var track200 = new Tracks(50,  eastY, 80, 200, true, false, 100, false, false, false, false, false, false, false);
-var track201 = new Tracks(130, eastY, 26, 201, true, false, 100, false, false, false, false, false, false, false);
-var track202 = new Tracks(156, eastY, 24, 202, true, false, 100, false, false, false, false, false, false, false);
-var track203 = new Tracks(200, eastY, 25, 203, true, false, 100, false, false, false, false, false, false, false);
-var track204 = new Tracks(245, eastY, 40, 204, true, false, 100, false, false, false, false, false, false, false);
-var track205 = new Tracks(285, eastY, 47, 205, true, false, 100, false, false, false, false, false, false, false);
-var track206 = new Tracks(332, eastY, 47, 206, true, false, 100, false, false, false, false, false, false, false);
-var track207 = new Tracks(379, eastY, 41, 207, true, false, 100, false, false, false, false, false, false, false);
-var track208 = new Tracks(420, eastY, 26, 208, true, false, 100, false, false, false, false, false, false, false);
-var track209 = new Tracks(446, eastY, 30, 209, true, false, 100, false, false, false, false, false, false, false);
-var track210 = new Tracks(476, eastY, 34, 210, true, false, 100, false, false, false, false, false, false, false);
-var track211 = new Tracks(510, eastY, 30, 211, true, false, 100, false, false, false, false, false, false, false);
-var track212 = new Tracks(540, eastY, 26, 212, true, false, 100, false, false, false, false, false, false, false);
-var track213 = new Tracks(566, eastY, 34, 213, true, false, 100, false, false, false, false, false, false, false);
-var track214 = new Tracks(600, eastY, 60, 214, true, false, 100, false, false, false, false, false, false, false);
-var track215 = new Tracks(660, eastY, 60, 215, true, false, 100, false, false, false, false, false, false, false);
-var track216 = new Tracks(720, eastY, 50, 216, true, false, 100, false, false, false, false, false, false, false);
-var track217 = new Tracks(770, eastY, 30, 217, true, false, 100, false, false, false, false, false, false, false);
-var track218 = new Tracks(800, eastY, 26, 218, true, false, 100, false, false, false, false, false, false, false);
-var track219 = new Tracks(826, eastY, 72, 219, true, false, 100, false, false, false, false, false, false, false);
-var track220 = new Tracks(898, eastY, 72, 220, true, false, 100, false, false, false, false, false, false, false);
-var track221 = new Tracks(990, eastY, 25, 221, true, false, 100, false, false, false, false, false, false, false);
-var track222 = new Tracks(1035, eastY, 72, 222, true, false, 100, false, false, false, false, false, false, false);
-var track223 = new Tracks(1107, eastY, 63, 223, true, false, 100, false, false, false, false, false, false, false);
-var track224 = new Tracks(1170, eastY, 26, 224, true, false, 100, false, false, false, false, false, false, false);
-var track225 = new Tracks(1196, eastY, 22, 225, true, false, 100, false, false, false, false, false, false, false);
-var track226 = new Tracks(1218, eastY, 50, 226, true, false, 100, false, false, false, false, false, false, false);
-var track227 = new Tracks(1268, eastY, 50, 227, true, false, 100, false, false, false, false, false, false, false);
-var track228 = new Tracks(1318, eastY, 22, 228, true, false, 100, false, false, false, false, false, false, false);
-var track229 = new Tracks(1340, eastY, 26, 229, true, false, 100, false, false, false, false, false, false, false);
-var track230 = new Tracks(1366, eastY, 19, 230, true, false, 100, false, false, false, false, false, false, false);
-var track231 = new Tracks(1385, eastY, 50, 231, true, false, 100, false, false, false, false, false, false, false);
-var track232 = new Tracks(1435, eastY, 50, 232, true, false, 100, false, false, false, false, false, false, false);
-var track233 = new Tracks(1485, eastY, 20, 233, true, false, 100, false, false, false, false, false, false, false);
-var track234 = new Tracks(1505, eastY, 65, 234, true, false, 100, false, false, false, false, false, false, false);
-var track235 = new Tracks(1590, eastY, 25, 235, true, false, 100, false, false, false, false, false, false, false);
-var track236 = new Tracks(1635, eastY, 65, 236, true, false, 100, false, false, false, false, false, false, false);
-var track237 = new Tracks(1700, eastY, 90, 237, true, false, 100, false, false, false, false, false, false, false);
-var track238 = new Tracks(1790, eastY, 26, 238, true, false, 100, false, false, false, false, false, false, false);
-var track239 = new Tracks(1816, eastY, 27, 239, true, false, 100, false, false, false, false, false, false, false);
-var track240 = new Tracks(1843, eastY, 50, 240, true, false, 100, false, false, false, false, false, false, false);
-var track241 = new Tracks(1893, eastY, 50, 241, true, false, 100, false, false, false, false, false, false, false);
-var track242 = new Tracks(1943, eastY, 27, 242, true, false, 100, false, false, false, false, false, false, false);
-var track243 = new Tracks(1970, eastY, 26, 242, true, false, 100, false, false, false, false, false, false, false);
-var track244 = new Tracks(1996, eastY, 19, 244, true, false, 100, false, false, false, false, false, false, false);
-var track245 = new Tracks(2015, eastY, 20, 245, true, false, 100, false, false, false, false, false, false, false);
-var track245 = new Tracks(2015, eastY, 20, 245, true, false, 100, false, false, false, false, false, false, false);
-var track246 = new Tracks(2035, eastY, 10, 246, true, false, 100, false, false, false, false, false, false, false);
-var track247 = new Tracks(2045, eastY, 10, 247, true, false, 100, false, false, false, false, false, false, false);
-var track248 = new Tracks(2055, eastY, 25, 248, true, false, 100, false, false, false, false, false, false, false);
-var track249 = new Tracks(2080, eastY, 26, 249, true, false, 100, false, false, false, false, false, false, false);
-var track250 = new Tracks(2106, eastY, 24, 250, true, false, 100, false, false, false, false, false, false, false);
-var track251 = new Tracks(2150, eastY, 25, 251, true, false, 100, false, false, false, false, false, false, false);
-var track252 = new Tracks(2175, eastY, 165, 252, true, false, 100, false, false, false, false, false, false, false);
-var track253 = new Tracks(2340, eastY, 25, 253, true, false, 100, false, false, false, false, false, false, false);
-var track254 = new Tracks(2385, eastY, 15, 254, true, false, 100, false, false, false, false, false, false, false);
-var track255 = new Tracks(2400, eastY, 20, 255, true, false, 100, false, false, false, false, false, false, false);
-var track256 = new Tracks(2420, eastY, 26, 256, true, false, 100, false, false, false, false, false, false, false);
-var track257 = new Tracks(2446, eastY, 50, 257, true, false, 100, false, false, false, false, false, false, false);
-var track258 = new Tracks(2496, eastY, 34, 258, true, false, 100, false, false, false, false, false, false, false);
-var track259 = new Tracks(2550, eastY, 25, 259, true, false, 100, false, false, false, false, false, false, false);
-var track260 = new Tracks(2575, eastY, 75, 260, true, false, 100, false, false, false, false, false, false, false);
-var track261 = new Tracks(2650, eastY, 25, 261, true, false, 100, false, false, false, false, false, false, false);
-var track262 = new Tracks(2695, eastY, 15, 262, true, false, 100, false, false, false, false, false, false, false);
-var track263 = new Tracks(2730, eastY, 95, 263, true, false, 100, false, false, false, false, false, false, false);
-var track264 = new Tracks(2845, eastY, 15, 264, true, false, 100, false, false, false, false, false, false, false);
-var track265 = new Tracks(2880, eastY, 125, 265, true, false, 100, false, false, false, false, false, false, false);
-var track266 = new Tracks(3025, eastY, 45, 266, true, false, 100, false, false, false, false, false, false, false);
-var track267 = new Tracks(3070, eastY, 10, 267, true, false, 100, false, false, false, false, false, false, false);
-var track268 = new Tracks(3080, eastY, 10, 268, true, false, 100, false, false, false, false, false, false, false);
-var track269 = new Tracks(3090, eastY, 26, 269, true, false, 100, false, false, false, false, false, false, false);
-var track270 = new Tracks(3116, eastY, 44, 270, true, false, 100, false, false, false, false, false, false, false);
-var track271 = new Tracks(3160, eastY, 15, 271, true, false, 100, false, false, false, false, false, false, false);
-var track272 = new Tracks(3175, eastY, 20, 272, true, false, 100, false, false, false, false, false, false, false);
-var track273 = new Tracks(3195, eastY, 15, 273, true, false, 100, false, false, false, false, false, false, false);
-var track274 = new Tracks(3210, eastY, 26, 274, true, false, 100, false, false, false, false, false, false, false);
-var track275 = new Tracks(3236, eastY, 34, 275, true, false, 100, false, false, false, false, false, false, false);
-var track276 = new Tracks(3270, eastY, 30, 276, true, false, 100, false, false, false, false, false, false, false);
-var track277 = new Tracks(3300, eastY, 30, 277, true, false, 100, false, false, false, false, false, false, false);
-var track278 = new Tracks(3330, eastY, 10, 278, true, false, 100, false, false, false, false, false, false, false);
-var track279 = new Tracks(3340, eastY, 70, 279, true, false, 100, false, false, false, false, false, false, false);
-var track280 = new Tracks(3410, eastY, 75, 280, true, false, 100, false, false, false, false, false, false, false);
-var track281 = new Tracks(3505, eastY, 35, 281, true, false, 100, false, false, false, false, false, false, false);
-var track282 = new Tracks(3560, eastY, 70, 282, true, false, 100, false, false, false, false, false, false, false);
-var track283 = new Tracks(3630, eastY, 26, 283, true, false, 100, false, false, false, false, false, false, false);
-var track284 = new Tracks(3656, eastY, 80, 284, true, false, 100, false, false, false, false, false, false, false);
+let track200 = new Tracks(50,  eastY, 80, 200, true, false, 100, false, false, false, false, false, false, false);
+let track201 = new Tracks(130, eastY, 26, 201, true, false, 100, false, false, false, false, false, false, false);
+let track202 = new Tracks(156, eastY, 24, 202, true, false, 100, false, false, false, false, false, false, false);
+let track203 = new Tracks(200, eastY, 25, 203, true, false, 100, false, false, false, false, false, false, false);
+let track204 = new Tracks(245, eastY, 40, 204, true, false, 100, false, false, false, false, false, false, false);
+let track205 = new Tracks(285, eastY, 47, 205, true, false, 100, false, false, false, false, false, false, false);
+let track206 = new Tracks(332, eastY, 47, 206, true, false, 100, false, false, false, false, false, false, false);
+let track207 = new Tracks(379, eastY, 41, 207, true, false, 100, false, false, false, false, false, false, false);
+let track208 = new Tracks(420, eastY, 26, 208, true, false, 100, false, false, false, false, false, false, false);
+let track209 = new Tracks(446, eastY, 30, 209, true, false, 100, false, false, false, false, false, false, false);
+let track210 = new Tracks(476, eastY, 34, 210, true, false, 100, false, false, false, false, false, false, false);
+let track211 = new Tracks(510, eastY, 30, 211, true, false, 100, false, false, false, false, false, false, false);
+let track212 = new Tracks(540, eastY, 26, 212, true, false, 100, false, false, false, false, false, false, false);
+let track213 = new Tracks(566, eastY, 34, 213, true, false, 100, false, false, false, false, false, false, false);
+let track214 = new Tracks(600, eastY, 60, 214, true, false, 100, false, false, false, false, false, false, false);
+let track215 = new Tracks(660, eastY, 60, 215, true, false, 100, false, false, false, false, false, false, false);
+let track216 = new Tracks(720, eastY, 50, 216, true, false, 100, false, false, false, false, false, false, false);
+let track217 = new Tracks(770, eastY, 30, 217, true, false, 100, false, false, false, false, false, false, false);
+let track218 = new Tracks(800, eastY, 26, 218, true, false, 100, false, false, false, false, false, false, false);
+let track219 = new Tracks(826, eastY, 72, 219, true, false, 100, false, false, false, false, false, false, false);
+let track220 = new Tracks(898, eastY, 72, 220, true, false, 100, false, false, false, false, false, false, false);
+let track221 = new Tracks(990, eastY, 25, 221, true, false, 100, false, false, false, false, false, false, false);
+let track222 = new Tracks(1035, eastY, 72, 222, true, false, 100, false, false, false, false, false, false, false);
+let track223 = new Tracks(1107, eastY, 63, 223, true, false, 100, false, false, false, false, false, false, false);
+let track224 = new Tracks(1170, eastY, 26, 224, true, false, 100, false, false, false, false, false, false, false);
+let track225 = new Tracks(1196, eastY, 22, 225, true, false, 100, false, false, false, false, false, false, false);
+let track226 = new Tracks(1218, eastY, 50, 226, true, false, 100, false, false, false, false, false, false, false);
+let track227 = new Tracks(1268, eastY, 50, 227, true, false, 100, false, false, false, false, false, false, false);
+let track228 = new Tracks(1318, eastY, 22, 228, true, false, 100, false, false, false, false, false, false, false);
+let track229 = new Tracks(1340, eastY, 26, 229, true, false, 100, false, false, false, false, false, false, false);
+let track230 = new Tracks(1366, eastY, 19, 230, true, false, 100, false, false, false, false, false, false, false);
+let track231 = new Tracks(1385, eastY, 50, 231, true, false, 100, false, false, false, false, false, false, false);
+let track232 = new Tracks(1435, eastY, 50, 232, true, false, 100, false, false, false, false, false, false, false);
+let track233 = new Tracks(1485, eastY, 20, 233, true, false, 100, false, false, false, false, false, false, false);
+let track234 = new Tracks(1505, eastY, 65, 234, true, false, 100, false, false, false, false, false, false, false);
+let track235 = new Tracks(1590, eastY, 25, 235, true, false, 100, false, false, false, false, false, false, false);
+let track236 = new Tracks(1635, eastY, 65, 236, true, false, 100, false, false, false, false, false, false, false);
+let track237 = new Tracks(1700, eastY, 90, 237, true, false, 100, false, false, false, false, false, false, false);
+let track238 = new Tracks(1790, eastY, 26, 238, true, false, 100, false, false, false, false, false, false, false);
+let track239 = new Tracks(1816, eastY, 27, 239, true, false, 100, false, false, false, false, false, false, false);
+let track240 = new Tracks(1843, eastY, 50, 240, true, false, 100, false, false, false, false, false, false, false);
+let track241 = new Tracks(1893, eastY, 50, 241, true, false, 100, false, false, false, false, false, false, false);
+let track242 = new Tracks(1943, eastY, 27, 242, true, false, 100, false, false, false, false, false, false, false);
+let track243 = new Tracks(1970, eastY, 26, 242, true, false, 100, false, false, false, false, false, false, false);
+let track244 = new Tracks(1996, eastY, 19, 244, true, false, 100, false, false, false, false, false, false, false);
+let track245 = new Tracks(2015, eastY, 20, 245, true, false, 100, false, false, false, false, false, false, false);
+let track246 = new Tracks(2035, eastY, 10, 246, true, false, 100, false, false, false, false, false, false, false);
+let track247 = new Tracks(2045, eastY, 10, 247, true, false, 100, false, false, false, false, false, false, false);
+let track248 = new Tracks(2055, eastY, 25, 248, true, false, 100, false, false, false, false, false, false, false);
+let track249 = new Tracks(2080, eastY, 26, 249, true, false, 100, false, false, false, false, false, false, false);
+let track250 = new Tracks(2106, eastY, 24, 250, true, false, 100, false, false, false, false, false, false, false);
+let track251 = new Tracks(2150, eastY, 25, 251, true, false, 100, false, false, false, false, false, false, false);
+let track252 = new Tracks(2175, eastY, 165, 252, true, false, 100, false, false, false, false, false, false, false);
+let track253 = new Tracks(2340, eastY, 25, 253, true, false, 100, false, false, false, false, false, false, false);
+let track254 = new Tracks(2385, eastY, 15, 254, true, false, 100, false, false, false, false, false, false, false);
+let track255 = new Tracks(2400, eastY, 20, 255, true, false, 100, false, false, false, false, false, false, false);
+let track256 = new Tracks(2420, eastY, 26, 256, true, false, 100, false, false, false, false, false, false, false);
+let track257 = new Tracks(2446, eastY, 50, 257, true, false, 100, false, false, false, false, false, false, false);
+let track258 = new Tracks(2496, eastY, 34, 258, true, false, 100, false, false, false, false, false, false, false);
+let track259 = new Tracks(2550, eastY, 25, 259, true, false, 100, false, false, false, false, false, false, false);
+let track260 = new Tracks(2575, eastY, 75, 260, true, false, 100, false, false, false, false, false, false, false);
+let track261 = new Tracks(2650, eastY, 25, 261, true, false, 100, false, false, false, false, false, false, false);
+let track262 = new Tracks(2695, eastY, 15, 262, true, false, 100, false, false, false, false, false, false, false);
+let track263 = new Tracks(2730, eastY, 95, 263, true, false, 100, false, false, false, false, false, false, false);
+let track264 = new Tracks(2845, eastY, 15, 264, true, false, 100, false, false, false, false, false, false, false);
+let track265 = new Tracks(2880, eastY, 125, 265, true, false, 100, false, false, false, false, false, false, false);
+let track266 = new Tracks(3025, eastY, 45, 266, true, false, 100, false, false, false, false, false, false, false);
+let track267 = new Tracks(3070, eastY, 10, 267, true, false, 100, false, false, false, false, false, false, false);
+let track268 = new Tracks(3080, eastY, 10, 268, true, false, 100, false, false, false, false, false, false, false);
+let track269 = new Tracks(3090, eastY, 26, 269, true, false, 100, false, false, false, false, false, false, false);
+let track270 = new Tracks(3116, eastY, 44, 270, true, false, 100, false, false, false, false, false, false, false);
+let track271 = new Tracks(3160, eastY, 15, 271, true, false, 100, false, false, false, false, false, false, false);
+let track272 = new Tracks(3175, eastY, 20, 272, true, false, 100, false, false, false, false, false, false, false);
+let track273 = new Tracks(3195, eastY, 15, 273, true, false, 100, false, false, false, false, false, false, false);
+let track274 = new Tracks(3210, eastY, 26, 274, true, false, 100, false, false, false, false, false, false, false);
+let track275 = new Tracks(3236, eastY, 34, 275, true, false, 100, false, false, false, false, false, false, false);
+let track276 = new Tracks(3270, eastY, 30, 276, true, false, 100, false, false, false, false, false, false, false);
+let track277 = new Tracks(3300, eastY, 30, 277, true, false, 100, false, false, false, false, false, false, false);
+let track278 = new Tracks(3330, eastY, 10, 278, true, false, 100, false, false, false, false, false, false, false);
+let track279 = new Tracks(3340, eastY, 70, 279, true, false, 100, false, false, false, false, false, false, false);
+let track280 = new Tracks(3410, eastY, 75, 280, true, false, 100, false, false, false, false, false, false, false);
+let track281 = new Tracks(3505, eastY, 35, 281, true, false, 100, false, false, false, false, false, false, false);
+let track282 = new Tracks(3560, eastY, 70, 282, true, false, 100, false, false, false, false, false, false, false);
+let track283 = new Tracks(3630, eastY, 26, 283, true, false, 100, false, false, false, false, false, false, false);
+let track284 = new Tracks(3656, eastY, 80, 284, true, false, 100, false, false, false, false, false, false, false);
 
-var tracksArray = [track100, track101, track102, track103, track104, track105, track106, track107, track108, track109,
+const tracksArray = [track100, track101, track102, track103, track104, track105, track106, track107, track108, track109,
                   track110, track111, track112, track113, track114, track115, track116, track117, track118, track119,
                   track120, track121, track122, track123, track124, track125, track126, track127, track128, track129,
                   track130, track131, track132, track133, track134, track135, track136, track137, track138, track139,
@@ -1437,56 +1443,54 @@ var tracksArray = [track100, track101, track102, track103, track104, track105, t
                   track280, track281, track282, track283, track284
                   ];
 
-var trackSelect = [];
-var trackClose = [];
-var trackTsr = [];
-var trackWz = [];
-var trackMenuActive = [];
+let trackSelect = [];
+let trackClose = [];
+let trackTsr = [];
+let trackWz = [];
+let trackMenuActive = [];
 
 //switchInstances       //(x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner)
-var switch301 = new Switches(180, 1, 301, false, false, false, false, false, false, 1, "16");
-var switch302 = new Switches(225, 2, 302, false, false, false, false, false, false, 2, "16");
-var switch303 = new Switches(180, 2, 303, true, false, false, false, false, false, 3, "16");
-var switch304 = new Switches(225, 1, 304, true, false, false, false, false, false, 4, "16");
-var switch305 = new Switches(970, 1, 305, true, false, false, false, false, false, 1, "16");
-var switch306 = new Switches(1015, 2, 306, true, false, false, false, false, false, 2, "16");
-var switch307 = new Switches(970, 2, 307, true, false, false, false, false, false, 3, "16");
-var switch308 = new Switches(1015, 1, 308, true, false, false, false, false, false, 4, "16");
-var switch309 = new Switches(1570, 1, 309, true, false, false, false, false, false, 1, "16");
-var switch310 = new Switches(1615, 2, 310, true, false, false, false, false, false, 2, "16");
-var switch311 = new Switches(1570, 2, 311, true, false, false, false, false, false, 3, "16");
-var switch312 = new Switches(1615, 1, 312, true, false, false, false, false, false, 4, "16");
-var switch313 = new Switches(2130, 2, 313, true, false, false, false, false, false, 3, "16");
-var switch314 = new Switches(2175, 1, 314, true, false, false, false, false, false, 4, "16");
-var switch315 = new Switches(2320, 1, 315, true, false, false, false, false, false, 1, "16");
-var switch316 = new Switches(2365, 2, 316, true, false, false, false, false, false, 2, "16");
-var switch317 = new Switches(2530, 2, 317, true, false, false, false, false, false, 3, "16");
-var switch318 = new Switches(2575, 1, 318, true, false, false, false, false, false, 4, "16");
-var switch319 = new Switches(2630, 1, 319, true, false, false, false, false, false, 1, "16");
-var switch320 = new Switches(2675, 2, 320, true, false, false, false, false, false, 2, "16");
-var switch321 = new Switches(2710, 2, 321, true, false, false, false, false, false, 5, "16");
-var switch322 = new Switches(2825, 2, 322, true, false, false, false, false, false, 6, "16");
-var switch323 = new Switches(2860, 2, 323, true, false, false, false, false, false, 3, "16");
-var switch324 = new Switches(2905, 1, 324, true, false, false, false, false, false, 4, "16");
-var switch325 = new Switches(2960, 1, 325, true, false, false, false, false, false, 1, "16");
-var switch326 = new Switches(3005, 2, 326, true, false, false, false, false, false, 2, "16");
-var switch327 = new Switches(3440, 1, 327, true, false, false, false, false, false, 1, "16");
-var switch328 = new Switches(3485, 2, 328, true, false, false, false, false, false, 2, "16");
-var switch329 = new Switches(3540, 2, 329, true, false, false, false, false, false, 3, "16");
-var switch330 = new Switches(3585, 1, 330, true, false, false, false, false, false, 4, "16");
+let switch301 = new Switches(180, 1, 301, false, false, false, false, false, false, 1, "16");
+let switch302 = new Switches(225, 2, 302, false, false, false, false, false, false, 2, "16");
+let switch303 = new Switches(180, 2, 303, true, false, false, false, false, false, 3, "16");
+let switch304 = new Switches(225, 1, 304, true, false, false, false, false, false, 4, "16");
+let switch305 = new Switches(970, 1, 305, true, false, false, false, false, false, 1, "16");
+let switch306 = new Switches(1015, 2, 306, true, false, false, false, false, false, 2, "16");
+let switch307 = new Switches(970, 2, 307, true, false, false, false, false, false, 3, "16");
+let switch308 = new Switches(1015, 1, 308, true, false, false, false, false, false, 4, "16");
+let switch309 = new Switches(1570, 1, 309, true, false, false, false, false, false, 1, "16");
+let switch310 = new Switches(1615, 2, 310, true, false, false, false, false, false, 2, "16");
+let switch311 = new Switches(1570, 2, 311, true, false, false, false, false, false, 3, "16");
+let switch312 = new Switches(1615, 1, 312, true, false, false, false, false, false, 4, "16");
+let switch313 = new Switches(2130, 2, 313, true, false, false, false, false, false, 3, "16");
+let switch314 = new Switches(2175, 1, 314, true, false, false, false, false, false, 4, "16");
+let switch315 = new Switches(2320, 1, 315, true, false, false, false, false, false, 1, "16");
+let switch316 = new Switches(2365, 2, 316, true, false, false, false, false, false, 2, "16");
+let switch317 = new Switches(2530, 2, 317, true, false, false, false, false, false, 3, "16");
+let switch318 = new Switches(2575, 1, 318, true, false, false, false, false, false, 4, "16");
+let switch319 = new Switches(2630, 1, 319, true, false, false, false, false, false, 1, "16");
+let switch320 = new Switches(2675, 2, 320, true, false, false, false, false, false, 2, "16");
+let switch321 = new Switches(2710, 2, 321, true, false, false, false, false, false, 5, "16");
+let switch322 = new Switches(2825, 2, 322, true, false, false, false, false, false, 6, "16");
+let switch323 = new Switches(2860, 2, 323, true, false, false, false, false, false, 3, "16");
+let switch324 = new Switches(2905, 1, 324, true, false, false, false, false, false, 4, "16");
+let switch325 = new Switches(2960, 1, 325, true, false, false, false, false, false, 1, "16");
+let switch326 = new Switches(3005, 2, 326, true, false, false, false, false, false, 2, "16");
+let switch327 = new Switches(3440, 1, 327, true, false, false, false, false, false, 1, "16");
+let switch328 = new Switches(3485, 2, 328, true, false, false, false, false, false, 2, "16");
+let switch329 = new Switches(3540, 2, 329, true, false, false, false, false, false, 3, "16");
+let switch330 = new Switches(3585, 1, 330, true, false, false, false, false, false, 4, "16");
     
-var switchesArray = [switch301, switch302, switch303, switch304, switch305, switch306, switch307, switch308, switch309, switch310,
+const switchesArray = [switch301, switch302, switch303, switch304, switch305, switch306, switch307, switch308, switch309, switch310,
                     switch311, switch312, switch313, switch314, switch315, switch316, switch317, switch318, switch319, switch320, 
                     switch321, switch322, switch323, switch324, switch325, switch326, switch327, switch328, switch329, switch330];
 
-var trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
-var shuffler = function(array) {
-	var c = array.length;
-	while (c > 0) {
-		var ind = Math.floor(Math.random() * c);
-		c--;
-		var temp = array[c];
-		array[c] = array[ind];
+const trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
+function shuffler(array) {
+  for(let i = array.length; i > 0; i--) {
+		var ind = Math.floor(Math.random() * i);
+		var temp = array[i];
+		array[i] = array[ind];
 		array[ind] = temp;
 	}
 };
@@ -1495,128 +1499,128 @@ shuffler(trainNums);
 //x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
 //Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu, safe)
 
-var trainA = new Trains(131,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 1, false, 0, 1, false, 0, false, true);
-var trainB = new Trains(575,  eastY, false, 102, 20, "02", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainC = new Trains(1155, eastY, false, 103, 20, "03", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainD = new Trains(1610, eastY, false, 104, 20, "04", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainE = new Trains(2058, eastY, false, 105, 20, "05", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainF = new Trains(2800, eastY, false, 106, 20, "06", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainG = new Trains(3300, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-var trainH = new Trains(3630, westY, false, 108, 20, "08", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainI = new Trains(3200, westY, false, 109, 20, "09", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainJ = new Trains(2758, westY, false, 110, 20, "10", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainK = new Trains(2199, westY, false, 111, 20, "11", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainL = new Trains(1850, westY, false, 112, 20, "12", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainM = new Trains(1345, westY, false, 113, 20, "13", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainN = new Trains(856,  westY, false, 114, 20, "14", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-var trainO = new Trains(466,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainA = new Trains(131,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 1, false, 0, 1, false, 0, false, true);
+let trainB = new Trains(575,  eastY, false, 102, 20, "02", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainC = new Trains(1155, eastY, false, 103, 20, "03", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainD = new Trains(1610, eastY, false, 104, 20, "04", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainE = new Trains(2058, eastY, false, 105, 20, "05", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainF = new Trains(2800, eastY, false, 106, 20, "06", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainG = new Trains(3300, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
+let trainH = new Trains(3630, westY, false, 108, 20, "08", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainI = new Trains(3200, westY, false, 109, 20, "09", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainJ = new Trains(2758, westY, false, 110, 20, "10", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainK = new Trains(2199, westY, false, 111, 20, "11", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainL = new Trains(1850, westY, false, 112, 20, "12", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainM = new Trains(1345, westY, false, 113, 20, "13", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainN = new Trains(856,  westY, false, 114, 20, "14", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainO = new Trains(466,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
 
-var trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
+let trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
 
-for(var t = 0; t < trainsArray.length; t++) {
-	trainsArray[t].number = trainNums[t];
+for(let i = 0; i < trainsArray.length; i++) {
+	trainsArray[i].number = trainNums[i];
 }
 
-var trainMenuActive = [];
+let trainMenuActive = [];
 
 //runs (run, x, y, dwell, docked, near, jump, direction, track)
-var run101 = new Shadows(101, 143, eastY, 25, false, false, 0, 0, 2);
-var run102 = new Shadows(102, 685, eastY, 25, false, false, 0, 0, 2);
-var run103 = new Shadows(103, 1155, eastY, 25, false, false, 0, 0, 2);
-var run104 = new Shadows(104, 1610, eastY, 25, false, false, 0, 0, 2);
-var run105 = new Shadows(105, 2158, eastY, 25, false, false, 0, 0, 2);
-var run106 = new Shadows(106, 2600, eastY, 25, false, false, 0, 0, 2);
-var run107 = new Shadows(107, 3100, eastY, 25, false, false, 0, 0, 2);
-var run108 = new Shadows(108, 3550, westY, 25, false, false, 0, 1, 1);
-var run109 = new Shadows(109, 3100, westY, 25, false, false, 0, 1, 1);
-var run110 = new Shadows(110, 2658, westY, 25, false, false, 0, 1, 1);
-var run111 = new Shadows(111, 2199, westY, 25, false, false, 0, 1, 1);
-var run112 = new Shadows(112, 1650, westY, 25, false, false, 0, 1, 1);
-var run113 = new Shadows(113, 1145, westY, 25, false, false, 0, 1, 1);
-var run114 = new Shadows(114, 656, westY, 25, false, false, 0, 1, 1);
-var run115 = new Shadows(115, 366, westY, 25, false, false, 0, 1, 1);
+let run101 = new Shadows(101, 143, eastY, 25, false, false, 0, 0, 2);
+let run102 = new Shadows(102, 685, eastY, 25, false, false, 0, 0, 2);
+let run103 = new Shadows(103, 1155, eastY, 25, false, false, 0, 0, 2);
+let run104 = new Shadows(104, 1610, eastY, 25, false, false, 0, 0, 2);
+let run105 = new Shadows(105, 2158, eastY, 25, false, false, 0, 0, 2);
+let run106 = new Shadows(106, 2600, eastY, 25, false, false, 0, 0, 2);
+let run107 = new Shadows(107, 3100, eastY, 25, false, false, 0, 0, 2);
+let run108 = new Shadows(108, 3550, westY, 25, false, false, 0, 1, 1);
+let run109 = new Shadows(109, 3100, westY, 25, false, false, 0, 1, 1);
+let run110 = new Shadows(110, 2658, westY, 25, false, false, 0, 1, 1);
+let run111 = new Shadows(111, 2199, westY, 25, false, false, 0, 1, 1);
+let run112 = new Shadows(112, 1650, westY, 25, false, false, 0, 1, 1);
+let run113 = new Shadows(113, 1145, westY, 25, false, false, 0, 1, 1);
+let run114 = new Shadows(114, 656, westY, 25, false, false, 0, 1, 1);
+let run115 = new Shadows(115, 366, westY, 25, false, false, 0, 1, 1);
 
-var runsArray = [run101, run102, run103, run104, run105, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
+let runsArray = [run101, run102, run103, run104, run105, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
 
 //signalInstances      (x, y, aspect, direction, label)
-var sig11 = new Signals(tun.x + 47, westY + 31, 0, 0, "1-E-1");
-var sig12 = new Signals(tun.x + 41, eastY + 29, 0, 0, "1-E-2");
-var sig13 = new Signals(tun.x + 130, westY - 14, 0, 1, "1-W-3");
-var sig14 = new Signals(tun.x + 130, eastY - 14, 0, 1, "1-W-4");
-var sig21 = new Signals(lyo.x + 157, westY + 31, 0, 0, "2-E-1");
-var sig22 = new Signals(lyo.x + 166, eastY + 29, 0, 0, "2-E-2");
-var sig23 = new Signals(lyo.x + 235, westY - 14, 0, 1, "2-W-3");
-var sig24 = new Signals(lyo.x + 242, eastY - 14, 0, 1, "2-W-4");
-var sig25 = new Signals(puot.x + 47, westY + 31, 0, 0, "2-E-5");
-var sig26 = new Signals(puot.x + 24, eastY + 27, 0, 0, "2-E-6");
-var sig27 = new Signals(puot.x + 130, westY - 14, 0, 1, "2-W-7");
-var sig28 = new Signals(puot.x + 130, eastY - 14, 0, 1, "2-W-8");
-var sig31 = new Signals(hur.x + 85, westY + 26, 0, 0, "3-E-1");
-var sig32 = new Signals(hur.x + 47, eastY + 27, 0, 0, "3-E-2");
-var sig33 = new Signals(hur.x + 129, westY - 15, 0, 1, "3-W-3");
-var sig34 = new Signals(hur.x + 98, eastY - 15, 0, 1, "3-W-4");
-var sig35 = new Signals(tre.x - 110, westY + 26, 0, 0, "3-E-5");
-var sig36 = new Signals(tre.x - 67, eastY + 27, 0, 0, "3-E-6");
-var sig37 = new Signals(tre.x - 69, westY - 15, 0, 1, "3-W-7");
-var sig38 = new Signals(tre.x - 30, eastY - 15, 0, 1, "3-W-8");
-var sig39 = new Signals(tre.x + 135, westY + 26, 0, 0, "3-E-9");
-var sig310 = new Signals(tre.x + 97, eastY + 27, 0, 0, "3-E-10");
-var sig311 = new Signals(tre.x + 179, westY - 15, 0, 1, "3-W-11");
-var sig312 = new Signals(tre.x + 148, eastY - 15, 0, 1, "3-W-12");
-var sig313 = new Signals(tre.x + 207, westY + 26, 0, 0, "3-E-13");
-var sig314 = new Signals(tre.x + 242, eastY + 27, 0, 0, "3-E-14");
-var sig315 = new Signals(tre.x + 250, westY - 15, 0, 1, "3-W-15");
-var sig316 = new Signals(tre.x + 330, eastY - 12, 0, 1, "3-W-16");
-var sig318 = new Signals(tre.x + 381, eastY + 26, 0, 0, "3-W-18");
-var sig320 = new Signals(tre.x + 409, eastY - 12, 0, 1, "3-W-20");
-var sig321 = new Signals(stl.x - 200, westY + 26, 0, 0, "3-E-21");
-var sig322 = new Signals(stl.x - 230, eastY + 26, 0, 0, "3-E-22");
-var sig323 = new Signals(stl.x - 115, westY - 15, 0, 1, "3-W-23");
-var sig324 = new Signals(stl.x - 60, eastY - 15, 0, 1, "3-W-24");
-var sig41 = new Signals(bla.x - 200, westY + 26, 0, 0, "4-E-1");
-var sig42 = new Signals(bla.x - 152, eastY + 26, 0, 0, "4-E-2");
-var sig43 = new Signals(bla.x - 20, westY - 15, 0, 1, "4-W-3");
-var sig44 = new Signals(bla.x - 50, eastY - 15, 0, 1, "4-W-4");
+let sig11 = new Signals(tun.x + 47, westY + 31, 0, 0, "1-E-1");
+let sig12 = new Signals(tun.x + 41, eastY + 29, 0, 0, "1-E-2");
+let sig13 = new Signals(tun.x + 130, westY - 14, 0, 1, "1-W-3");
+let sig14 = new Signals(tun.x + 130, eastY - 14, 0, 1, "1-W-4");
+let sig21 = new Signals(lyo.x + 157, westY + 31, 0, 0, "2-E-1");
+let sig22 = new Signals(lyo.x + 166, eastY + 29, 0, 0, "2-E-2");
+let sig23 = new Signals(lyo.x + 235, westY - 14, 0, 1, "2-W-3");
+let sig24 = new Signals(lyo.x + 242, eastY - 14, 0, 1, "2-W-4");
+let sig25 = new Signals(puot.x + 47, westY + 31, 0, 0, "2-E-5");
+let sig26 = new Signals(puot.x + 24, eastY + 27, 0, 0, "2-E-6");
+let sig27 = new Signals(puot.x + 130, westY - 14, 0, 1, "2-W-7");
+let sig28 = new Signals(puot.x + 130, eastY - 14, 0, 1, "2-W-8");
+let sig31 = new Signals(hur.x + 85, westY + 26, 0, 0, "3-E-1");
+let sig32 = new Signals(hur.x + 47, eastY + 27, 0, 0, "3-E-2");
+let sig33 = new Signals(hur.x + 129, westY - 15, 0, 1, "3-W-3");
+let sig34 = new Signals(hur.x + 98, eastY - 15, 0, 1, "3-W-4");
+let sig35 = new Signals(tre.x - 110, westY + 26, 0, 0, "3-E-5");
+let sig36 = new Signals(tre.x - 67, eastY + 27, 0, 0, "3-E-6");
+let sig37 = new Signals(tre.x - 69, westY - 15, 0, 1, "3-W-7");
+let sig38 = new Signals(tre.x - 30, eastY - 15, 0, 1, "3-W-8");
+let sig39 = new Signals(tre.x + 135, westY + 26, 0, 0, "3-E-9");
+let sig310 = new Signals(tre.x + 97, eastY + 27, 0, 0, "3-E-10");
+let sig311 = new Signals(tre.x + 179, westY - 15, 0, 1, "3-W-11");
+let sig312 = new Signals(tre.x + 148, eastY - 15, 0, 1, "3-W-12");
+let sig313 = new Signals(tre.x + 207, westY + 26, 0, 0, "3-E-13");
+let sig314 = new Signals(tre.x + 242, eastY + 27, 0, 0, "3-E-14");
+let sig315 = new Signals(tre.x + 250, westY - 15, 0, 1, "3-W-15");
+let sig316 = new Signals(tre.x + 330, eastY - 12, 0, 1, "3-W-16");
+let sig318 = new Signals(tre.x + 381, eastY + 26, 0, 0, "3-W-18");
+let sig320 = new Signals(tre.x + 409, eastY - 12, 0, 1, "3-W-20");
+let sig321 = new Signals(stl.x - 200, westY + 26, 0, 0, "3-E-21");
+let sig322 = new Signals(stl.x - 230, eastY + 26, 0, 0, "3-E-22");
+let sig323 = new Signals(stl.x - 115, westY - 15, 0, 1, "3-W-23");
+let sig324 = new Signals(stl.x - 60, eastY - 15, 0, 1, "3-W-24");
+let sig41 = new Signals(bla.x - 200, westY + 26, 0, 0, "4-E-1");
+let sig42 = new Signals(bla.x - 152, eastY + 26, 0, 0, "4-E-2");
+let sig43 = new Signals(bla.x - 20, westY - 15, 0, 1, "4-W-3");
+let sig44 = new Signals(bla.x - 50, eastY - 15, 0, 1, "4-W-4");
 
-var signalsArray = [sig11, sig12, sig13, sig14, sig21, sig22, sig23, sig24, sig25, sig26, sig27, sig28, sig31, sig32, sig33, sig34, sig35, sig36, sig37, sig38, sig39, sig310, sig311, sig312, sig313, sig314, sig315, sig316, sig318, sig320, sig321, sig322, sig323, sig324, sig41, sig42, sig43, sig44];
+const signalsArray = [sig11, sig12, sig13, sig14, sig21, sig22, sig23, sig24, sig25, sig26, sig27, sig28, sig31, sig32, sig33, sig34, sig35, sig36, sig37, sig38, sig39, sig310, sig311, sig312, sig313, sig314, sig315, sig316, sig318, sig320, sig321, sig322, sig323, sig324, sig41, sig42, sig43, sig44];
 
 //crossovers (x, 365, up, lma)
-var cross1 = new Crossover(tun.x + 50, westY + 19, true, false);	
-var cross2 = new Crossover(tun.x + 50, westY + 19, false, false);
-var cross3 = new Crossover(lyo.x + 170, westY + 19, true, false);
-var cross4 = new Crossover(lyo.x + 170, westY + 19, false, false);
-var cross5 = new Crossover(puot.x + 50, westY + 19, true, false);
-var cross6 = new Crossover(puot.x + 50, westY + 19, false, false);
-var cross7 = new Crossover(2130, westY + 19, true, false); //hur
-var cross8 = new Crossover(2320, westY + 19, false, false);
-var cross9 = new Crossover(2530, westY + 19, true, false);
-var cross10 = new Crossover(2630, westY + 19, false, false);
-var cross11 = new Crossover(2860, westY + 19, true, false);
-var cross12 = new Crossover(2960, westY + 19, false, false);
-var cross13 = new Crossover(3440, westY + 19, false, false);
-var cross14 = new Crossover(3540, westY + 19, true, false);
+let cross1 = new Crossover(tun.x + 50, westY + 19, true, false);	
+let cross2 = new Crossover(tun.x + 50, westY + 19, false, false);
+let cross3 = new Crossover(lyo.x + 170, westY + 19, true, false);
+let cross4 = new Crossover(lyo.x + 170, westY + 19, false, false);
+let cross5 = new Crossover(puot.x + 50, westY + 19, true, false);
+let cross6 = new Crossover(puot.x + 50, westY + 19, false, false);
+let cross7 = new Crossover(2130, westY + 19, true, false); //hur
+let cross8 = new Crossover(2320, westY + 19, false, false);
+let cross9 = new Crossover(2530, westY + 19, true, false);
+let cross10 = new Crossover(2630, westY + 19, false, false);
+let cross11 = new Crossover(2860, westY + 19, true, false);
+let cross12 = new Crossover(2960, westY + 19, false, false);
+let cross13 = new Crossover(3440, westY + 19, false, false);
+let cross14 = new Crossover(3540, westY + 19, true, false);
 
-var crossArray = [cross1, cross2, cross3, cross4, cross5, cross6, cross7, cross8, cross9, cross10, cross11, cross12, cross13, cross14];
+const crossArray = [cross1, cross2, cross3, cross4, cross5, cross6, cross7, cross8, cross9, cross10, cross11, cross12, cross13, cross14];
 
 //cross tun+50 lyo+170, puot+50, 2130, 2320, 2530, 2630, 2860, 2960, 3440, 3540
 
 
-var platformMenu = new Menus({
+let platformMenu = new Menus({
     x: mouseX,
     y: mouseY,
     w: 100,
     h: 80,
 });
 
-var trainMenu = new Menus({
+let trainMenu = new Menus({
 	x: mouseX,
 	y: mouseY,
 	w: 100,
 	h: 80,
 });
 
-var trackMenu = new Menus({
+let trackMenu = new Menus({
 	x: mouseX,
 	y: mouseY,
 	w: 100,
@@ -1671,39 +1675,39 @@ let speedEl = document.getElementById('speed');
 
 draw = function() {
     
-    background(112, 112, 112); 
+  background(112, 112, 112); 
     
     
     // if(trackSelect.length !== 0) {
     //   text(trackSelect[0].number + " " + trackSelect[0].x + " and " + trackSelect[0].length, 3250, 200);
     // }
 
-       
-    if(speedf === 0) {
-      speed = 0;
-    } else if(speedf === 1) {
-      speed = 240;
-    } else if(speedf === 2) {
-      speed = 120;
-    } else if(speedf === 3) {
-      speed = 60;
-    } else if(speedf === 4) {
-      speed = 30;
-    } else if(speedf === 5) {
-      speed = 15;
-    } else if(speedf === 6) {
-      speed = 8;
-    } else if(speedf === 7) {
-      speed = 4;
-    } else if(speedf === 8) {
-      speed = 1;
-    }
-    speedEl.textContent = speedf;
+     
+  if(speedf === 0) {
+    speed = 0;
+  } else if(speedf === 1) {
+    speed = 240;
+  } else if(speedf === 2) {
+    speed = 120;
+  } else if(speedf === 3) {
+    speed = 60;
+  } else if(speedf === 4) {
+    speed = 30;
+  } else if(speedf === 5) {
+    speed = 15;
+  } else if(speedf === 6) {
+    speed = 8;
+  } else if(speedf === 7) {
+    speed = 4;
+  } else if(speedf === 8) {
+    speed = 1;
+  }
+  speedEl.textContent = speedf;
     
-    //speed
-    //runShadowsVisible
-    //CombinedState
-    //switchLabels
+  //speed
+  //runShadowsVisible
+  //CombinedState
+  //switchLabels
 
 
   if(track102.lma === true || track103.lma === true || track203.lma === true || track204.lma === true) {
@@ -1878,7 +1882,7 @@ draw = function() {
 
 
 
-  var btnTkClose = new Button({
+  let btnTkClose = new Button({
   		x: trackMenu.x + 20,
   		y: trackMenu.y + 15,
   		width: 100,
@@ -1895,7 +1899,7 @@ draw = function() {
   		}
 	  });
 	  
-	  var btnTkTsr = new Button({
+	let btnTkTsr = new Button({
   		x: trackMenu.x + 20,
   		y: trackMenu.y + 32,
   		width: 100,
@@ -1916,7 +1920,7 @@ draw = function() {
   		}
 	  });
 
-  var btnTkWz = new Button({
+  let btnTkWz = new Button({
   		x: trackMenu.x + 20,
   		y: trackMenu.y + 49,
   		width: 100,
@@ -1934,7 +1938,7 @@ draw = function() {
 	  });
 
 
-  var btnTrnAtpm = new Button({
+  let btnTrnAtpm = new Button({
     x: trainMenu.x + 20,
     y: trainMenu.y + 32,
     width: 100,
@@ -1945,7 +1949,7 @@ draw = function() {
     }
   });
 
-  var btnTrnEb = new Button({
+  let btnTrnEb = new Button({
     x: trainMenu.x + 20,
     y: trainMenu.y + 49,
     width: 100,
@@ -1956,7 +1960,7 @@ draw = function() {
     }
   });
   
-  var btnPlatHold = new Button({
+  let btnPlatHold = new Button({
     x: platformMenu.x + 20,
     y: platformMenu.y + 15,
     width: 100,
@@ -1967,7 +1971,7 @@ draw = function() {
     }
   });
   
-  var btnPlatClose = new Button({
+  let btnPlatClose = new Button({
     x: platformMenu.x + 20,
     y: platformMenu.y + 32,
     width: 100,
@@ -1978,7 +1982,7 @@ draw = function() {
     }
   });
 
-  var btnPlatDwell = new Button({
+  let btnPlatDwell = new Button({
     x: platformMenu.x + 20,
     y: platformMenu.y + 49,
     width: 100,
@@ -2082,101 +2086,95 @@ draw = function() {
 	text("SW_329", 3508, eastY - 22);
 	text("SW_330", 3528, westY + 35);
 
-  for(var s = 0; s < signalsArray.length; s++) {
-    signalsArray[s].drawSignal();
+  for(let i = 0; i < signalsArray.length; i++) {
+    signalsArray[i].drawSignal();
   }
 	
-	for(var t = 0; t < tracksArray.length; t++) {
-	  tracksArray[t].drawTrack();
+	for(let i = 0; i < tracksArray.length; i++) {
+	  tracksArray[i].drawTrack();
 	}
 	
-	for(var s = 0; s < switchesArray.length; s++) {
-	  switchesArray[s].drawSwitch();
+	for(let i = 0; i < switchesArray.length; i++) {
+	  switchesArray[i].drawSwitch();
 	}
 
-	for(var c = 0; c < crossArray.length; c++) {
-		crossArray[c].drawCross();
+	for(let i = 0; i < crossArray.length; i++) {
+		crossArray[i].drawCross();
 	}
   
-  for(var t = 0; t < trainsArray.length; t++) {
-		trainsArray[t].checkSafeDistance();
+  for(let i = 0; i < trainsArray.length; i++) {
+		trainsArray[i].checkSafeDistance();
 	}
     
-	for(var t = 0; t < trainsArray.length; t++) {
-		trainsArray[t].drawTrain();
+	for(let i = 0; i < trainsArray.length; i++) {
+		trainsArray[i].drawTrain();
 	}
 
-  for(var r = 0; r < runsArray.length; r++) {
-    runsArray[r].drawShadow();
+  for(let i = 0; i < runsArray.length; i++) {
+    runsArray[i].drawShadow();
   }
     
     
   if(trackMenuActive.length === 0) {
     trackMenu.x = -200;
   }
-  for(var i = 0; i < trackMenuActive.length; i++) {
+  for(let i = 0; i < trackMenuActive.length; i++) {
     trackMenuActive[i].drawTrackMenu();
 	}
   
   if(trainMenuActive.length === 0) {
     trainMenu.x = -200;
   }
-  for(var i = 0; i < trainMenuActive.length; i++) {
+  for(let i = 0; i < trainMenuActive.length; i++) {
     trainMenuActive[i].drawTrainMenu();
 	}
      
   if(platformMenuActive.length === 0) {
     platformMenu.x = -200;
   }
-  for(var i = 0; i < platformMenuActive.length; i++) {
+  for(let i = 0; i < platformMenuActive.length; i++) {
     platformMenuActive[i].drawPlatformMenu();
   }
-     
    
      
-     
-	mouseClicked = function() {
-	  
-	  for(var t = 0; t < tracksArray.length; t++) {
-      if(tracksArray[t].isUnderMouse(mouseX, mouseY)) {
-        trackSelect.push(tracksArray[t]);
+function	mouseClicked() {
+	  for(let i = 0; i < tracksArray.length; i++) {
+      if(tracksArray[i].isUnderMouse(mouseX, mouseY)) {
+        trackSelect.push(tracksArray[i]);
         trackMenuActive = [];
         trainMenuActive = [];
         platformMenuActive = [];
-        trackMenuActive.push(tracksArray[t]);
+        trackMenuActive.push(tracksArray[i]);
         trackMenu.x = mouseX;
 		    trackMenu.y = mouseY;
       }
     }
-    
-    for(var n = 0; n < trainsArray.length; n++) {
-      if(trainsArray[n].isUnderMouse(mouseX, mouseY)) {
+    for(let i = 0; i < trainsArray.length; i++) {
+      if(trainsArray[i].isUnderMouse(mouseX, mouseY)) {
         trackMenuActive = [];
         trackSelect = [];
         trainMenuActive = [];
         platformMenuActive = [];
-        trainMenuActive.push(trainsArray[n]);
+        trainMenuActive.push(trainsArray[i]);
         trainMenu.x = mouseX;
         trainMenu.y = mouseY;
       }
     }
-    
-    for(var p = 0; p < platformsArray.length; p++) {
-      if(platformsArray[p].isUnderMouse(mouseX, mouseY)) {
+    for(let i = 0; i < platformsArray.length; i++) {
+      if(platformsArray[i].isUnderMouse(mouseX, mouseY)) {
         trackMenuActive = [];
         trackSelect = [];
         trainMenuActive = [];
         platformMenuActive = [];
-        platformMenuActive.push(platformsArray[p]);
+        platformMenuActive.push(platformsArray[i]);
         platformMenu.x = mouseX;
         platformMenu.y = mouseY;
       }
     }
-
-    for(var t = 0; t < trackSelect.length; t++) {
-      trackSelect[t].select = true;
-      trackSelect[t].westArrow = true;
-      trackSelect[t].eastArrow = true;
+    for(let i = 0; i < trackSelect.length; i++) {
+      trackSelect[i].select = true;
+      trackSelect[i].westArrow = true;
+      trackSelect[i].eastArrow = true;
     }
     
 
@@ -2186,11 +2184,6 @@ draw = function() {
 	  
 	  btnTrnAtpm.handleMouseClick();
     btnTrnEb.handleMouseClick();
-	  
-  // 	systemHoldButton.handleMouseClick();
-  // 	powerButton.handleMouseClick();
-  // 	speedUp.handleMouseClick();
-  // 	speedDown.handleMouseClick();
   	
   	btnPlatHold.handleMouseClick();
   	btnPlatClose.handleMouseClick();
@@ -2199,8 +2192,6 @@ draw = function() {
 
   };//endMouseClicked
     
-
-
 // debug tracks
 
   // for(var i = 0; i < trackSelect.length; i++) {
@@ -2213,10 +2204,9 @@ draw = function() {
   // }
 
 
-
     // Clock time
     let clock = new Date();
-    var day = new Array();
+    let day = new Array();
     day[0] = "Sunday";
     day[1] = "Monday";
     day[2] = "Tuesday";
@@ -2224,7 +2214,7 @@ draw = function() {
     day[4] = "Thursday";
     day[5] = "Friday";
     day[6] = "Saturday";
-    var month = new Array();
+    let month = new Array();
     month[0] = "January";
     month[1] = "February";
     month[2] = "March";
@@ -2237,146 +2227,138 @@ draw = function() {
     month[9] = "October";
     month[10] = "November";
     month[11] = "December";
-    var cHours = clock.getHours();
-    var cMinutes = clock.getMinutes();
+    let cHours = clock.getHours();
+    let cMinutes = clock.getMinutes();
     cMinutes = cMinutes < 10 ? '0' + cMinutes : cMinutes;
-    var cSeconds = clock.getSeconds();
+    let cSeconds = clock.getSeconds();
     cSeconds = cSeconds < 10 ? '0' + cSeconds : cSeconds;
     
     let clockDateEl = document.querySelector('#date-span');
     let clockTimeEl = document.querySelector('#time-span');
     clockDateEl.textContent = (day[clock.getDay()] + ", " + month[clock.getMonth()] + " " + clock.getDate() + ", " + clock.getFullYear() + ".");
     clockTimeEl.textContent = (cHours + ':' + cMinutes + ':' + cSeconds);
-
-
-    
-    
     
 }; //endDrawFunction
 
+	}
+};  //endProcessing/sketchFunctions
 
+// Get the canvas that Processing-js will use
+const canvas = document.getElementById("mycanvas"); 
+// Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+const processingInstance = new Processing(canvas, sketchProc); 
 
-			}
-		};  //endProcessing/sketchFunctions
+// DOM manipulations, except clock
 
-    // Get the canvas that Processing-js will use
-    var canvas = document.getElementById("mycanvas"); 
-    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
-    var processingInstance = new Processing(canvas, sketchProc); 
-
-
-    // DOM manipulations, except clock
-
-    let activeAlarmsEl = document.getElementById('activeAlarms');
-    activeAlarmsEl.textContent = 0;
+let activeAlarmsEl = document.getElementById('activeAlarms');
+activeAlarmsEl.textContent = 0;
     
-    let randomYardTrains = [];
-    for(let i = 0; i < 5; i++) {
-      randomYardTrains.push(Math.floor(Math.random() * (56 - 35 + 1)) + 35);
-    }
+let randomYardTrains = [];
+for(let i = 0; i < 6; i++) {
+  randomYardTrains.push(Math.floor(Math.random() * (56 - 35 + 1)) + 35);
+}
 
-    let randomYardSwitch = Math.floor(Math.random() * (532 - 501 + 1)) + 501;
+let randomYardSwitch = Math.floor(Math.random() * (532 - 501 + 1)) + 501;
 
-    // End of message time
-    var aUTC = new Date();
-    var eYear = aUTC.getFullYear();
-    var eMonth = aUTC.getMonth() + 1;
-    eMonth = eMonth < 10 ? '0' + eMonth : eMonth;
-    var eDate = aUTC.getDate();
-    eDate = eDate < 10 ? '0' + eDate : eDate;
-    var eHours = aUTC.getHours();
-    var eMinutes = aUTC.getMinutes();
-    eMinutes = eMinutes < 10 ? '0' + eMinutes : eMinutes;
-    var eSeconds = aUTC.getSeconds();
-    eSeconds = eSeconds < 10 ? '0' + eSeconds : eSeconds;
-    var eMilliseconds = aUTC.getMilliseconds();
-    eMilliseconds = eMilliseconds < 100 && eMilliseconds >= 10 ? '0' + eMilliseconds : eMilliseconds < 10 && eMilliseconds >= 1 ? '00' + eMilliseconds : '000';
-    var edt = eYear + '-' + eMonth + '-' + eDate + ' ' + eHours + ':' + eMinutes + ':' + eSeconds + "." + eMilliseconds;
+// End of message time
+let aUTC = new Date();
+let eYear = aUTC.getFullYear();
+let eMonth = aUTC.getMonth() + 1;
+eMonth = eMonth < 10 ? '0' + eMonth : eMonth;
+let eDate = aUTC.getDate();
+eDate = eDate < 10 ? '0' + eDate : eDate;
+let eHours = aUTC.getHours();
+let eMinutes = aUTC.getMinutes();
+eMinutes = eMinutes < 10 ? '0' + eMinutes : eMinutes;
+let eSeconds = aUTC.getSeconds();
+eSeconds = eSeconds < 10 ? '0' + eSeconds : eSeconds;
+let eMilliseconds = aUTC.getMilliseconds();
+eMilliseconds = eMilliseconds < 100 && eMilliseconds >= 10 ? '0' + eMilliseconds : eMilliseconds < 10 && eMilliseconds >= 1 ? '00' + eMilliseconds : '000';
+let edt = eYear + '-' + eMonth + '-' + eDate + ' ' + eHours + ':' + eMinutes + ':' + eSeconds + "." + eMilliseconds;
 
-    // Array of arrays of alarm messages [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
-    const falseAlarms = [
-      [
-      "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = " + edt,
-      "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage 0: 0 reports: Train integrity is reestablished, at time = " + edt,
-      "Train " + randomYardTrains[1] + " [0" + randomYardTrains[1] + "] Manually driven (RM) without MRR",
-      "VOBC 10" + randomYardTrains[2] + " cannot establish communication with ATS.",
-      "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0"
-    ], [
-      "Switch SW_" + randomYardSwitch + " is disturbed"
-    ], [
-      "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time = " + edt,
-      "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time = " + edt,
-      "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time = " + edt,
-      "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time = " + edt,
-      "ZC ZC5 Rack Fan Failure Detected",
-      "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected"
-    ]
-    ];
-    const realAlarms = [];
-            
+// Array of arrays of alarm messages [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
+const falseAlarms = [
+  [
+    "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = " + edt,
+    "Train " + randomYardTrains[0] + " [0" + randomYardTrains[0] + "](10" + randomYardTrains[0] + ") front position at chainage 0: 0 reports: Train integrity is reestablished, at time = " + edt,
+    "Train " + randomYardTrains[1] + " [0" + randomYardTrains[1] + "] Manually driven (RM) without MRR",
+    "VOBC 10" + randomYardTrains[2] + " cannot establish communication with ATS.",
+    "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0",
+    "VOBC 10" + randomYardTrains[4] + "on Train " + randomYardTrains[4] + " [0" + randomYardTrains[4] + "](10" + randomYardTrains[4] + ") front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=" + edt
+  ], [
+    "Switch SW_" + randomYardSwitch + " is disturbed"
+  ], [
+    "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time = " + edt,
+    "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time = " + edt,
+    "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time = " + edt,
+    "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time = " + edt,
+    "ZC ZC5 Rack Fan Failure Detected",
+    "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected"
+  ]
+];
+const realAlarms = [];
 
+
+function clearAlarm(event) {
+  if(event.target.tagName === "p") {
+    event.target.remove();
+  } else { //else if(event.target.tagName === "span") {
+    event.target.parentNode.remove();
+  }
+  activeAlarmsEl.textContent --;
+  window.setTimeout(generateAlarm, 200000);
+};
     
-    function clearAlarm(event) {
-      if(event.target.tagName === "p") {
-        event.target.remove();
-      } else { //else if(event.target.tagName === "span") 
-        event.target.parentNode.remove();
-      }
-      activeAlarmsEl.textContent --;
-      window.setTimeout(generateAlarm, 200000);
-    };
-    
-    //VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=
-    //VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected - cleared, at time =
+//VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=
+//VOBC 1001 on Train 7 [007](1007) front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected - cleared, at time =
 
-    function generateAlarm() {
+function generateAlarm() {
 
-      // Start of Alarm Time
-      let aDate = new Date();
-      let aHours = aDate.getHours();
-      aHours = aHours < 10 ? '0' + aHours : aHours;
-      let aMinutes = aDate.getMinutes();
-      aMinutes = aMinutes < 10 ? '0' + aMinutes : aMinutes;
-      let aSeconds = aDate.getSeconds();
-      aSeconds = aSeconds < 10 ? '0' + aSeconds : aSeconds;
-      let adt = aDate.getMonth() + "/" + aDate.getDate() + "/" + aDate.getFullYear();
-      let aTime = aHours + ":" + aMinutes + ":" + aSeconds;
+  // Start of Alarm Time
+  let aDate = new Date();
+  let aHours = aDate.getHours();
+  aHours = aHours < 10 ? '0' + aHours : aHours;
+  let aMinutes = aDate.getMinutes();
+  aMinutes = aMinutes < 10 ? '0' + aMinutes : aMinutes;
+  let aSeconds = aDate.getSeconds();
+  aSeconds = aSeconds < 10 ? '0' + aSeconds : aSeconds;
+  let adt = aDate.getMonth() + "/" + aDate.getDate() + "/" + aDate.getFullYear();
+  let aTime = aHours + ":" + aMinutes + ":" + aSeconds;
 
       
-      var messageI1 = Math.floor(Math.random() * 3);
-      var messageSet = falseAlarms[messageI1];
-      var messageI2 = Math.floor(Math.random() * messageSet.length);
-      var message = falseAlarms[messageI1][messageI2];
-      // [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
-      let category = messageI1 == 0 ? "Train" : "Wayside";
-      let region = messageI1 == 2 ? "ZC5" : "Yard";
+  let messageI1 = Math.floor(Math.random() * 3);
+  let messageSet = falseAlarms[messageI1];
+  let messageI2 = Math.floor(Math.random() * messageSet.length);
+  let message = falseAlarms[messageI1][messageI2];
+  // [YardTrainLRV#][YardWaysideSWT#][ZC5WaysideNo#]
+  let category = messageI1 == 0 ? "Train" : "Wayside";
+  let region = messageI1 == 2 ? "ZC5" : "Yard";
       
-      let alarmEl = document.createElement('p');
-      alarmEl.setAttribute("class", "alarm");
-      alarmEl.innerHTML = "<span>" + adt + " " + aTime + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
-      let alarmsEl = document.getElementById('alarms');
-      alarmsEl.prepend(alarmEl);
-      activeAlarmsEl.textContent ++;
-      document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
-    }
+  let alarmEl = document.createElement('p');
+  alarmEl.setAttribute("class", "alarm");
+  alarmEl.innerHTML = "<span>" + adt + " " + aTime + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
+  let alarmsEl = document.getElementById('alarms');
+  alarmsEl.prepend(alarmEl);
+  activeAlarmsEl.textContent ++;
+  document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
+}
 
     
-    window.setTimeout(generateAlarm, 2000);
-    window.setTimeout(generateAlarm, 8000);
-    window.setTimeout(generateAlarm, 10000);
-    window.setTimeout(generateAlarm, 22000);
-    window.setTimeout(generateAlarm, 50000);
+window.setTimeout(generateAlarm, 2000);
+window.setTimeout(generateAlarm, 8000);
+window.setTimeout(generateAlarm, 10000);
+window.setTimeout(generateAlarm, 22000);
+window.setTimeout(generateAlarm, 50000);
     
-    generateAlarm();
+generateAlarm();
 
-    //  window.  setInterval, clearInterval 
+//  window.  setInterval, clearInterval 
 
-  //htmlfurnishing
-  //windows dialogue?
-  //local processingJS source?
-  
-//if (frameCount % 60 === 0)      <--slow movement?
-//if (random(0,1) < 0.5)          <--50/50 random?
+//htmlfurnishing
+//windows dialogue?
+//local processingJS source?
 
 
 // plat menu opens when track menu attempted
+// line 0 = reset
+// disappearing alarm box
