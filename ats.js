@@ -1,12 +1,16 @@
-
-// A visual of the ATS system
-// By Alan
-// Based on ProcessingJS library
-
 const sketchProc = function(processingInstance) {
 	with (processingInstance) {
 		size(3800, 800); 
 		frameRate(60);
+        
+
+
+/////////////////////ProgramCodeGoesHere/////////////////////////////////////
+
+
+// A visual of the ATS system
+// By Alan
+// Based on ProcessingJS library
 
 //Code notes: xpositions are upper left (train, station)
 //stationxPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
@@ -22,27 +26,16 @@ let speedf = 3;
 // Constructors
 
 // TrainConstructor
-let Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe) {
+let Trains = function(x, y, run, dwell, number, direction, track, line, docked) {
 	this.x = x;
 	this.y = y;
-	this.docked = docked;
 	this.run = run;
-	this.dwell = dwell;
+  this.dwell = dwell;
 	this.number = number;
-	this.doorOpen = doorOpen;
-	this.atpm = atpm;
-	this.variance = variance;
-	this.hold = hold;
-	this.eb = eb;
 	this.direction = direction;
 	this.track = track;
-	this.near = near;
-	this.jump = jump;
 	this.line = line;
-	this.swt = swt;
-	this.turnout = turnout;
-	this.menu = menu;
-	this.safe = safe;
+  this.docked = docked;
 };
 
 // StationConstructor
@@ -239,7 +232,7 @@ Trains.prototype.drawTrain = function() {
 			this.near = false;
 		}
 	}
-	for(let d = 0; d < stationsArray.length; d++) {
+	for(var d = 0; d < stationsArray.length; d++) {
 		if(this.x === stationsArray[d].x && ((this.track === 1 && stationsArray[d].wPlatform.close === false) || (this.track === 2 && stationsArray[d].ePlatform.close === false))) {
 			this.docked = true;
 			if((this.track === 2 && stationsArray[d].ePlatform.hold === true) || (this.track === 1 && stationsArray[d].wPlatform.hold === true) || systemH === true) {
@@ -1331,11 +1324,11 @@ let track176 = new Tracks(3270, westY, 30, 176, true, false, 100, false, false, 
 let track177 = new Tracks(3300, westY, 30, 177, true, false, 100, false, false, false, false, false, false, false);
 let track178 = new Tracks(3330, westY, 10, 178, true, false, 100, false, false, false, false, false, false, false);
 let track179 = new Tracks(3340, westY, 50, 179, true, false, 100, false, false, false, false, false, false, false);
-var track180 = new Tracks(3390, westY, 50, 180, true, false, 100, false, false, false, false, false, false, false);
-var track181 = new Tracks(3460, westY, 125, 181, true, false, 100, false, false, false, false, false, false, false);
-var track182 = new Tracks(3605, westY, 25, 182, true, false, 100, false, false, false, false, false, false, false);
-var track183 = new Tracks(3630, westY, 26, 183, true, false, 100, false, false, false, false, false, false, false);
-var track184 = new Tracks(3656, westY, 80, 184, true, false, 100, false, false, false, false, false, false, false);
+let track180 = new Tracks(3390, westY, 50, 180, true, false, 100, false, false, false, false, false, false, false);
+let track181 = new Tracks(3460, westY, 125, 181, true, false, 100, false, false, false, false, false, false, false);
+let track182 = new Tracks(3605, westY, 25, 182, true, false, 100, false, false, false, false, false, false, false);
+let track183 = new Tracks(3630, westY, 26, 183, true, false, 100, false, false, false, false, false, false, false);
+let track184 = new Tracks(3656, westY, 80, 184, true, false, 100, false, false, false, false, false, false, false);
 
 let track200 = new Tracks(50,  eastY, 80, 200, true, false, 100, false, false, false, false, false, false, false);
 let track201 = new Tracks(130, eastY, 26, 201, true, false, 100, false, false, false, false, false, false, false);
@@ -1481,46 +1474,46 @@ let switch328 = new Switches(3485, 2, 328, true, false, false, false, false, fal
 let switch329 = new Switches(3540, 2, 329, true, false, false, false, false, false, 3, "16");
 let switch330 = new Switches(3585, 1, 330, true, false, false, false, false, false, 4, "16");
     
-const switchesArray = [switch301, switch302, switch303, switch304, switch305, switch306, switch307, switch308, switch309, switch310,
+var switchesArray = [switch301, switch302, switch303, switch304, switch305, switch306, switch307, switch308, switch309, switch310,
                     switch311, switch312, switch313, switch314, switch315, switch316, switch317, switch318, switch319, switch320, 
                     switch321, switch322, switch323, switch324, switch325, switch326, switch327, switch328, switch329, switch330];
 
-const trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
-function shuffler(array) {
-  for(let i = array.length; i > 0; i--) {
-		var ind = Math.floor(Math.random() * i);
-		var temp = array[i];
-		array[i] = array[ind];
-		array[ind] = temp;
-	}
-};
-shuffler(trainNums);
+let trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+shuffle(trainNums);
 
+//x, y, run, dwell, number, direction, track, line, docked // new params
 //x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
 //Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu, safe)
 
-let trainA = new Trains(131,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 1, false, 0, 1, false, 0, false, true);
-let trainB = new Trains(575,  eastY, false, 102, 20, "02", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainC = new Trains(1155, eastY, false, 103, 20, "03", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainD = new Trains(1610, eastY, false, 104, 20, "04", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainE = new Trains(2058, eastY, false, 105, 20, "05", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainF = new Trains(2800, eastY, false, 106, 20, "06", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainG = new Trains(3300, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainH = new Trains(3630, westY, false, 108, 20, "08", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainI = new Trains(3200, westY, false, 109, 20, "09", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainJ = new Trains(2758, westY, false, 110, 20, "10", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainK = new Trains(2199, westY, false, 111, 20, "11", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainL = new Trains(1850, westY, false, 112, 20, "12", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainM = new Trains(1345, westY, false, 113, 20, "13", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainN = new Trains(856,  westY, false, 114, 20, "14", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainO = new Trains(466,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainA = new Trains(131,  eastY, 101, 20, trainNums[0],  0, 1, 1, false);
+let trainB = new Trains(575,  eastY, 102, 20, trainNums[1],  0, 2, 1, false);
+let trainC = new Trains(1155, eastY, 103, 20, trainNums[2],  0, 2, 1, false);
+let trainD = new Trains(1610, eastY, 104, 20, trainNums[3],  0, 2, 1, false);
+let trainE = new Trains(2058, eastY, 105, 20, trainNums[4],  0, 2, 1, false);
+let trainF = new Trains(2800, eastY, 106, 20, trainNums[5],  0, 2, 1, false);
+let trainG = new Trains(3300, eastY, 107, 20, trainNums[6],  0, 2, 1, false);
+let trainH = new Trains(3630, westY, 108, 20, trainNums[7],  1, 1, 1, false);
+let trainI = new Trains(3200, westY, 109, 20, trainNums[8],  1, 1, 1, false);
+let trainJ = new Trains(2758, westY, 110, 20, trainNums[9],  1, 1, 1, false);
+let trainK = new Trains(2199, westY, 111, 20, trainNums[10], 1, 1, 1, false);
+let trainL = new Trains(1850, westY, 112, 20, trainNums[11], 1, 1, 1, false);
+let trainM = new Trains(1345, westY, 113, 20, trainNums[12], 1, 1, 1, false);
+let trainN = new Trains(856,  westY, 114, 20, trainNums[13], 1, 1, 1, false);
+let trainO = new Trains(466,  westY, 115, 20, trainNums[14], 1, 1, 1, false);
 
 let trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
 
 for(let i = 0; i < trainsArray.length; i++) {
-	trainsArray[i].number = trainNums[i];
+  trainsArray[i].number = trainNums[i];
 }
+
 
 let trainMenuActive = [];
 
@@ -2043,8 +2036,8 @@ draw = function() {
 
 
   
-  for(var s = 0; s < stationsArray.length; s++) {
-    stationsArray[s].drawStation();
+  for(let i = 0; i < stationsArray.length; i++) {
+    stationsArray[i].drawStation();
   }
 
 
@@ -2138,6 +2131,7 @@ draw = function() {
    
      
 function	mouseClicked() {
+  console.log('click');
 	  for(let i = 0; i < tracksArray.length; i++) {
       if(tracksArray[i].isUnderMouse(mouseX, mouseY)) {
         trackSelect.push(tracksArray[i]);
@@ -2243,9 +2237,7 @@ function	mouseClicked() {
 	}
 };  //endProcessing/sketchFunctions
 
-// Get the canvas that Processing-js will use
 const canvas = document.getElementById("mycanvas"); 
-// Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
 const processingInstance = new Processing(canvas, sketchProc); 
 
 // DOM manipulations, except clock
