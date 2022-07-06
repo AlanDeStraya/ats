@@ -30,12 +30,12 @@ let Trains = function(x, y, run, dwell, number, direction, track, line, docked, 
 	this.x = x;
 	this.y = y;
 	this.run = run;
-  	this.dwell = dwell;
+  this.dwell = dwell;
 	this.number = number;
 	this.direction = direction;
 	this.track = track;
 	this.line = line;
-  	this.docked = docked;
+  this.docked = docked;
 	this.atpm = atpm;
 };
 
@@ -72,8 +72,8 @@ let Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westC
 };
 
 // ShadowConstructor
-let Shadows = function(run, x, y, dwell, docked, near, jump, direction, track) {
-    this.run = run;
+let Shadows = function(block, x, y, dwell, docked, near, jump, direction, track) {
+    this.block = block;
     this.x = x;
     this.y = y;
     this.dwell = dwell;
@@ -307,6 +307,12 @@ Trains.prototype.drawTrain = function() {
   		text(this.dwell, this.x - 35, westY - 17);
   	}
   }
+
+  if(this.direction === 0) {
+    this.variance = this.run.x - this.x;
+  } else if(this.direction === 1) {
+    this.variance = this.x - this.run.x;
+  }
   
   //line decisions
 	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
@@ -434,11 +440,11 @@ Trains.prototype.drawTrain = function() {
 	//label
 	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
 		textSize(11);
-		text("0" + this.run + "BLW" + this.number, this.x - 18, this.y - 6);
+		text("0" + this.run.block + "BLW" + this.number, this.x - 18, this.y - 6);
 	}
 	if(this.direction === 1 && (this.line <= 6)) {
 		textSize(11);
-		text("0" + this.run + "TUW" + this.number, this.x - 18, this.y - 6);
+		text("0" + this.run.block + "TUW" + this.number, this.x - 18, this.y - 6);
 	}
   	
 	//doors
@@ -1547,21 +1553,21 @@ shuffle(trainNums);
 //x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
 //Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu, safe)
 
-let trainA = new Trains(131,  eastY, 101, 20, trainNums[0],  0, 1, 1, false, false);
-let trainB = new Trains(575,  eastY, 102, 20, trainNums[1],  0, 2, 1, false, false);
-let trainC = new Trains(1155, eastY, 103, 20, trainNums[2],  0, 2, 1, false, false);
-let trainD = new Trains(1610, eastY, 104, 20, trainNums[3],  0, 2, 1, false, false);
-let trainE = new Trains(2058, eastY, 105, 20, trainNums[4],  0, 2, 1, false, false);
-let trainF = new Trains(2800, eastY, 106, 20, trainNums[5],  0, 2, 1, false, false);
-let trainG = new Trains(3300, eastY, 107, 20, trainNums[6],  0, 2, 1, false, false);
-let trainH = new Trains(3630, westY, 108, 20, trainNums[7],  1, 1, 1, false, false);
-let trainI = new Trains(3200, westY, 109, 20, trainNums[8],  1, 1, 1, false, false);
-let trainJ = new Trains(2758, westY, 110, 20, trainNums[9],  1, 1, 1, false, false);
-let trainK = new Trains(2199, westY, 111, 20, trainNums[10], 1, 1, 1, false, false);
-let trainL = new Trains(1850, westY, 112, 20, trainNums[11], 1, 1, 1, false, false);
-let trainM = new Trains(1345, westY, 113, 20, trainNums[12], 1, 1, 1, false, false);
-let trainN = new Trains(856,  westY, 114, 20, trainNums[13], 1, 1, 1, false, false);
-let trainO = new Trains(466,  westY, 115, 20, trainNums[14], 1, 1, 1, false, false);
+let trainA = new Trains(131,  eastY, {}, 20, trainNums[0],  0, 1, 1, false, false);
+let trainB = new Trains(575,  eastY, {}, 20, trainNums[1],  0, 2, 1, false, false);
+let trainC = new Trains(1155, eastY, {}, 20, trainNums[2],  0, 2, 1, false, false);
+let trainD = new Trains(1610, eastY, {}, 20, trainNums[3],  0, 2, 1, false, false);
+let trainE = new Trains(2058, eastY, {}, 20, trainNums[4],  0, 2, 1, false, false);
+let trainF = new Trains(2800, eastY, {}, 20, trainNums[5],  0, 2, 1, false, false);
+let trainG = new Trains(3300, eastY, {}, 20, trainNums[6],  0, 2, 1, false, false);
+let trainH = new Trains(3630, westY, {}, 20, trainNums[7],  1, 1, 1, false, false);
+let trainI = new Trains(3200, westY, {}, 20, trainNums[8],  1, 1, 1, false, false);
+let trainJ = new Trains(2758, westY, {}, 20, trainNums[9],  1, 1, 1, false, false);
+let trainK = new Trains(2199, westY, {}, 20, trainNums[10], 1, 1, 1, false, false);
+let trainL = new Trains(1850, westY, {}, 20, trainNums[11], 1, 1, 1, false, false);
+let trainM = new Trains(1345, westY, {}, 20, trainNums[12], 1, 1, 1, false, false);
+let trainN = new Trains(856,  westY, {}, 20, trainNums[13], 1, 1, 1, false, false);
+let trainO = new Trains(466,  westY, {}, 20, trainNums[14], 1, 1, 1, false, false);
 
 let trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
@@ -1573,24 +1579,29 @@ for(let i = 0; i < trainsArray.length; i++) {
 
 let trainMenuActive = [];
 
-//runs (run, x, y, dwell, docked, near, jump, direction, track)
-let run101 = new Shadows(101, 143, eastY, 25, false, false, 0, 0, 2);
-let run102 = new Shadows(102, 685, eastY, 25, false, false, 0, 0, 2);
+//runs (block, x, y, dwell, docked, near, jump, direction, track)
+let run101 = new Shadows(101, 131, eastY, 25, false, false, 0, 0, 2);
+let run102 = new Shadows(102, 575, eastY, 25, false, false, 0, 0, 2);
 let run103 = new Shadows(103, 1155, eastY, 25, false, false, 0, 0, 2);
 let run104 = new Shadows(104, 1610, eastY, 25, false, false, 0, 0, 2);
-let run105 = new Shadows(105, 2158, eastY, 25, false, false, 0, 0, 2);
-let run106 = new Shadows(106, 2600, eastY, 25, false, false, 0, 0, 2);
-let run107 = new Shadows(107, 3100, eastY, 25, false, false, 0, 0, 2);
-let run108 = new Shadows(108, 3550, westY, 25, false, false, 0, 1, 1);
-let run109 = new Shadows(109, 3100, westY, 25, false, false, 0, 1, 1);
-let run110 = new Shadows(110, 2658, westY, 25, false, false, 0, 1, 1);
+let run105 = new Shadows(105, 2058, eastY, 25, false, false, 0, 0, 2);
+let run106 = new Shadows(106, 2800, eastY, 25, false, false, 0, 0, 2);
+let run107 = new Shadows(107, 3300, eastY, 25, false, false, 0, 0, 2);
+let run108 = new Shadows(108, 3630, westY, 25, false, false, 0, 1, 1);
+let run109 = new Shadows(109, 3200, westY, 25, false, false, 0, 1, 1);
+let run110 = new Shadows(110, 2758, westY, 25, false, false, 0, 1, 1);
 let run111 = new Shadows(111, 2199, westY, 25, false, false, 0, 1, 1);
-let run112 = new Shadows(112, 1650, westY, 25, false, false, 0, 1, 1);
-let run113 = new Shadows(113, 1145, westY, 25, false, false, 0, 1, 1);
-let run114 = new Shadows(114, 656, westY, 25, false, false, 0, 1, 1);
-let run115 = new Shadows(115, 366, westY, 25, false, false, 0, 1, 1);
+let run112 = new Shadows(112, 1850, westY, 25, false, false, 0, 1, 1);
+let run113 = new Shadows(113, 1345, westY, 25, false, false, 0, 1, 1);
+let run114 = new Shadows(114, 856, westY, 25, false, false, 0, 1, 1);
+let run115 = new Shadows(115, 466, westY, 25, false, false, 0, 1, 1);
 
 let runsArray = [run101, run102, run103, run104, run105, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
+
+for(let i = 0; i < trainsArray.length; i++) {
+  trainsArray[i].run = runsArray[i];
+}
+
 
 //signalInstances      (x, y, aspect, direction, label)
 let sig11 = new Signals(tun.x + 47, westY + 31, 0, 0, "1-E-1");
