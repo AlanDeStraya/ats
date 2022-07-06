@@ -26,16 +26,17 @@ let speedf = 3;
 // Constructors
 
 // TrainConstructor
-let Trains = function(x, y, run, dwell, number, direction, track, line, docked) {
+let Trains = function(x, y, run, dwell, number, direction, track, line, docked, atpm) {
 	this.x = x;
 	this.y = y;
 	this.run = run;
-  this.dwell = dwell;
+  	this.dwell = dwell;
 	this.number = number;
 	this.direction = direction;
 	this.track = track;
 	this.line = line;
-  this.docked = docked;
+  	this.docked = docked;
+	this.atpm = atpm;
 };
 
 // StationConstructor
@@ -1542,25 +1543,25 @@ function shuffle(array) {
 }
 shuffle(trainNums);
 
-//x, y, run, dwell, number, direction, track, line, docked // new params
+//x, y, run, dwell, number, direction, track, line, docked, atpm // new params
 //x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
 //Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu, safe)
 
-let trainA = new Trains(131,  eastY, 101, 20, trainNums[0],  0, 1, 1, false);
-let trainB = new Trains(575,  eastY, 102, 20, trainNums[1],  0, 2, 1, false);
-let trainC = new Trains(1155, eastY, 103, 20, trainNums[2],  0, 2, 1, false);
-let trainD = new Trains(1610, eastY, 104, 20, trainNums[3],  0, 2, 1, false);
-let trainE = new Trains(2058, eastY, 105, 20, trainNums[4],  0, 2, 1, false);
-let trainF = new Trains(2800, eastY, 106, 20, trainNums[5],  0, 2, 1, false);
-let trainG = new Trains(3300, eastY, 107, 20, trainNums[6],  0, 2, 1, false);
-let trainH = new Trains(3630, westY, 108, 20, trainNums[7],  1, 1, 1, false);
-let trainI = new Trains(3200, westY, 109, 20, trainNums[8],  1, 1, 1, false);
-let trainJ = new Trains(2758, westY, 110, 20, trainNums[9],  1, 1, 1, false);
-let trainK = new Trains(2199, westY, 111, 20, trainNums[10], 1, 1, 1, false);
-let trainL = new Trains(1850, westY, 112, 20, trainNums[11], 1, 1, 1, false);
-let trainM = new Trains(1345, westY, 113, 20, trainNums[12], 1, 1, 1, false);
-let trainN = new Trains(856,  westY, 114, 20, trainNums[13], 1, 1, 1, false);
-let trainO = new Trains(466,  westY, 115, 20, trainNums[14], 1, 1, 1, false);
+let trainA = new Trains(131,  eastY, 101, 20, trainNums[0],  0, 1, 1, false, false);
+let trainB = new Trains(575,  eastY, 102, 20, trainNums[1],  0, 2, 1, false, false);
+let trainC = new Trains(1155, eastY, 103, 20, trainNums[2],  0, 2, 1, false, false);
+let trainD = new Trains(1610, eastY, 104, 20, trainNums[3],  0, 2, 1, false, false);
+let trainE = new Trains(2058, eastY, 105, 20, trainNums[4],  0, 2, 1, false, false);
+let trainF = new Trains(2800, eastY, 106, 20, trainNums[5],  0, 2, 1, false, false);
+let trainG = new Trains(3300, eastY, 107, 20, trainNums[6],  0, 2, 1, false, false);
+let trainH = new Trains(3630, westY, 108, 20, trainNums[7],  1, 1, 1, false, false);
+let trainI = new Trains(3200, westY, 109, 20, trainNums[8],  1, 1, 1, false, false);
+let trainJ = new Trains(2758, westY, 110, 20, trainNums[9],  1, 1, 1, false, false);
+let trainK = new Trains(2199, westY, 111, 20, trainNums[10], 1, 1, 1, false, false);
+let trainL = new Trains(1850, westY, 112, 20, trainNums[11], 1, 1, 1, false, false);
+let trainM = new Trains(1345, westY, 113, 20, trainNums[12], 1, 1, 1, false, false);
+let trainN = new Trains(856,  westY, 114, 20, trainNums[13], 1, 1, 1, false, false);
+let trainO = new Trains(466,  westY, 115, 20, trainNums[14], 1, 1, 1, false, false);
 
 let trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
