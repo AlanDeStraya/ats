@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS header test</title>
+    <style>
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100px;
+      background-color: rgb(238, 238, 238);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .outline {
+      border: 1px inset rgb(235, 235, 235);
+    }
+    .left-block {
+      width: 262px;
+      height: 75px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    #ack {
+      border: 1px solid rgb(220, 220, 220);
+      background-color: rgb(232, 232, 232);
+      font-family: tahoma, sans-serif;
+      font-size: 11px;
+      text-align: center;
+      width: 95px;
+      height: 40px;
+      margin-left: 3px;
+      margin-bottom: 0px;
+    }
+    #ack .outline {
+      width: 40px;
+    }
+    #thales {
+      font-family: sans-serif;
+      font-size: 18px;
+      letter-spacing: 8px;
+      text-align: center;
+      border: 4px double rgb(220, 220, 220);
+      background-color: rgb(251, 251, 251);
+      color: rgb(0, 0, 100);
+      padding: 6px 4px;
+      width: 140px;
+      height: 22px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    #date-time {
+      border: 0.5px inset rgb(245, 245, 245);
+      background-color: rgb(232, 232, 232);
+      font-family: tahoma, sans-serif;
+      font-size: 12px;
+      text-align: center;
+      padding: 6px;
+      width: 240px;
+      margin-top: 2px;
+    }
+    
+    
+    #alarms {
+      background-color: white;
+      color: white;
+      height: 75px;
+      overflow: auto;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 0px;
+      border: 1px solid grey;
+      font-family: tahoma, sans-serif;
+      font-size: 13px;
+      line-height: 1.6em;
+      flex-grow: 1;
+    }
+    #alarms span {
+      margin-right: 42px;
+    }
+    #alarms p {
+      background-color: red;
+      margin: 0;
+      padding-left: 5px;
+      border: 0;
+    }
+    
+    
+    #servers {
+      background-color: darkgrey;
+      height: 75px;
+      width: 200px;
+      font-size: 14px;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <header>
+      
+      
+      <div class='left-block'>
+        <h1 id='thales'>A.T.S.++</h1>
+          <table id='ack'>
+            <tbody>
+            <tr>
+                <td>Not Ack</td>
+                <td class='outline'>288</td>
+              </tr>
+              <tr>
+                <td>Active</td>
+                <td class='outline'>109</td>
+              </tr>
+            </tbody>
+          </table>
+          <p id='date-time'><span id='date-span'>Wednesday, May 25, 2022.</span> &nbsp; <span id='time-span'>21:26:48</span></p>
+        </div>
+      
+      
+      <div id='alarms'>
+        
+        
+        
+        <!--<span>5/25/2022 21:44:06 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:43:59 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:43:24 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span><br>
+        <span>5/25/2022 21:42:48 </span><span>Train</span> <span>Yard</span> <span>Train 3 [003] Manually driven (RM) without MRR</span> -->
+      </div>
+      
+      
+      <div id='servers'><p id="demo"></p></div>      
+    </header>
+    <script>
+    
+    let alarmMessages = [
+      "Train xx [0xx](10xx) front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time =",
+      "Train xx[0xx](10xx) front position at chainage 0: 0 reports: Train integrity is reestablished, at time =",
+      "Train xx [0xx] Manually driven (RM) without MRR",
+      "Switch SW_yyy is disturbed",
+      "ZC5 reports: NCO in area NCO_Transition_Area_1 has been removed, at time =",
+      "VOBC 1010 cannot establish communication with ATS.",
+      "ZC5 reports: Signal 5Y19-2 Failed due to Mismatch between the Field Signal Status and the Signal Command, Signal Command is 0, at time =",
+      "ZC5 Module 1617 reports: IC I/O Card Isolated for Replica 1, for IC 9, at time =",
+      "ZC5 Module 1617 reports: IC Discrete Voltage Checkback detected when commanded low for Replica 1, for IC 9, for Car 4, with Bit = 0, at time =",
+      "ZC ZC5 Rack Fan Failure Detected",
+      "ZC ZC5 Rack Non-Vital 24Vdc Power Failure Detected",
+      "External Fire and Smoke Detected on Train 47 [047] front position at chainage 0 : 0"
+    ];
+            
+    let trainsArray = ["01", "02", "03", "04", "05"];
+    
+    function clearAlarm(event) {
+      if(event.target.tagName === "P") {
+        event.target.remove();
+      } else {
+        event.target.parentNode.remove();
+      }
+      window.setTimeout(generateAlarm, 5000);
+    };
+    
+    function generateAlarm() {
+      let d = new Date();
+      let dt = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+      let time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds();
+      let category = "Train";
+      let region = "Yard";
+      let message = "Hello world";
+      
+      let alarmEl = document.createElement('p');
+      alarmEl.setAttribute("class", "alarm");
+      alarmEl.innerHTML = "<span>" + dt + " " + time + "</span> <span>" + category + "</span> <span>" + region + "</span> <span>" + message + "</span>";
+      let alarmsEl = document.getElementById('alarms');
+      alarmsEl.prepend(alarmEl);
+      document.querySelector('.alarm').addEventListener('dblclick', clearAlarm);
+    }
+    
+    generateAlarm();
+    generateAlarm();
+    generateAlarm();
+    generateAlarm();
+    generateAlarm();
+    
+    
+    //Train 22 [022](1022) front position at chainage: Tk19Be60 : 1914115 reports: Train integrity is lost, Reason = 0, at time = 2022-06-21 15:01:42.762
+    //Wayside //Yard //Switch SW_512 is disturbed // - Cleared
+    //Wayside //ZC5 //ZC5 repots: NCO in area NCO_Transition_Area_1 has been removed, at time = 2022-06-21 15:01:42.762
+    //VOBC 1010 cannot establish communication with ATS. - Cleared
+    
+
+
+/*  window.  setInterval, clearInterval  */
+
+
+/*  How to target element (event.target) 
+document.getElementById("divId").addEventListener("click", someFunction);
+
+function someFunction(event) {
+  console.log(event.target.id);
+}
+<div id="divId">
+  <span id="one">one</span>
+  <span id="two"> two</span>
+</div>
+*/
+    </script>
+  </body>
+</html>

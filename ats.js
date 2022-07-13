@@ -1,12 +1,16 @@
-
-// A visual of the ATS system
-// By Alan
-// Based on ProcessingJS library
-
 const sketchProc = function(processingInstance) {
 	with (processingInstance) {
 		size(3800, 800); 
 		frameRate(60);
+        
+
+
+/////////////////////ProgramCodeGoesHere/////////////////////////////////////
+
+
+// A visual of the ATS system
+// By Alan
+// Based on ProcessingJS library
 
 //Code notes: xpositions are upper left (train, station)
 //stationxPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
@@ -22,27 +26,17 @@ let speedf = 3;
 // Constructors
 
 // TrainConstructor
-let Trains = function(x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe) {
+let Trains = function(x, y, run, dwell, number, direction, track, line, docked, atpm) {
 	this.x = x;
 	this.y = y;
-	this.docked = docked;
 	this.run = run;
-	this.dwell = dwell;
+  this.dwell = dwell;
 	this.number = number;
-	this.doorOpen = doorOpen;
-	this.atpm = atpm;
-	this.variance = variance;
-	this.hold = hold;
-	this.eb = eb;
 	this.direction = direction;
 	this.track = track;
-	this.near = near;
-	this.jump = jump;
 	this.line = line;
-	this.swt = swt;
-	this.turnout = turnout;
-	this.menu = menu;
-	this.safe = safe;
+  this.docked = docked;
+	this.atpm = atpm;
 };
 
 // StationConstructor
@@ -78,8 +72,8 @@ let Pseudos = function(name, x, both, hold, eastHold, westHold, eastClose, westC
 };
 
 // ShadowConstructor
-let Shadows = function(run, x, y, dwell, docked, near, jump, direction, track) {
-    this.run = run;
+let Shadows = function(block, x, y, dwell, docked, near, jump, direction, track) {
+    this.block = block;
     this.x = x;
     this.y = y;
     this.dwell = dwell;
@@ -145,13 +139,15 @@ let Crossover = function(x, y, up, lma) {
 };
 
 // SwitchConstructor
-let Switches = function(x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner) {
+let Switches = function(x, y, track, number, tangent, disturbed, manual, blocked, reserved, flank, menu, type, owner) {
   this.x = x;
+  this.y = y;
   this.track = track;
   this.number = number;
   this.tangent = tangent;
   this.disturbed = disturbed;
   this.manual = manual;
+  this.blocked = blocked;
   this.reserved = reserved;
   this.flank = flank;
   this.menu = menu;
@@ -311,6 +307,12 @@ Trains.prototype.drawTrain = function() {
   		text(this.dwell, this.x - 35, westY - 17);
   	}
   }
+
+  if(this.direction === 0) {
+    this.variance = this.run.x - this.x;
+  } else if(this.direction === 1) {
+    this.variance = this.x - this.run.x;
+  }
   
   //line decisions
 	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
@@ -438,11 +440,11 @@ Trains.prototype.drawTrain = function() {
 	//label
 	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
 		textSize(11);
-		text("0" + this.run + "BLW" + this.number, this.x - 18, this.y - 6);
+		text("0" + this.run.block + "BLW" + this.number, this.x - 18, this.y - 6);
 	}
 	if(this.direction === 1 && (this.line <= 6)) {
 		textSize(11);
-		text("0" + this.run + "TUW" + this.number, this.x - 18, this.y - 6);
+		text("0" + this.run.block + "TUW" + this.number, this.x - 18, this.y - 6);
 	}
   	
 	//doors
@@ -643,38 +645,38 @@ Trains.prototype.checkSafeDistance = function() {
   let switchClear = true;
   let trackClear = true;
   let selfClear = true;
-  for(var s = 0; s < trainsArray.length; s++) {
+  for(let i = 0; i < trainsArray.length; i++) {
     if(this.track === 2) {
-      if(trainsArray[s].track === 2 && trainsArray[s].x > this.x && this.x > trainsArray[s].x - 25) {
+      if(trainsArray[i].track === 2 && trainsArray[i].x > this.x && this.x > trainsArray[i].x - 25) {
         trainClear = false;
-        s = trainsArray.length;
+        i = trainsArray.length;
       } else {
         trainClear = true;
       }
     }
     if(this.track === 1) {
-      if(trainsArray[s].track === 1 && trainsArray[s].x < this.x && this.x < trainsArray[s].x + 25) {
+      if(trainsArray[i].track === 1 && trainsArray[i].x < this.x && this.x < trainsArray[i].x + 25) {
         trainClear = false;
-        s = trainsArray.length;
+        i = trainsArray.length;
       } else {
         trainClear = true;
       }
     }
   }
   
-  for(var g = 0; g < switchesArray.length; g++) {
-    if(this.track === 2) {
-      if(switchesArray[g].x > this.x && this.x > switchesArray[g].x - 25 && switchesArray[g].owner !== "16" && switchesArray[g].owner !== this.number) {
+  for(var i = 0; i < switchesArray.length; i++) {
+    if(this.track === 2 && switchesArray[i].track === 2) {
+      if((switchesArray[i].x > this.x && this.x > switchesArray[i].x - 25) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
         switchClear = false;
-        g = switchesArray.length;
+        i = switchesArray.length;
       } else {
         switchClear = true;
       }
     }
-    if(this.track === 1) {
-      if(switchesArray[g].x < this.x && this.x < switchesArray[g].x + 45 && switchesArray[g].owner !== "16" && switchesArray[g].owner !== this.number) {
+    if(this.track === 1 && switchesArray[i].track === 1) {
+      if((switchesArray[i].x < this.x && this.x < switchesArray[i].x + 45) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
         switchClear = false;
-        g = switchesArray.length;
+        i = switchesArray.length;
       } else {
         switchClear = true;
       }
@@ -682,20 +684,20 @@ Trains.prototype.checkSafeDistance = function() {
   }
   
   if(this.track === 1) {
-    for(var t = 0; t < tracksArray.length / 2; t++) {
-      if((this.x > tracksArray[t].x + tracksArray[t].length + 2 && this.x < tracksArray[t].x + tracksArray[t].length + 12) && (tracksArray[t].close === true || (tracksArray[t].wz === true && this.atpm === false))) {
+    for(let i = 0; i < tracksArray.length / 2; i++) {
+      if((this.x > tracksArray[i].x + tracksArray[i].length + 2 && this.x < tracksArray[i].x + tracksArray[i].length + 12) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
         trackClear = false;
-        t = tracksArray.length / 2;
+        i = tracksArray.length / 2;
       } else {
         trackClear = true;
       }
     }
   }
   if(this.track === 2) {
-    for(var t = tracksArray.length / 2; t < tracksArray.length; t++) {
-      if((this.x < tracksArray[t].x - 15 && this.x > tracksArray[t].x - 30) && (tracksArray[t].close === true || (tracksArray[t].wz === true && this.atpm === false))) {
+    for(var i = tracksArray.length / 2; i < tracksArray.length; i++) {
+      if((this.x < tracksArray[i].x - 15 && this.x > tracksArray[i].x - 30) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
         trackClear = false;
-        t = tracksArray.length;
+        i = tracksArray.length;
       } else {
         trackClear = true;
       }
@@ -912,31 +914,57 @@ Switches.prototype.drawSwitch = function() {
         vertex(this.x + 21, westY + 13); vertex(this.x + 21, westY + 2); vertex(this.x + 15, westY + 2); vertex(this.x + 2, westY + 25); endShape();
   }
   if(this.flank === true) {
+    strokeWeight(1);
+    stroke(0, 0, 0);
+    fill(255, 0, 255);
     if(this.type === 1) {
-      strokeWeight(1);
-      stroke(0, 0, 0);
-      fill(255, 0, 255);
       ellipse(this.x + 4, westY + 7, 13, 13);
     }
     if(this.type === 2) {
-      strokeWeight(1);
-      stroke(0, 0, 0);
-      fill(255, 0, 255);
       ellipse(this.x + 16, eastY + 7, 13, 13);
     }
     if(this.type === 3) {
-      strokeWeight(1);
-      stroke(0, 0, 0);
-      fill(255, 0, 255);
       ellipse(this.x + 4, eastY + 7, 13, 13);
     }
     if(this.type === 4) {
-      strokeWeight(1);
-      stroke(0, 0, 0);
-      fill(255, 0, 255);
       ellipse(this.x + 16, westY + 7, 13, 13);
     }
   }
+  if(this.reserved === true) {
+    strokeWeight(1);
+    stroke(0, 0, 0);
+    fill(255, 128, 0);
+    if(this.type === 1) {
+      ellipse(this.x + 4, westY + 7, 13, 13);
+    }
+    if(this.type === 2) {
+      ellipse(this.x + 16, eastY + 7, 13, 13);
+    }
+    if(this.type === 3) {
+      ellipse(this.x + 4, eastY + 7, 13, 13);
+    }
+    if(this.type === 4) {
+      ellipse(this.x + 16, westY + 7, 13, 13);
+    }
+  }
+  if(this.manual === true) {
+    strokeWeight(4);
+    stroke(0, 0, 255);
+    noFill();
+    if(this.type === 1) {
+      ellipse(this.x + 4, westY + 7, 55, 55);
+    }
+    if(this.type === 2) {
+      ellipse(this.x + 16, eastY + 7, 55, 55);
+    }
+    if(this.type === 3) {
+      ellipse(this.x + 4, eastY + 7, 55, 55);
+    }
+    if(this.type === 4) {
+      ellipse(this.x + 16, westY + 7, 55, 55);
+    }
+  }
+
 };
 
 
@@ -1176,6 +1204,31 @@ Button.prototype.draw = function() {
 };
 
 
+Switches.prototype.isUnderMouse = function(mx, y) {
+  let go = true;
+  if(trainMenuActive.length > 0) {
+    go = false;
+  }
+  if(go === true) {
+    return mx >= this.x && mx <= this.x + 20 &&
+          y >= this.y && y <= this.y + 13
+  }
+};
+
+Switches.prototype.drawSwitchMenu = function() {
+  fill(210, 210, 210);
+  stroke(0, 0, 0);
+  strokeWeight(1);
+  rect(switchMenu.x + 20, switchMenu.y + 15, 100, 80);
+  fill(0, 0, 0);
+  textSize(12);
+  text('Reserve', switchMenu.x + 26, switchMenu.y + 31);
+  text('Manual', switchMenu.x + 26, switchMenu.y + 47);
+  text('Block', switchMenu.x + 26, switchMenu.y + 63);
+  text('Move', switchMenu.x + 26, switchMenu.y + 79);
+};
+
+
 
 Platforms.prototype.isUnderMouse = function(mx, y) {
   var go = true;
@@ -1331,11 +1384,11 @@ let track176 = new Tracks(3270, westY, 30, 176, true, false, 100, false, false, 
 let track177 = new Tracks(3300, westY, 30, 177, true, false, 100, false, false, false, false, false, false, false);
 let track178 = new Tracks(3330, westY, 10, 178, true, false, 100, false, false, false, false, false, false, false);
 let track179 = new Tracks(3340, westY, 50, 179, true, false, 100, false, false, false, false, false, false, false);
-var track180 = new Tracks(3390, westY, 50, 180, true, false, 100, false, false, false, false, false, false, false);
-var track181 = new Tracks(3460, westY, 125, 181, true, false, 100, false, false, false, false, false, false, false);
-var track182 = new Tracks(3605, westY, 25, 182, true, false, 100, false, false, false, false, false, false, false);
-var track183 = new Tracks(3630, westY, 26, 183, true, false, 100, false, false, false, false, false, false, false);
-var track184 = new Tracks(3656, westY, 80, 184, true, false, 100, false, false, false, false, false, false, false);
+let track180 = new Tracks(3390, westY, 50, 180, true, false, 100, false, false, false, false, false, false, false);
+let track181 = new Tracks(3460, westY, 125, 181, true, false, 100, false, false, false, false, false, false, false);
+let track182 = new Tracks(3605, westY, 25, 182, true, false, 100, false, false, false, false, false, false, false);
+let track183 = new Tracks(3630, westY, 26, 183, true, false, 100, false, false, false, false, false, false, false);
+let track184 = new Tracks(3656, westY, 80, 184, true, false, 100, false, false, false, false, false, false, false);
 
 let track200 = new Tracks(50,  eastY, 80, 200, true, false, 100, false, false, false, false, false, false, false);
 let track201 = new Tracks(130, eastY, 26, 201, true, false, 100, false, false, false, false, false, false, false);
@@ -1449,99 +1502,106 @@ let trackTsr = [];
 let trackWz = [];
 let trackMenuActive = [];
 
-//switchInstances       //(x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner)
-let switch301 = new Switches(180, 1, 301, false, false, false, false, false, false, 1, "16");
-let switch302 = new Switches(225, 2, 302, false, false, false, false, false, false, 2, "16");
-let switch303 = new Switches(180, 2, 303, true, false, false, false, false, false, 3, "16");
-let switch304 = new Switches(225, 1, 304, true, false, false, false, false, false, 4, "16");
-let switch305 = new Switches(970, 1, 305, true, false, false, false, false, false, 1, "16");
-let switch306 = new Switches(1015, 2, 306, true, false, false, false, false, false, 2, "16");
-let switch307 = new Switches(970, 2, 307, true, false, false, false, false, false, 3, "16");
-let switch308 = new Switches(1015, 1, 308, true, false, false, false, false, false, 4, "16");
-let switch309 = new Switches(1570, 1, 309, true, false, false, false, false, false, 1, "16");
-let switch310 = new Switches(1615, 2, 310, true, false, false, false, false, false, 2, "16");
-let switch311 = new Switches(1570, 2, 311, true, false, false, false, false, false, 3, "16");
-let switch312 = new Switches(1615, 1, 312, true, false, false, false, false, false, 4, "16");
-let switch313 = new Switches(2130, 2, 313, true, false, false, false, false, false, 3, "16");
-let switch314 = new Switches(2175, 1, 314, true, false, false, false, false, false, 4, "16");
-let switch315 = new Switches(2320, 1, 315, true, false, false, false, false, false, 1, "16");
-let switch316 = new Switches(2365, 2, 316, true, false, false, false, false, false, 2, "16");
-let switch317 = new Switches(2530, 2, 317, true, false, false, false, false, false, 3, "16");
-let switch318 = new Switches(2575, 1, 318, true, false, false, false, false, false, 4, "16");
-let switch319 = new Switches(2630, 1, 319, true, false, false, false, false, false, 1, "16");
-let switch320 = new Switches(2675, 2, 320, true, false, false, false, false, false, 2, "16");
-let switch321 = new Switches(2710, 2, 321, true, false, false, false, false, false, 5, "16");
-let switch322 = new Switches(2825, 2, 322, true, false, false, false, false, false, 6, "16");
-let switch323 = new Switches(2860, 2, 323, true, false, false, false, false, false, 3, "16");
-let switch324 = new Switches(2905, 1, 324, true, false, false, false, false, false, 4, "16");
-let switch325 = new Switches(2960, 1, 325, true, false, false, false, false, false, 1, "16");
-let switch326 = new Switches(3005, 2, 326, true, false, false, false, false, false, 2, "16");
-let switch327 = new Switches(3440, 1, 327, true, false, false, false, false, false, 1, "16");
-let switch328 = new Switches(3485, 2, 328, true, false, false, false, false, false, 2, "16");
-let switch329 = new Switches(3540, 2, 329, true, false, false, false, false, false, 3, "16");
-let switch330 = new Switches(3585, 1, 330, true, false, false, false, false, false, 4, "16");
+//switchInstances       //(x, track, number, tangent, disturbed, manual, blocked, reserved, flank, menu, type, owner)
+let switch301 = new Switches(180, westY + 2, 1, 301, false, false, false, false, false, false, false, 1, "16");
+let switch302 = new Switches(225, eastY + 2, 2, 302, false, false, false, false, false, false, false, 2, "16");
+let switch303 = new Switches(180, eastY + 2, 2, 303, true, false, false, false, false, false, false, 3, "16");
+let switch304 = new Switches(225, westY + 2, 1, 304, true, false, false, false, false, false, false, 4, "16");
+let switch305 = new Switches(970, westY + 2, 1, 305, true, false, false, false, false, false, false, 1, "16");
+let switch306 = new Switches(1015, eastY + 2, 2, 306, true, false, false, false, false, false, false, 2, "16");
+let switch307 = new Switches(970, eastY + 2, 2, 307, true, false, false, false, false, false, false, 3, "16");
+let switch308 = new Switches(1015, westY + 2, 1, 308, true, false, false, false, false, false, false, 4, "16");
+let switch309 = new Switches(1570, westY + 2, 1, 309, true, false, false, false, false, false, false, 1, "16");
+let switch310 = new Switches(1615, eastY + 2, 2, 310, true, false, false, false, false, false, false, 2, "16");
+let switch311 = new Switches(1570, eastY + 2, 2, 311, true, false, false, false, false, false, false, 3, "16");
+let switch312 = new Switches(1615, westY + 2, 1, 312, true, false, false, false, false, false, false, 4, "16");
+let switch313 = new Switches(2130, eastY + 2, 2, 313, true, false, false, false, false, false, false, 3, "16");
+let switch314 = new Switches(2175, westY + 2, 1, 314, true, false, false, false, false, false, false, 4, "16");
+let switch315 = new Switches(2320, westY + 2, 1, 315, true, false, false, false, false, false, false, 1, "16");
+let switch316 = new Switches(2365, eastY + 2, 2, 316, true, false, false, false, false, false, false, 2, "16");
+let switch317 = new Switches(2530, eastY + 2, 2, 317, true, false, false, false, false, false, false, 3, "16");
+let switch318 = new Switches(2575, westY + 2, 1, 318, true, false, false, false, false, false, false, 4, "16");
+let switch319 = new Switches(2630, westY + 2, 1, 319, true, false, false, false, false, false, false, 1, "16");
+let switch320 = new Switches(2675, eastY + 2, 2, 320, true, false, false, false, false, false, false, 2, "16");
+let switch321 = new Switches(2710, eastY + 2, 2, 321, true, false, false, false, false, false, false, 5, "16");
+let switch322 = new Switches(2825, eastY + 2, 2, 322, true, false, false, false, false, false, false, 6, "16");
+let switch323 = new Switches(2860, eastY + 2, 2, 323, true, false, false, false, false, false, false, 3, "16");
+let switch324 = new Switches(2905, westY + 2, 1, 324, true, false, false, false, false, false, false, 4, "16");
+let switch325 = new Switches(2960, westY + 2, 1, 325, true, false, false, false, false, false, false, 1, "16");
+let switch326 = new Switches(3005, eastY + 2, 2, 326, true, false, false, false, false, false, false, 2, "16");
+let switch327 = new Switches(3440, westY + 2, 1, 327, true, false, false, false, false, false, false, 1, "16");
+let switch328 = new Switches(3485, eastY + 2, 2, 328, true, false, false, false, false, false, false, 2, "16");
+let switch329 = new Switches(3540, eastY + 2, 2, 329, true, false, false, false, false, false, false, 3, "16");
+let switch330 = new Switches(3585, westY + 2, 1, 330, true, false, false, false, false, false, false, 4, "16");
     
 const switchesArray = [switch301, switch302, switch303, switch304, switch305, switch306, switch307, switch308, switch309, switch310,
                     switch311, switch312, switch313, switch314, switch315, switch316, switch317, switch318, switch319, switch320, 
                     switch321, switch322, switch323, switch324, switch325, switch326, switch327, switch328, switch329, switch330];
 
-const trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
-function shuffler(array) {
-  for(let i = array.length; i > 0; i--) {
-		var ind = Math.floor(Math.random() * i);
-		var temp = array[i];
-		array[i] = array[ind];
-		array[ind] = temp;
-	}
-};
-shuffler(trainNums);
+let switchMenuActive = [];
 
+let trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+shuffle(trainNums);
+
+//x, y, run, dwell, number, direction, track, line, docked, atpm // new params
 //x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
 //Trains               (x, y, dock,   run,   dwl, num, drOpen, atpm, vrnc, hold, eb, dir, track, dock, jump, line, swt, turnout, menu, safe)
 
-let trainA = new Trains(131,  eastY, false, 101, 20, "01", false, false, 0, false, false, 0, 1, false, 0, 1, false, 0, false, true);
-let trainB = new Trains(575,  eastY, false, 102, 20, "02", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainC = new Trains(1155, eastY, false, 103, 20, "03", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainD = new Trains(1610, eastY, false, 104, 20, "04", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainE = new Trains(2058, eastY, false, 105, 20, "05", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainF = new Trains(2800, eastY, false, 106, 20, "06", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainG = new Trains(3300, eastY, false, 107, 20, "07", false, false, 0, false, false, 0, 2, false, 0, 1, false, 0, false, true);
-let trainH = new Trains(3630, westY, false, 108, 20, "08", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainI = new Trains(3200, westY, false, 109, 20, "09", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainJ = new Trains(2758, westY, false, 110, 20, "10", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainK = new Trains(2199, westY, false, 111, 20, "11", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainL = new Trains(1850, westY, false, 112, 20, "12", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainM = new Trains(1345, westY, false, 113, 20, "13", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainN = new Trains(856,  westY, false, 114, 20, "14", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
-let trainO = new Trains(466,  westY, false, 115, 20, "15", false, false, 0, false, false, 1, 1, false, 0, 1, false, 0, false, true);
+let trainA = new Trains(131,  eastY, {}, 20, trainNums[0],  0, 1, 1, false, false);
+let trainB = new Trains(575,  eastY, {}, 20, trainNums[1],  0, 2, 1, false, false);
+let trainC = new Trains(1155, eastY, {}, 20, trainNums[2],  0, 2, 1, false, false);
+let trainD = new Trains(1610, eastY, {}, 20, trainNums[3],  0, 2, 1, false, false);
+let trainE = new Trains(2058, eastY, {}, 20, trainNums[4],  0, 2, 1, false, false);
+let trainF = new Trains(2800, eastY, {}, 20, trainNums[5],  0, 2, 1, false, false);
+let trainG = new Trains(3300, eastY, {}, 20, trainNums[6],  0, 2, 1, false, false);
+let trainH = new Trains(3630, westY, {}, 20, trainNums[7],  1, 1, 1, false, false);
+let trainI = new Trains(3200, westY, {}, 20, trainNums[8],  1, 1, 1, false, false);
+let trainJ = new Trains(2758, westY, {}, 20, trainNums[9],  1, 1, 1, false, false);
+let trainK = new Trains(2199, westY, {}, 20, trainNums[10], 1, 1, 1, false, false);
+let trainL = new Trains(1850, westY, {}, 20, trainNums[11], 1, 1, 1, false, false);
+let trainM = new Trains(1345, westY, {}, 20, trainNums[12], 1, 1, 1, false, false);
+let trainN = new Trains(856,  westY, {}, 20, trainNums[13], 1, 1, 1, false, false);
+let trainO = new Trains(466,  westY, {}, 20, trainNums[14], 1, 1, 1, false, false);
 
 let trainsArray = [trainA, trainB, trainC, trainD, trainE, trainF, trainG, 
                 trainH, trainI, trainJ, trainK, trainL, trainM, trainN, trainO];
 
 for(let i = 0; i < trainsArray.length; i++) {
-	trainsArray[i].number = trainNums[i];
+  trainsArray[i].number = trainNums[i];
 }
+
 
 let trainMenuActive = [];
 
-//runs (run, x, y, dwell, docked, near, jump, direction, track)
-let run101 = new Shadows(101, 143, eastY, 25, false, false, 0, 0, 2);
-let run102 = new Shadows(102, 685, eastY, 25, false, false, 0, 0, 2);
+//runs (block, x, y, dwell, docked, near, jump, direction, track)
+let run101 = new Shadows(101, 131, eastY, 25, false, false, 0, 0, 2);
+let run102 = new Shadows(102, 575, eastY, 25, false, false, 0, 0, 2);
 let run103 = new Shadows(103, 1155, eastY, 25, false, false, 0, 0, 2);
 let run104 = new Shadows(104, 1610, eastY, 25, false, false, 0, 0, 2);
-let run105 = new Shadows(105, 2158, eastY, 25, false, false, 0, 0, 2);
-let run106 = new Shadows(106, 2600, eastY, 25, false, false, 0, 0, 2);
-let run107 = new Shadows(107, 3100, eastY, 25, false, false, 0, 0, 2);
-let run108 = new Shadows(108, 3550, westY, 25, false, false, 0, 1, 1);
-let run109 = new Shadows(109, 3100, westY, 25, false, false, 0, 1, 1);
-let run110 = new Shadows(110, 2658, westY, 25, false, false, 0, 1, 1);
+let run105 = new Shadows(105, 2058, eastY, 25, false, false, 0, 0, 2);
+let run106 = new Shadows(106, 2800, eastY, 25, false, false, 0, 0, 2);
+let run107 = new Shadows(107, 3300, eastY, 25, false, false, 0, 0, 2);
+let run108 = new Shadows(108, 3630, westY, 25, false, false, 0, 1, 1);
+let run109 = new Shadows(109, 3200, westY, 25, false, false, 0, 1, 1);
+let run110 = new Shadows(110, 2758, westY, 25, false, false, 0, 1, 1);
 let run111 = new Shadows(111, 2199, westY, 25, false, false, 0, 1, 1);
-let run112 = new Shadows(112, 1650, westY, 25, false, false, 0, 1, 1);
-let run113 = new Shadows(113, 1145, westY, 25, false, false, 0, 1, 1);
-let run114 = new Shadows(114, 656, westY, 25, false, false, 0, 1, 1);
-let run115 = new Shadows(115, 366, westY, 25, false, false, 0, 1, 1);
+let run112 = new Shadows(112, 1850, westY, 25, false, false, 0, 1, 1);
+let run113 = new Shadows(113, 1345, westY, 25, false, false, 0, 1, 1);
+let run114 = new Shadows(114, 856, westY, 25, false, false, 0, 1, 1);
+let run115 = new Shadows(115, 466, westY, 25, false, false, 0, 1, 1);
 
 let runsArray = [run101, run102, run103, run104, run105, run106, run107, run108, run109, run110, run111, run112, run113, run114, run115];
+
+for(let i = 0; i < trainsArray.length; i++) {
+  trainsArray[i].run = runsArray[i];
+}
+
 
 //signalInstances      (x, y, aspect, direction, label)
 let sig11 = new Signals(tun.x + 47, westY + 31, 0, 0, "1-E-1");
@@ -1605,12 +1665,18 @@ const crossArray = [cross1, cross2, cross3, cross4, cross5, cross6, cross7, cros
 
 //cross tun+50 lyo+170, puot+50, 2130, 2320, 2530, 2630, 2860, 2960, 3440, 3540
 
+let switchMenu = new Menus({
+  x: mouseX,
+  y: mouseY, 
+  w: 100,
+  h: 80,
+});
 
 let platformMenu = new Menus({
-    x: mouseX,
-    y: mouseY,
-    w: 100,
-    h: 80,
+  x: mouseX,
+  y: mouseY,
+  w: 100,
+  h: 80,
 });
 
 let trainMenu = new Menus({
@@ -1879,65 +1945,120 @@ draw = function() {
   }
   
 
-
-
+  let btnSwtReserve = new Button({
+    x: switchMenu.x + 20,
+    y: switchMenu.y + 15,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      for(let i = 0; i < switchMenuActive.length; i++) {
+        switchMenuActive[i].reserved = !switchMenuActive[i].reserved;
+        switchMenuActive = [];
+      }
+    }
+  });
+  let btnSwtManual = new Button({
+    x: switchMenu.x + 20,
+    y: switchMenu.y + 32,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      for(let i = 0; i < switchMenuActive.length; i++) {
+        switchMenuActive[i].manual = !switchMenuActive[i].manual;
+        switchMenuActive = [];
+      }
+    }
+  });
+  let btnSwtBlock = new Button({
+    x: switchMenu.x + 20,
+    y: switchMenu.y + 49,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      for(let i = 0; i < switchMenuActive.length; i++) {
+        switchMenuActive[i].blocked = !switchMenuActive[i].blocked;
+        switchMenuActive = [];
+      }
+    }
+  });
+  let btnSwtMove = new Button({
+    x: switchMenu.x + 20,
+    y: switchMenu.y + 66,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      for(let i = 0; i < switchMenuActive.length; i++) {
+        if(switchMenuActive[i].manual === true) {
+          switchMenuActive[i].tangent = !switchMenuActive[i].tangent;
+        }
+        switchMenuActive = [];
+      }
+    }
+  });
 
   let btnTkClose = new Button({
-  		x: trackMenu.x + 20,
-  		y: trackMenu.y + 15,
-  		width: 100,
-  		height: 16,
-  		onClick: function() {
-  		  for(var c = 0; c < trackSelect.length; c++) {
-          trackSelect[c].close = !trackSelect[c].close;
-          trackSelect[c].select = false;
-          trackSelect[c].westArrow = false;
-          trackSelect[c].eastArrow = false;
-          trackMenuActive = [];
-        }
-        trackSelect = [];
-  		}
-	  });
-	  
+  	x: trackMenu.x + 20,
+  	y: trackMenu.y + 15,
+  	width: 100,
+  	height: 16,
+  	onClick: function() {
+  	  for(var i = 0; i < trackSelect.length; i++) {
+        trackSelect[i].close = !trackSelect[i].close;
+        trackSelect[i].select = false;
+        trackSelect[i].westArrow = false;
+        trackSelect[i].eastArrow = false;
+        trackMenuActive = [];
+      }
+      trackSelect = [];
+  	}
+	});
 	let btnTkTsr = new Button({
-  		x: trackMenu.x + 20,
-  		y: trackMenu.y + 32,
-  		width: 100,
-  		height: 16,
-  		onClick: function() {
-  		  for(var c = 0; c < trackSelect.length; c++) {
-          if(trackSelect[c].tsr === 100) {
-            trackSelect[c].tsr = 25;
-          } else if(trackSelect[c].tsr < 100) {
-            trackSelect[c].tsr = 100;
-          }
-          trackSelect[c].select = false;
-          trackSelect[c].westArrow = false;
-          trackSelect[c].eastArrow = false;
-          trackMenuActive = [];
-  		  }
-  		  trackSelect = [];
-  		}
-	  });
-
-  let btnTkWz = new Button({
-  		x: trackMenu.x + 20,
-  		y: trackMenu.y + 49,
-  		width: 100,
-  		height: 16,
-  		onClick: function() {
-  		  for(var c = 0; c < trackSelect.length; c++) {
-          trackSelect[c].wz = !trackSelect[c].wz;
-          trackSelect[c].select = false;
-          trackSelect[c].westArrow = false;
-          trackSelect[c].eastArrow = false;
-          trackMenuActive = [];
+  	x: trackMenu.x + 20,
+  	y: trackMenu.y + 32,
+  	width: 100,
+  	height: 16,
+  	onClick: function() {
+  	  for(var i = 0; i < trackSelect.length; i++) {
+        if(trackSelect[i].tsr === 100) {
+          trackSelect[i].tsr = 25;
+        } else if(trackSelect[i].tsr < 100) {
+          trackSelect[i].tsr = 100;
         }
-        trackSelect = [];
-  		}
-	  });
+        trackSelect[i].select = false;
+        trackSelect[i].westArrow = false;
+        trackSelect[i].eastArrow = false;
+        trackMenuActive = [];
+      }
+  	  trackSelect = [];
+  	}
+	});
+  let btnTkWz = new Button({
+  	x: trackMenu.x + 20,
+  	y: trackMenu.y + 49,
+  	width: 100,
+  	height: 16,
+  	onClick: function() {
+  	  for(var i = 0; i < trackSelect.length; i++) {
+        trackSelect[i].wz = !trackSelect[i].wz;
+        trackSelect[i].select = false;
+        trackSelect[i].westArrow = false;
+        trackSelect[i].eastArrow = false;
+        trackMenuActive = [];
+      }
+      trackSelect = [];
+  	}
+	});
 
-
+  let btnTrnDepart = new Button({
+    x: trainMenu.x + 20,
+    y: trainMenu.y + 15,
+    width: 100,
+    height: 16,
+    onClick: function() {
+      trainMenuActive[0].dwell = 0;
+      trainMenuActive = [];
+    }
+  });
   let btnTrnAtpm = new Button({
     x: trainMenu.x + 20,
     y: trainMenu.y + 32,
@@ -1948,7 +2069,6 @@ draw = function() {
       trainMenuActive = [];
     }
   });
-
   let btnTrnEb = new Button({
     x: trainMenu.x + 20,
     y: trainMenu.y + 49,
@@ -1970,7 +2090,6 @@ draw = function() {
       platformMenuActive = [];
     }
   });
-  
   let btnPlatClose = new Button({
     x: platformMenu.x + 20,
     y: platformMenu.y + 32,
@@ -1981,7 +2100,6 @@ draw = function() {
       platformMenuActive = [];
     }
   });
-
   let btnPlatDwell = new Button({
     x: platformMenu.x + 20,
     y: platformMenu.y + 49,
@@ -2043,8 +2161,8 @@ draw = function() {
 
 
   
-  for(var s = 0; s < stationsArray.length; s++) {
-    stationsArray[s].drawStation();
+  for(let i = 0; i < stationsArray.length; i++) {
+    stationsArray[i].drawStation();
   }
 
 
@@ -2113,7 +2231,13 @@ draw = function() {
   for(let i = 0; i < runsArray.length; i++) {
     runsArray[i].drawShadow();
   }
-    
+  
+  if(switchMenuActive.length === 0) {
+    switchMenu.x = -200;
+  }
+  for(let i = 0; i < switchMenuActive.length; i++) {
+    switchMenuActive[i].drawSwitchMenu();
+  }
     
   if(trackMenuActive.length === 0) {
     trackMenu.x = -200;
@@ -2137,12 +2261,13 @@ draw = function() {
   }
    
      
-function	mouseClicked() {
+mouseClicked = function() {
 	  for(let i = 0; i < tracksArray.length; i++) {
       if(tracksArray[i].isUnderMouse(mouseX, mouseY)) {
         trackSelect.push(tracksArray[i]);
         trackMenuActive = [];
         trainMenuActive = [];
+        switchMenuActive = [];
         platformMenuActive = [];
         trackMenuActive.push(tracksArray[i]);
         trackMenu.x = mouseX;
@@ -2155,6 +2280,7 @@ function	mouseClicked() {
         trackSelect = [];
         trainMenuActive = [];
         platformMenuActive = [];
+        switchMenuActive = [];
         trainMenuActive.push(trainsArray[i]);
         trainMenu.x = mouseX;
         trainMenu.y = mouseY;
@@ -2165,10 +2291,23 @@ function	mouseClicked() {
         trackMenuActive = [];
         trackSelect = [];
         trainMenuActive = [];
+        switchMenuActive = [];
         platformMenuActive = [];
         platformMenuActive.push(platformsArray[i]);
         platformMenu.x = mouseX;
         platformMenu.y = mouseY;
+      }
+    }
+    for(let i = 0; i < switchesArray.length; i++) {
+      if(switchesArray[i].isUnderMouse(mouseX, mouseY)) {
+        trackMenuActive = [];
+        trackSelect = [];
+        trainMenuActive = [];
+        platformMenuActive = [];
+        switchMenuActive = [];
+        switchMenuActive.push(switchesArray[i]);
+        switchMenu.x = mouseX;
+        switchMenu.y = mouseY;
       }
     }
     for(let i = 0; i < trackSelect.length; i++) {
@@ -2176,12 +2315,17 @@ function	mouseClicked() {
       trackSelect[i].westArrow = true;
       trackSelect[i].eastArrow = true;
     }
-    
+
+    btnSwtReserve.handleMouseClick();
+    btnSwtManual.handleMouseClick();
+    btnSwtBlock.handleMouseClick();
+    btnSwtMove.handleMouseClick();
 
 	  btnTkTsr.handleMouseClick();
 	  btnTkClose.handleMouseClick();
 	  btnTkWz.handleMouseClick();
 	  
+    btnTrnDepart.handleMouseClick();
 	  btnTrnAtpm.handleMouseClick();
     btnTrnEb.handleMouseClick();
   	
@@ -2243,9 +2387,7 @@ function	mouseClicked() {
 	}
 };  //endProcessing/sketchFunctions
 
-// Get the canvas that Processing-js will use
 const canvas = document.getElementById("mycanvas"); 
-// Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
 const processingInstance = new Processing(canvas, sketchProc); 
 
 // DOM manipulations, except clock
@@ -2284,7 +2426,7 @@ const falseAlarms = [
     "Train " + randomYardTrains[1] + " [0" + randomYardTrains[1] + "] Manually driven (RM) without MRR",
     "VOBC 10" + randomYardTrains[2] + " cannot establish communication with ATS.",
     "External Fire and Smoke Detected on Train " + randomYardTrains[3] + " [0" + randomYardTrains[3] + "] front position at chainage 0 : 0",
-    "VOBC 10" + randomYardTrains[4] + "on Train " + randomYardTrains[4] + " [0" + randomYardTrains[4] + "](10" + randomYardTrains[4] + ") front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=" + edt
+    "VOBC 10" + randomYardTrains[4] + " on Train " + randomYardTrains[4] + " [0" + randomYardTrains[4] + "](10" + randomYardTrains[4] + ") front position at chainage: TK32e86 : 3226844 reports: An unexpected change in coupler status has been detected, at A end, at time=" + edt
   ], [
     "Switch SW_" + randomYardSwitch + " is disturbed"
   ], [
@@ -2345,20 +2487,10 @@ function generateAlarm() {
 
     
 window.setTimeout(generateAlarm, 2000);
-window.setTimeout(generateAlarm, 8000);
+// window.setTimeout(generateAlarm, 8000);
 window.setTimeout(generateAlarm, 10000);
-window.setTimeout(generateAlarm, 22000);
+// window.setTimeout(generateAlarm, 22000);
 window.setTimeout(generateAlarm, 50000);
     
-generateAlarm();
+// generateAlarm();
 
-//  window.  setInterval, clearInterval 
-
-//htmlfurnishing
-//windows dialogue?
-//local processingJS source?
-
-
-// plat menu opens when track menu attempted
-// line 0 = reset
-// disappearing alarm box
