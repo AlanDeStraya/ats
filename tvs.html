@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    canvas {
+      z-index: 1
+    }
+    </style>
+    <title>TVS</title>
+  </head>
+  <body>
+		<canvas id="mycanvas"></canvas> 
+		<script src="ProcessingJS.js"></script> 
+ 
+ <!--top 'TVZ-1 Level 2', Lyon br Station br 'SVZ-1 Level 2'-->
+ <!--mid TVZ-1 br 'normal' br Active-->
+ <!--bottom 'SVZ-1 Level 3' br 'Alarms'-->
+ 
+		<script>
+			const sketchProc = function(processingInstance) {
+				with (processingInstance) {
+					size(1880, 800); 
+					frameRate(30);   
+					
+          let Button = function(config) {
+              this.x = config.x || 25;
+              this.y = config.y || 440;
+              this.w = config.w || 100;
+              this.h = config.h || 14;
+              this.label = config.label || "Normal";
+              this.onClick = config.onClick || function() {};
+          };
+					Button.prototype.drawButton = function() {
+  					rectMode(CENTER);
+  					textAlign(CENTER, CENTER);
+  					textSize(12);
+  					fill(225, 225, 225);
+  					stroke(128, 128, 128);
+  					rect(this.x, this.y, this.w, this.h, 5);
+  					fill(0, 0, 0);
+  					text(this.label, this.x, this.y + 1);
+					}
+					Button.prototype.isMouseInside = function() {
+          	return mouseX > (this.x - this.w / 2) &&
+          		mouseX < (this.x + this.w / 2) &&
+          		mouseY > (this.y - this.h / 2) &&
+          		mouseY < (this.y + this.h / 2);
+          };
+
+          Button.prototype.handleMouseClick = function() {
+          	if (this.isMouseInside()) {
+          		this.onClick();
+          		}
+          };
+					
+					let norm1 = new Button({
+  					  x: 255
+  					});
+  					let norm2 = new Button({
+  					  x: 405
+  					});
+  					let norm3 = new Button({
+  					  x: 555
+  					});
+  					let norm4 = new Button({
+  					  x: 705
+  					});
+  					let norm5 = new Button({
+  					  x: 855
+  					});
+  					let norm6 = new Button({
+  					  x: 1005
+  					});
+  					let norm7 = new Button({
+  					  x: 1155
+  					});
+  					let norm8 = new Button({
+  					  x: 1505
+  					});
+  					let norm9 = new Button({
+  					  x: 1655
+  					});
+  					const levelOneNormsArray = [norm1, norm2, norm3, norm4, norm5, norm6, norm7, norm8, norm9];
+  					
+            let tun12 = new Button ({
+              x: 255,
+              y: 205,
+              w: 80,
+              label: 'TVZ-1 Level 2',
+              // onClick: drawLevelTwo('TVZ-1'),
+            });
+            let tun22 = new Button ({
+              x: 405,
+              y: 205,
+              w: 80,
+              label: 'SVZ-1 Level 2',
+              // onClick: drawLevelTwo('SVZ-1'),
+            });
+            let tun32 = new Button ({
+              x: 555,
+              y: 205,
+              w: 80,
+              label: 'TVZ-2 Level 2',
+              // ?? onClick: drawLevelTwo('TVZ-2'),
+            });
+            let tun42 = new Button ({
+              x: 705,
+              y: 205,
+              w: 80,
+              label: 'SVZ-2 Level 2',
+              // ?? onClick: drawLevelTwo('SVZ-2'),
+            });
+            let tun52 = new Button ({
+              x: 855,
+              y: 205,
+              w: 80,
+              label: 'TVZ-3 Level 2',
+              // ?? onClick: drawLevelTwo('TVZ-3'),
+            });
+            let tun62 = new Button ({
+              x: 1005,
+              y: 205,
+              w: 80,
+              label: 'SVZ-3 Level 2',
+              // ?? onClick: drawLevelTwo('SVZ-3'),
+            });
+            let tun72 = new Button ({
+              x: 1155,
+              y: 205,
+              w: 80,
+              label: 'TVZ-4 Level 2',
+              // ?? onClick: drawLevelTwo('TVZ-4'),
+            });
+            let tun82 = new Button ({
+              x: 1505,
+              y: 205,
+              w: 80,
+              label: 'TVZ-5 Level 2',
+              // ?? onClick: drawLevelTwo('TVZ-5'),
+            });
+            let tun92 = new Button ({
+              x: 1655,
+              y: 205,
+              w: 80,
+              label: 'SVZ-4 Level 2',
+              // ?? onClick: drawLevelTwo('SVZ-4'),
+            });
+            let tun13 = new Button ({
+              x: 405,
+              y: 675,
+              w: 80,
+              label: 'TVZ-1 Level 3',
+              // ?? onClick: drawLevelThree('TVZ-1'),
+            });
+            let tun23 = new Button ({
+              x: 705,
+              y: 675,
+              w: 80,
+              label: 'TVZ-2 Level 3',
+              // ?? onClick: drawLevelThree('TVZ-2'),
+            });
+            let tun33 = new Button ({
+              x: 1005,
+              y: 675,
+              w: 80,
+              label: 'TVZ-3 Level 3',
+              // ?? onClick: drawLevelThree('TVZ-3'),
+            });
+            let tun43 = new Button ({
+              x: 1655,
+              y: 675,
+              w: 80,
+              label: 'TVZ-4 Level 3',
+              // ?? onClick: drawLevelThree('TVZ-4'),
+            });
+            let tun1a = new Button ({
+              x: 405,
+              y: 695,
+              w: 80,
+              label: 'Alarms',
+              // onClick: 
+            });
+            let tun2a = new Button ({
+              x: 705,
+              y: 695,
+              w: 80,
+              label: 'Alarms',
+              // onClick:
+            });
+            let tun3a = new Button ({
+              x: 1005,
+              y: 695,
+              w: 80,
+              label: 'Alarms',
+              // onClick:
+            });
+            let tun4a = new Button ({
+              x: 1655,
+              y: 695,
+              w: 80,
+              label: 'Alarms',
+              // onClick:
+            });
+            
+										
+					let levelOneButtonsArray = [tun12, tun22, tun32, tun42, tun52, tun62, tun72, tun82, tun92, tun13, tun23, tun33, tun43, tun1a, tun2a, tun3a, tun4a];
+					
+								
+					function drawLevelOne() {
+            background(250, 247, 249);
+            textAlign(CENTER, CENTER);
+            textSize(26);
+            fill(0, 0, 0);
+            text('Tunnel Ventilation Level 1 Overview', 940, 50);
+            noFill();
+            stroke(128, 128, 128);
+            // Border
+  					rect(10, 10, 1860, 780);
+  					
+  					// Zones
+  					fill(225, 225, 225);
+  					stroke(175, 175, 175);
+  					for(let i = 0; i < 3; i++) {
+    					rect(180 + i * 300, 300, 150, 280);
+    					rect(330 + i * 300, 220, 150, 440);
+  					}
+  					rect(1080, 300, 150, 280);
+  					rect(1430, 300, 150, 280);
+  					rect(1580, 220, 150, 440);
+  					
+  					// Portals
+  					stroke(128, 128, 128);
+  					noFill();
+  					beginShape(), vertex(130, 170), vertex(180, 220), vertex(180, 660), vertex(130, 710), endShape();
+  					beginShape(), vertex(1280, 170), vertex(1230, 220), vertex(1230, 660), vertex(1280, 710), endShape();
+  					beginShape(), vertex(1380, 170), vertex(1430, 220), vertex(1430, 660), vertex(1380, 710), endShape();
+  					beginShape(), vertex(1780, 170), vertex(1730, 220), vertex(1730, 660), vertex(1780, 710), endShape();
+  					
+  					// Labels
+  					fill(0, 0, 0);
+  					textSize(12);
+  					text('West', 140, 420);
+  					text('Tunnel', 140, 440);
+  					text('Portal', 140, 460);
+  					text('East', 1270, 420);
+  					text('Tunnel', 1270, 440);
+  					text('Portal', 1270, 460);
+  					text('West', 1390, 420);
+  					text('Tunnel', 1390, 440);
+  					text('Portal', 1390, 460);
+  					text('East', 1770, 420);
+  					text('Tunnel', 1770, 440);
+  					text('Portal', 1770, 460);
+  					
+  					text('Westbound', 555, 290);
+  					text('Westbound', 855, 290);
+  					text('Westbound', 1505, 290);
+  					text('Eastbound', 555, 600);
+  					text('Eastbound', 855, 600);
+  					text('Eastbound', 1505, 600);
+  					
+  					// Station labels
+  					text('Lyon', 405, 175);
+  					text('Station', 405, 190);
+  					text('Parliament', 705, 175);
+  					text('Station', 705, 190);
+  					text('Rideau', 1005, 175);
+  					text('Station', 1005, 190);
+  					text('St Laurent', 1650, 175);
+  					text('Station', 1650, 190);
+  					
+  					// Zone labels
+  					for(let i = 0; i < 7; i++) {
+  					  text('Active', 255 + i * 150, 460);
+  					}
+  					text('Active', 1505, 460);
+  					text('Active', 1655, 460);
+  					text('TVZ-1', 255, 420);
+  					text('SVZ-1', 405, 420);
+  					text('TVZ-2', 555, 420);
+  					text('SVZ-2', 705, 420);
+  					text('TVZ-3', 855, 420);
+  					text('SVZ-3', 1005, 420);
+  					text('TVZ-4', 1155, 420);
+  					text('TVZ-5', 1505, 420);
+  					text('SVZ-4', 1655, 420);
+  					
+  					// Normal 'Buttons'
+  					for(let i = 0; i < levelOneNormsArray.length; i++) {
+              levelOneNormsArray[i].drawButton();
+            }
+  					
+            
+            
+            
+            
+            for(let i = 0; i < levelOneButtonsArray.length; i++) {
+              levelOneButtonsArray[i].drawButton();
+            }
+
+					} // End drawLevelOne
+					
+					function drawLevelTwo(zone) {
+					  console.log('hmmm');
+					  background(255, 255, 255);
+					  fill(0, 0, 0);
+					  text(zone, 200, 200);
+					}
+					
+					function drawLevelThree(station) {
+					
+					}
+					
+					function drawPopup() {
+					  
+					}
+					/*draw = function() {
+  					mouseClicked = function() {
+  					  for(let i = 0; i < buttonsArray.length; i++) {
+  					    buttonsArray[i].handleMouseClick();
+  					  }
+  					}
+					}*/ // end draw
+					drawLevelOne();
+				} // end processingInstance
+			}; // end sketchProc
+      const canvas = document.getElementById("mycanvas"); 
+      const processingInstance = new Processing(canvas, sketchProc); 
+		</script>
+  </body>
+</html>

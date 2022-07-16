@@ -2,15 +2,8 @@ const sketchProc = function(processingInstance) {
 	with (processingInstance) {
 		size(3800, 800); 
 		frameRate(60);
-        
-
-
-/////////////////////ProgramCodeGoesHere/////////////////////////////////////
-
 
 // A visual of the ATS system
-// By Alan
-// Based on ProcessingJS library
 
 //Code notes: xpositions are upper left (train, station)
 //stationxPositions 130, 420, 540, 800, 1170, 1340, 1790, 1970, 2080, 2420, 3090, 3210, 3630
@@ -2493,4 +2486,3 @@ window.setTimeout(generateAlarm, 10000);
 window.setTimeout(generateAlarm, 50000);
     
 // generateAlarm();
-

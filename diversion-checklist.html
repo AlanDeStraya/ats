@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    :root {
+      --dark: rgb(200, 200, 200);
+      --light: rgb(230, 238, 230);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: var(--dark);
+      font-family: sans-serif;
+    }
+    main {
+      margin: 0 auto;
+      width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 20px;
+    }
+    h2 {
+      font-weight: normal;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    div {
+      width: 700px;
+      line-height: 26px;
+      border: 1px solid black;
+      user-select: none;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+    }
+    p {
+      font-size: 22px;
+    }
+    span {
+      font-size: 20px;
+      margin-right: 15px;
+    }
+    #extras p, #extras span {
+      font-size: 16px;
+      margin: 0;
+    }
+    #extras {
+      padding: 0;
+      margin-top: 30px;
+      border: 0;
+    }
+    #scada, #comms {
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      border: 0;
+    }
+    #scada {
+      width: 230px;
+    }
+    #comms {
+      width: 470px;
+    }
+    #extras div {
+      line-height: 18px;
+      width: auto;
+      padding: 3px;
+      margin-top: 0;
+    }
+    #scada div, #comms div {
+      height: 50px;
+      flex-direction: column;
+      justify-content: space-apart;
+    }
+    </style>
+    <title>Diversion Checklist</title>
+  </head>
+  <body>
+    <main>
+      <h1>Diversion Checklist</h1>
+      <h2>Click to mark completed and timestamp</h2>
+  
+      
+        <div id='one'><p><strong>Strategic holds</strong>, determine if diversion</p></div>
+        <div id='two'><p><strong>System hold</strong> (general broadcast of issue and hold)</p></div>
+        <div id='three'><p><strong>Implement diversion</strong></p></div>
+        <div id='four'><p><strong>Release system hold</strong> (general broadcast of diversion plan)</p></div>
+        <div id='five'><p><strong>Ensure platform announcements</strong></p></div>
+        <div id='six'><p><strong>Close affected platforms</strong></p></div>
+        <div id='seven'><p><strong>Anti-bunching</strong></p></div>
+        <div id='eight'><p><strong>Offrun or clear timetable</strong></p></div>
+        <div id='nine'><p><strong>Park excess trains?</strong></p></div>
+        <div id='ten'><p><strong>Adjust turnback dwells</strong></p></div>
+        <div id='eleven'><p><strong>Constant headway?</strong></p></div>
+        <div id='twelve'><p><strong>Protection for guideway access?</strong></p></div>
+        <div id='thirteen'><p><strong>Mission-critical support requested</strong></p></div>
+        <div id='extras'>
+          <div id='scada'>
+            <div id='eOne'><p>RTM contacted</p></div>
+            <div id='eTwo'><p>Tech arrival</p></div>
+          </div>
+          <div id='comms'>
+            <div id='eThree'><p>Supt notified</p></div>
+            <div id='eFour'><p>Comms notified</p></div>
+            <div id='eFive'><p>SCU notified</p></div>
+            <div id='eSix'><p>Passenger transfer</p></div>
+          </div>
+        </div>
+
+    </main>
+    <script>
+    let oneEl = document.getElementById('one');
+    let twoEl = document.getElementById('two');
+    let threeEl = document.getElementById('three');
+    let fourEl = document.getElementById('four');
+    let fiveEl = document.getElementById('five');
+    let sixEl = document.getElementById('six');
+    let sevenEl = document.getElementById('seven');
+    let eightEl = document.getElementById('eight');
+    let nineEl = document.getElementById('nine');
+    let tenEl = document.getElementById('ten');
+    let elevenEl = document.getElementById('eleven');
+    let twelveEl = document.getElementById('twelve');
+    let thirteenEl = document.getElementById('thirteen');
+    let eOneEl = document.getElementById('eOne')
+    let eTwoEl = document.getElementById('eTwo')
+    let eThreeEl = document.getElementById('eThree')
+    let eFourEl = document.getElementById('eFour')
+    let eFiveEl = document.getElementById('eFive')
+    let eSixEl = document.getElementById('eSix')
+    // const elsArray = [oneEl, twoEl, threeEl, fourEl, fiveEl, sixEl, sevenEl, eightEl, nineEl, tenEl, elevenEl, twelveEl];
+    
+    let one = false;
+    let two = false;
+    let three = false;
+    let four = false;
+    let five = false;
+    let six = false;
+    let seven = false;
+    let eight = false;
+    let nine = false;
+    let ten = false;
+    let eleven = false;
+    let twelve = false;
+    let thirteen = false;
+    let eOne = false;
+    let eTwo = false;
+    let eThree = false;
+    let eFour = false;
+    let eFive = false;
+    let eSix = false;
+    
+    let timeElOne;
+    let timeElTwo;
+    let timeElThree;
+    let timeElFour;
+    let timeElFive;
+    let timeElSix;
+    let timeElSeven;
+    let timeElEight;
+    let timeElNine;
+    let timeElTen;
+    let timeElEleven;
+    let timeElTwelve;
+    let timeElThirteen;
+    
+    let timeEleOne
+    let timeEleTwo
+    let timeEleThree
+    let timeEleFour
+    let timeEleFive
+    let timeEleSix
+        
+    
+    function toggleOne() {
+      if(one === false) {
+        oneEl.style.backgroundColor = 'var(--light)';
+        oneEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElOne = document.createElement('span');
+        timeElOne.innerHTML = timeStamp;
+        oneEl.append(timeElOne);
+        one = true;
+      } else if(one === true) {
+        oneEl.style.backgroundColor = 'var(--dark)';
+        oneEl.style.color = 'black';
+        timeElOne.remove();
+        one = false;
+      }
+    }
+    oneEl.addEventListener('click', toggleOne);
+    
+    function toggleTwo() {
+      if(two === false) {
+        twoEl.style.backgroundColor = 'var(--light)';
+        twoEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElTwo = document.createElement('span');
+        timeElTwo.innerHTML = timeStamp;
+        twoEl.append(timeElTwo);
+        two = true;
+      } else if(two === true) {
+        twoEl.style.backgroundColor = 'var(--dark)';
+        twoEl.style.color = 'black';
+        timeElTwo.remove();
+        two = false;
+      }
+    }
+    twoEl.addEventListener('click', toggleTwo);
+    
+    
+    function toggleThree() {
+      if(three === false) {
+        threeEl.style.backgroundColor = 'var(--light)';
+        threeEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElThree = document.createElement('span');
+        timeElThree.innerHTML = timeStamp;
+        threeEl.append(timeElThree);
+        three = true;
+      } else if(three === true) {
+        threeEl.style.backgroundColor = 'var(--dark)';
+        threeEl.style.color = 'black';
+        timeElThree.remove();
+        three = false;
+      }
+    }
+    threeEl.addEventListener('click', toggleThree);
+    
+    function toggleFour() {
+      if(four === false) {
+        fourEl.style.backgroundColor = 'var(--light)';
+        fourEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElFour = document.createElement('span');
+        timeElFour.innerHTML = timeStamp;
+        fourEl.append(timeElFour);
+        four = true;
+      } else if(four === true) {
+        fourEl.style.backgroundColor = 'var(--dark)';
+        fourEl.style.color = 'black';
+        timeElFour.remove();
+        four = false;
+      }
+    }
+    fourEl.addEventListener('click', toggleFour);
+    
+    function toggleFive() {
+      if(five === false) {
+        fiveEl.style.backgroundColor = 'var(--light)';
+        fiveEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElFive = document.createElement('span');
+        timeElFive.innerHTML = timeStamp;
+        fiveEl.append(timeElFive);
+        five = true;
+      } else if(five === true) {
+        fiveEl.style.backgroundColor = 'var(--dark)';
+        fiveEl.style.color = 'black';
+        timeElFive.remove();
+        five = false;
+      }
+    }
+
+    fiveEl.addEventListener('click', toggleFive);
+    
+    function toggleSix() {
+      if(six === false) {
+        sixEl.style.backgroundColor = 'var(--light)';
+        sixEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElSix = document.createElement('span');
+        timeElSix.innerHTML = timeStamp;
+        sixEl.append(timeElSix);
+        six = true;
+      } else if(six === true) {
+        sixEl.style.backgroundColor = 'var(--dark)';
+        sixEl.style.color = 'black';
+        timeElSix.remove();
+        six = false;
+      }
+    }
+    sixEl.addEventListener('click', toggleSix);
+    
+    function toggleSeven() {
+      if(seven === false) {
+        sevenEl.style.backgroundColor = 'var(--light)';
+        sevenEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElSeven = document.createElement('span');
+        timeElSeven.innerHTML = timeStamp;
+        sevenEl.append(timeElSeven);
+        seven = true;
+      } else if(seven === true) {
+        sevenEl.style.backgroundColor = 'var(--dark)';
+        sevenEl.style.color = 'black';
+        timeElSeven.remove();
+        seven = false;
+      }
+    }
+    sevenEl.addEventListener('click', toggleSeven);
+        
+    function toggleEight() {
+      if(eight === false) {
+        eightEl.style.backgroundColor = 'var(--light)';
+        eightEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElEight = document.createElement('span');
+        timeElEight.innerHTML = timeStamp;
+        eightEl.append(timeElEight);
+        eight = true;
+      } else if(eight === true) {
+        eightEl.style.backgroundColor = 'var(--dark)';
+        eightEl.style.color = 'black';
+        timeElEight.remove();
+        eight = false;
+      }
+    }
+    eightEl.addEventListener('click', toggleEight);
+    
+    function toggleNine() {
+      if(nine === false) {
+        nineEl.style.backgroundColor = 'var(--light)';
+        nineEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElNine = document.createElement('span');
+        timeElNine.innerHTML = timeStamp;
+        nineEl.append(timeElNine);
+        nine = true;
+      } else if(nine === true) {
+        nineEl.style.backgroundColor = 'var(--dark)';
+        nineEl.style.color = 'black';
+        timeElNine.remove();
+        nine = false;
+      }
+    }
+    nineEl.addEventListener('click', toggleNine);
+    
+    
+    function toggleTen() {
+      if(ten === false) {
+        tenEl.style.backgroundColor = 'var(--light)';
+        tenEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElTen = document.createElement('span');
+        timeElTen.innerHTML = timeStamp;
+        tenEl.append(timeElTen);
+        ten = true;
+      } else if(ten === true) {
+        tenEl.style.backgroundColor = 'var(--dark)';
+        tenEl.style.color = 'black';
+        timeElTen.remove();
+        ten = false;
+      }
+    }
+    tenEl.addEventListener('click', toggleTen);
+
+    function toggleEleven() {
+      if(eleven === false) {
+        elevenEl.style.backgroundColor = 'var(--light)';
+        elevenEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElEleven = document.createElement('span');
+        timeElEleven.innerHTML = timeStamp;
+        elevenEl.append(timeElEleven);
+        eleven = true;
+      } else if(eleven === true) {
+        elevenEl.style.backgroundColor = 'var(--dark)';
+        elevenEl.style.color = 'black';
+        timeElEleven.remove();
+        eleven = false;
+      }
+    }
+    elevenEl.addEventListener('click', toggleEleven);
+    
+    function toggleTwelve() {
+      if(twelve === false) {
+        twelveEl.style.backgroundColor = 'var(--light)';
+        twelveEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElTwelve = document.createElement('span');
+        timeElTwelve.innerHTML = timeStamp;
+        twelveEl.append(timeElTwelve);
+        twelve = true;
+      } else if(twelve === true) {
+        twelveEl.style.backgroundColor = 'var(--dark)';
+        twelveEl.style.color = 'black';
+        timeElTwelve.remove();
+        twelve = false;
+      }
+    }
+    twelveEl.addEventListener('click', toggleTwelve);
+    
+    function toggleThirteen() {
+      if(thirteen === false) {
+        thirteenEl.style.backgroundColor = 'var(--light)';
+        thirteenEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeElThirteen = document.createElement('span');
+        timeElThirteen.innerHTML = timeStamp;
+        thirteenEl.append(timeElThirteen);
+        thirteen = true;
+      } else if(thirteen === true) {
+        thirteenEl.style.backgroundColor = 'var(--dark)';
+        thirteenEl.style.color = 'black';
+        timeElThirteen.remove();
+        thirteen = false;
+      }
+    }
+    thirteenEl.addEventListener('click', toggleThirteen);
+    
+    function toggleeOne() {
+      if(eOne === false) {
+        eOneEl.style.backgroundColor = 'var(--light)';
+        eOneEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleOne = document.createElement('span');
+        timeEleOne.innerHTML = timeStamp;
+        eOneEl.append(timeEleOne);
+        eOne = true;
+      } else if(eOne === true) {
+        eOneEl.style.backgroundColor = 'var(--dark)';
+        eOneEl.style.color = 'black';
+        timeEleOne.remove();
+        eOne = false;
+      }
+    }
+    eOneEl.addEventListener('click', toggleeOne);
+    
+    function toggleeTwo() {
+      if(eTwo === false) {
+        eTwoEl.style.backgroundColor = 'var(--light)';
+        eTwoEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleTwo = document.createElement('span');
+        timeEleTwo.innerHTML = timeStamp;
+        eTwoEl.append(timeEleTwo);
+        eTwo = true;
+      } else if(eTwo === true) {
+        eTwoEl.style.backgroundColor = 'var(--dark)';
+        eTwoEl.style.color = 'black';
+        timeEleTwo.remove();
+        eTwo = false;
+      }
+    }
+    eTwoEl.addEventListener('click', toggleeTwo);
+    
+    function toggleeThree() {
+      if(eThree === false) {
+        eThreeEl.style.backgroundColor = 'var(--light)';
+        eThreeEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleThree = document.createElement('span');
+        timeEleThree.innerHTML = timeStamp;
+        eThreeEl.append(timeEleThree);
+        eThree = true;
+      } else if(eThree === true) {
+        eThreeEl.style.backgroundColor = 'var(--dark)';
+        eThreeEl.style.color = 'black';
+        timeEleThree.remove();
+        eThree = false;
+      }
+    }
+    eThreeEl.addEventListener('click', toggleeThree);
+    
+    function toggleeFour() {
+      if(eFour === false) {
+        eFourEl.style.backgroundColor = 'var(--light)';
+        eFourEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleFour = document.createElement('span');
+        timeEleFour.innerHTML = timeStamp;
+        eFourEl.append(timeEleFour);
+        eFour = true;
+      } else if(eFour === true) {
+        eFourEl.style.backgroundColor = 'var(--dark)';
+        eFourEl.style.color = 'black';
+        timeEleFour.remove();
+        eFour = false;
+      }
+    }
+    eFourEl.addEventListener('click', toggleeFour);
+    
+    function toggleeFive() {
+      if(eFive === false) {
+        eFiveEl.style.backgroundColor = 'var(--light)';
+        eFiveEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleFive = document.createElement('span');
+        timeEleFive.innerHTML = timeStamp;
+        eFiveEl.append(timeEleFive);
+        eFive = true;
+      } else if(eFive === true) {
+        eFiveEl.style.backgroundColor = 'var(--dark)';
+        eFiveEl.style.color = 'black';
+        timeEleFive.remove();
+        eFive = false;
+      }
+    }
+    eFiveEl.addEventListener('click', toggleeFive);
+    
+    function toggleeSix() {
+      if(eSix === false) {
+        eSixEl.style.backgroundColor = 'var(--light)';
+        eSixEl.style.color = 'rgb(0, 70, 0)';
+        let now = new Date();
+        let mins = now.getMinutes();
+        if(mins < 10) {
+          mins = '0' + mins;
+        }
+        let timeStamp = now.getHours() + ':' + mins;
+        timeEleSix = document.createElement('span');
+        timeEleSix.innerHTML = timeStamp;
+        eSixEl.append(timeEleSix);
+        eSix = true;
+      } else if(eSix === true) {
+        eSixEl.style.backgroundColor = 'var(--dark)';
+        eSixEl.style.color = 'black';
+        timeEleSix.remove();
+        eSix = false;
+      }
+    }
+    eSixEl.addEventListener('click', toggleeSix);
+    
+    
+    </script>
+  </body>
+</html>
