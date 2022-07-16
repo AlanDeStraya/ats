@@ -657,9 +657,9 @@ Trains.prototype.checkSafeDistance = function() {
     }
   }
   
-  for(var i = 0; i < switchesArray.length; i++) {
+  for(let i = 0; i < switchesArray.length; i++) {
     if(this.track === 2 && switchesArray[i].track === 2) {
-      if((switchesArray[i].x > this.x && this.x > switchesArray[i].x - 25) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
+      if((switchesArray[i].x > this.x && this.x > switchesArray[i].x - 45) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
         switchClear = false;
         i = switchesArray.length;
       } else {
@@ -678,7 +678,7 @@ Trains.prototype.checkSafeDistance = function() {
   
   if(this.track === 1) {
     for(let i = 0; i < tracksArray.length / 2; i++) {
-      if((this.x > tracksArray[i].x + tracksArray[i].length + 2 && this.x < tracksArray[i].x + tracksArray[i].length + 12) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
+      if((this.x > tracksArray[i].x + tracksArray[i].length + 2 && this.x < tracksArray[i].x + tracksArray[i].length + 6) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
         trackClear = false;
         i = tracksArray.length / 2;
       } else {
@@ -687,7 +687,7 @@ Trains.prototype.checkSafeDistance = function() {
     }
   }
   if(this.track === 2) {
-    for(var i = tracksArray.length / 2; i < tracksArray.length; i++) {
+    for(let i = tracksArray.length / 2; i < tracksArray.length; i++) {
       if((this.x < tracksArray[i].x - 15 && this.x > tracksArray[i].x - 30) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
         trackClear = false;
         i = tracksArray.length;
@@ -878,7 +878,7 @@ Tracks.prototype.drawTrack = function() {
      
      
      
-//x, track, number, tangent, disturbed, manual, reserved, flank, menu, type, owner
+//x, track, number, tangent, disturbed, manual, blocked reserved, flank, menu, type, owner
 //switchDrawMethod
 Switches.prototype.drawSwitch = function() {
   noStroke();
@@ -955,6 +955,34 @@ Switches.prototype.drawSwitch = function() {
     }
     if(this.type === 4) {
       ellipse(this.x + 16, westY + 7, 55, 55);
+    }
+  }
+  if(this.disturbed === true) {
+    strokeWeight(4);
+    stroke(255, 0, 0);
+    noFill();
+    if(this.type === 1) {
+      ellipse(this.x + 4, westY + 7, 47, 47);
+    }
+    if(this.type === 2) {
+      ellipse(this.x + 16, eastY + 7, 47, 47);
+    }
+    if(this.type === 3) {
+      ellipse(this.x + 4, eastY + 7, 47, 47);
+    }
+    if(this.type === 4) {
+      ellipse(this.x + 16, westY + 7, 47, 47);
+    }
+  }
+  if(this.blocked === true) {
+    strokeWeight(4);
+    stroke(192, 192, 192);
+    fill(160, 185, 255);
+    if(this.track === 1) {
+      rect(this.x - 8, westY - 2, 36, 30);
+    }
+    if(this.track === 2) {
+      rect(this.x - 8, eastY - 14, 36, 30)
     }
   }
 
@@ -1224,7 +1252,7 @@ Switches.prototype.drawSwitchMenu = function() {
 
 
 Platforms.prototype.isUnderMouse = function(mx, y) {
-  var go = true;
+  let go = true;
   if(trainMenuActive.length > 0) {
     go = false;
   }
@@ -1536,7 +1564,7 @@ let switchMenuActive = [];
 let trainNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
+        let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
@@ -1697,7 +1725,7 @@ let systemPowerButtonEl = document.getElementById('system-power');
 systemPowerButtonEl.addEventListener('click', () => {
   power = !power;
   power == false ? systemPowerButtonEl.style.backgroundColor = 'rgb(210, 210, 210)' : systemPowerButtonEl.style.backgroundColor = 'rgb(232, 232, 232)';
-  for(var p = 0; p < tracksArray.length; p++) {
+  for(let p = 0; p < tracksArray.length; p++) {
     tracksArray[p].power = !tracksArray[p].power;
   }
 });
@@ -1995,7 +2023,7 @@ draw = function() {
   	width: 100,
   	height: 16,
   	onClick: function() {
-  	  for(var i = 0; i < trackSelect.length; i++) {
+  	  for(let i = 0; i < trackSelect.length; i++) {
         trackSelect[i].close = !trackSelect[i].close;
         trackSelect[i].select = false;
         trackSelect[i].westArrow = false;
@@ -2011,7 +2039,7 @@ draw = function() {
   	width: 100,
   	height: 16,
   	onClick: function() {
-  	  for(var i = 0; i < trackSelect.length; i++) {
+  	  for(let i = 0; i < trackSelect.length; i++) {
         if(trackSelect[i].tsr === 100) {
           trackSelect[i].tsr = 25;
         } else if(trackSelect[i].tsr < 100) {
@@ -2031,7 +2059,7 @@ draw = function() {
   	width: 100,
   	height: 16,
   	onClick: function() {
-  	  for(var i = 0; i < trackSelect.length; i++) {
+  	  for(let i = 0; i < trackSelect.length; i++) {
         trackSelect[i].wz = !trackSelect[i].wz;
         trackSelect[i].select = false;
         trackSelect[i].westArrow = false;
@@ -2204,13 +2232,13 @@ draw = function() {
 	for(let i = 0; i < tracksArray.length; i++) {
 	  tracksArray[i].drawTrack();
 	}
-	
-	for(let i = 0; i < switchesArray.length; i++) {
-	  switchesArray[i].drawSwitch();
-	}
 
 	for(let i = 0; i < crossArray.length; i++) {
 		crossArray[i].drawCross();
+	}
+	
+	for(let i = 0; i < switchesArray.length; i++) {
+	  switchesArray[i].drawSwitch();
 	}
   
   for(let i = 0; i < trainsArray.length; i++) {
@@ -2331,11 +2359,11 @@ mouseClicked = function() {
     
 // debug tracks
 
-  // for(var i = 0; i < trackSelect.length; i++) {
+  // for(let i = 0; i < trackSelect.length; i++) {
   //   fill(0, 0, 0);
   //   text(trackSelect[i].number, 50+50*i, 200);
   // }
-  // for(var i = 0; i < trackMenuActive.length; i++) {
+  // for(let i = 0; i < trackMenuActive.length; i++) {
   //   fill(0, 0, 0);
   //   text(trackMenuActive[i].number, 50+50*i, 250);
   // }
