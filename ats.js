@@ -881,6 +881,17 @@ Tracks.prototype.drawTrack = function() {
 //x, track, number, tangent, disturbed, manual, blocked reserved, flank, menu, type, owner
 //switchDrawMethod
 Switches.prototype.drawSwitch = function() {
+  if(this.blocked === true) {
+    strokeWeight(4);
+    stroke(192, 192, 192);
+    fill(160, 185, 255);
+    if(this.track === 1) {
+      rect(this.x - 8, westY - 2, 36, 30);
+    }
+    if(this.track === 2) {
+      rect(this.x - 8, eastY - 14, 36, 30)
+    }
+  }
   noStroke();
   fill(192, 192, 192);
   if(this.track === 1 && this.tangent === true) {
@@ -972,17 +983,6 @@ Switches.prototype.drawSwitch = function() {
     }
     if(this.type === 4) {
       ellipse(this.x + 16, westY + 7, 47, 47);
-    }
-  }
-  if(this.blocked === true) {
-    strokeWeight(4);
-    stroke(192, 192, 192);
-    fill(160, 185, 255);
-    if(this.track === 1) {
-      rect(this.x - 8, westY - 2, 36, 30);
-    }
-    if(this.track === 2) {
-      rect(this.x - 8, eastY - 14, 36, 30)
     }
   }
 
@@ -2009,7 +2009,7 @@ draw = function() {
     height: 16,
     onClick: function() {
       for(let i = 0; i < switchMenuActive.length; i++) {
-        if(switchMenuActive[i].manual === true) {
+        if(switchMenuActive[i].manual === true && switchMenuActive[i].blocked === false) {
           switchMenuActive[i].tangent = !switchMenuActive[i].tangent;
         }
         switchMenuActive = [];
