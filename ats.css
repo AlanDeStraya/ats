@@ -4,7 +4,11 @@ canvas {
   left: -2px;
   border: none;
 }
-
+@media only screen and (max-height: 700px) {
+  canvas {
+    top: 20px;
+  }
+}
 body {
   background-color: rgb(238, 238, 238);
   font-family: sans-serif;
@@ -278,8 +282,9 @@ header {
   position: fixed;
   bottom: 0;
   left: 0;
-  padding: 10px;
+  padding: 3px;
   display: flex;
+  justify-content: space-around;
 }
 .footer p {
   margin-right: 35px;
