@@ -205,10 +205,10 @@ let ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 
 
 // Methods
-// x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
-// trainDrawMethod
+// Properties: x, y, docked, run, dwell, number, doorOpen, atpm, variance, hold, eb, direction, track, near, jump, line, swt, turnout, menu, safe
+// Train Draw Method
 
-Trains.prototype.drawTrain = function() {	
+Trains.prototype.operateTrain = function() {	
 	for(let j = 0; j < stationsArray.length; j++) {  //cycle stations
 		if(this.x >= stationsArray[j].x - 10 && 
 		this.x <= stationsArray[j].x + 10 &&
@@ -246,7 +246,7 @@ Trains.prototype.drawTrain = function() {
 		}
 	}
   	
-  //moveDistances
+  // Move distances (horizontal)
 	if(this.near === true && this.docked === false) {
 		this.jump = 1;
 	} else if(this.docked === true) { //possibly unnecessary?
@@ -254,24 +254,24 @@ Trains.prototype.drawTrain = function() {
 	} else if(this.near === false && this.docked === false) {
 		this.jump = floor(random(1, 9));
 	}
-	//move 
-  
-  if(this.safe === true) {	
+
+  if(this.checkSafe() === true) {	
+    // Move horizontally
   	if(frameCount % speed === 0 && this.docked === false && this.direction === 0 && power === true) {
   		this.x += this.jump;
   	}
   	if(frameCount % speed === 0 && this.docked === false && this.direction === 1 && power === true) {
   		this.x -= this.jump;
   	}
-  }
-  	  
-  	  
-	if(frameCount % speed === 0 && (this.track === 3 || this.track === 6) && power === true) {
-    this.y += this.jump * 1.73;
-  }
-  if(frameCount % speed ===0 && (this.track === 4 || this.track === 5) && power === true) {
-    this.y -= this.jump * 1.73;
-  }
+ 
+    // Move vertically
+    if(frameCount % speed === 0 && (this.track === 3 || this.track === 6) && power === true) {
+      this.y += this.jump * 1.73;
+    }
+    if(frameCount % speed ===0 && (this.track === 4 || this.track === 5) && power === true) {
+      this.y -= this.jump * 1.73;
+    }
+ }
 	//depart
 	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 0 && this.line > 0) {
 		this.x += 1;
@@ -308,25 +308,25 @@ Trains.prototype.drawTrain = function() {
   }
   
   //Line 1 crossovers
-	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
+	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= switch301.x - 10 && this.x <= switch301.x - 2) {
 	  this.track = 3;
 	  this.x = 179;
 	  this.y += 5;
 	  this.turnout = true;
 	}
-	if(this.line === 1 && this.direction === 0 && this.track === 3 && this.x > 220) {
+	if(this.line === 1 && this.direction === 0 && this.track === 3 && this.x > switch301.x + 40) {
 	  this.turnout = false;
 	  this.track = 2;
 	  this.x += 15;
 	}
 	
-	if(this.line === 1 && this.direction === 0 && this.track === 2 && this.x >= 3531 && this.x <= 3539) {
+	if(this.line === 1 && this.direction === 0 && this.track === 2 && this.x >= switch329.x - 10 && this.x <= switch329.x - 2) {
 	  this.track = 5;
 	  this.x = 3540;
 	  this.y -= 5;
 	  this.turnout = true;
 	}
-	if(this.line === 1 && this.direction === 0 && this.track === 5 && this.x > 3581) {
+	if(this.line === 1 && this.direction === 0 && this.track === 5 && this.x > switch329.x + 40) {
 	  this.turnout = false;
 	  this.track = 1;
 	  this.x += 15;
@@ -334,145 +334,7 @@ Trains.prototype.drawTrain = function() {
 	}
   	
   //draw
-	strokeWeight(0.5);
-	stroke(0, 0, 0);
-	this.eb === true ? fill(255, 0, 0, 200) : fill(0, 250, 250, 150);
-  	
-	if(this.track === 1 && this.direction === 1) {
-   	beginShape(); vertex(this.x, westY); vertex(this.x + 22, westY); 
-				vertex(this.x + 22, westY + 15); vertex(this.x, westY + 15); 
-				vertex(this.x - 8, westY + 8); vertex(this.x, westY); endShape();
-		this.y = westY;
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-	}
-	if(this.track === 1 && this.direction === 0) {
-		beginShape(); vertex(this.x, westY); vertex(this.x + 22, westY); 
-				vertex(this.x + 30, westY + 8); vertex(this.x + 22, westY + 15); 
-				vertex(this.x, westY + 15); vertex(this.x, westY); endShape();
-		this.y = westY;
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-	}
-	if(this.track === 2 && this.direction === 0) {
-		beginShape(); vertex(this.x, eastY); vertex(this.x + 22, eastY); 
-				vertex(this.x + 30, eastY + 8); vertex(this.x + 22, eastY + 15); 
-				vertex(this.x, eastY + 15); vertex(this.x, eastY); endShape();
-		this.y = eastY;
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-	}
-	if(this.track === 2 && this.direction === 1) {
-   		beginShape(); vertex(this.x, eastY); vertex(this.x + 22, eastY); 
-				vertex(this.x + 22, eastY + 15); vertex(this.x, eastY + 15); 
-				vertex(this.x - 8, eastY + 8); vertex(this.x, eastY); endShape();
-		this.y = eastY;
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-	}
-	
-  //rotators
-	if(this.track === 3) {
-  	pushMatrix();
-    translate(this.x, this.y + 13); 
-    rotate(1);
-  	beginShape(); vertex(0, 0); vertex(0, -15); vertex(22, -15); vertex(30, -8); vertex(22, 0); vertex(0, 0); endShape();
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-  	popMatrix();
-	}
-	if(this.track === 4) {
-	  pushMatrix();
-    translate(this.x, this.y); 
-    rotate(4);
-	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-  	popMatrix();
-	}
-	if(this.track === 5) {
-  	pushMatrix();
-    translate(this.x, this.y); 
-    rotate(-1);
-  	beginShape(); vertex(0, 0); vertex(22, 0); vertex(30, 8); vertex(22, 15); vertex(0, 15); vertex(0, 0); endShape();
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-  	popMatrix();
-	}
-	if(this.track === 6) {
-	  pushMatrix();
-    translate(this.x, this.y); 
-    rotate(4);
-	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
-  	if(this.atpm === true && this.doorOpen === false) {
-  		fill(80, 80, 80);
-  		textSize(13);
-  		text("P", this.x + 7, this.y + 12);
-  	}
-  	popMatrix();
-	}
-  
-  //labelColor
-	if(this.variance > 60) {
-		stroke(0, 0, 0);
-		fill(255, 255, 0);
-	} else if(this.variance < -40) {
-		stroke(255, 255, 255);
-		fill(0, 255, 0);
-	} else {
-		stroke(0, 0, 0);
-		fill(0, 0, 0);
-	}
-
-  this.run.variance = this.variance;
-  	
-	//label
-	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
-		textSize(11);
-		text("0" + this.run.block + "BLW" + this.number, this.x - 18, this.y - 6);
-	}
-	if(this.direction === 1 && (this.line <= 6)) {
-		textSize(11);
-		text("0" + this.run.block + "TUW" + this.number, this.x - 18, this.y - 6);
-	}
-  	
-	//doors
-	if(this.docked === true && this.dwell > 4) {
-	    this.doorOpen = true;
-	} else {
-	    this.doorOpen = false;
-	}
-  if(this.doorOpen === true && this.track === 2) {
-  	noStroke();
-		fill(90, 90, 90, 180);
-		rect(this.x + 7, eastY + 3, 9, 9);
-	}
-	if(this.doorOpen === true && this.track === 1) {
-    noStroke();
-    fill(90, 90, 90, 180);
-    rect(this.x + 6, westY + 3, 9, 9);
-  }
+  this.drawTrain();
 
 
   // Terminus End Changes
@@ -523,7 +385,7 @@ Trains.prototype.drawTrain = function() {
   }
   
   
-  // TUN arrival
+  // TUN approach
   if(this.x > 244 && this.x < 290 && this.track === 1 && this.direction === 1 && switch304.owner === "16") { // && tunw.occupied === false
     switch301.tangent = true;
     switch301.owner = this.number;
@@ -539,6 +401,7 @@ Trains.prototype.drawTrain = function() {
   if(this.x > switch304.x - 10 && this.x < switch304.x && this.track === 1 && this.direction === 1) {
     sig13.aspect = 0;
   }
+  // TUN arrival
   if(this.x === tun.x) {
     track100.lma = false;
     track100.westArrow = false;
@@ -637,39 +500,162 @@ Trains.prototype.drawTrain = function() {
 
 };
 
-/*
-draw function
-line 1 function
-line 2 function
 
-if line=1 call line 1
-if line=2 call line 2
-call draw
-*/
+Trains.prototype.drawTrain = function() {
+  strokeWeight(0.5);
+	stroke(0, 0, 0);
+	this.eb === true ? fill(255, 0, 0, 200) : fill(0, 250, 250, 150);
+  
+  if(this.track === 1) {
+    this.y = westY;
+  }
+  if(this.track === 2) {
+    this.y = eastY;
+  }
+  
+	if(this.direction === 1) {
+   	beginShape(); vertex(this.x, this.y); vertex(this.x + 22, this.y); 
+				vertex(this.x + 22, this.y + 15); vertex(this.x, this.y + 15); 
+				vertex(this.x - 8, this.y + 8); vertex(this.x, this.y); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+	}
+	if(this.track === 1 && this.direction === 0) {
+		beginShape(); vertex(this.x, this.y); vertex(this.x + 22, this.y); 
+				vertex(this.x + 30, this.y + 8); vertex(this.x + 22, this.y + 15); 
+				vertex(this.x, this.y + 15); vertex(this.x, this.y); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+	}
+	if(this.track === 2 && this.direction === 0) {
+		beginShape(); vertex(this.x, this.y); vertex(this.x + 22, this.y); 
+				vertex(this.x + 30, this.y + 8); vertex(this.x + 22, this.y + 15); 
+				vertex(this.x, this.y + 15); vertex(this.x, this.y); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+	}
+	if(this.track === 2 && this.direction === 1) {
+   		beginShape(); vertex(this.x, this.y); vertex(this.x + 22, this.y); 
+				vertex(this.x + 22, this.y + 15); vertex(this.x, this.y + 15); 
+				vertex(this.x - 8, this.y + 8); vertex(this.x, this.y); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+	}
+	
+  //rotators
+	if(this.track === 3) {
+  	pushMatrix();
+    translate(this.x, this.y + 13); 
+    rotate(1);
+  	beginShape(); vertex(0, 0); vertex(0, -15); vertex(22, -15); vertex(30, -8); vertex(22, 0); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+  	popMatrix();
+	}
+	if(this.track === 4) {
+	  pushMatrix();
+    translate(this.x, this.y); 
+    rotate(4);
+	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+  	popMatrix();
+	}
+	if(this.track === 5) {
+  	pushMatrix();
+    translate(this.x, this.y); 
+    rotate(-1);
+  	beginShape(); vertex(0, 0); vertex(22, 0); vertex(30, 8); vertex(22, 15); vertex(0, 15); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+  	popMatrix();
+	}
+	if(this.track === 6) {
+	  pushMatrix();
+    translate(this.x, this.y); 
+    rotate(4);
+	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
+  	popMatrix();
+	}
+  
+  //labelColor
+	if(this.variance > 60) {
+		stroke(0, 0, 0);
+		fill(255, 255, 0);
+	} else if(this.variance < -40) {
+		stroke(255, 255, 255);
+		fill(0, 255, 0);
+	} else {
+		stroke(0, 0, 0);
+		fill(0, 0, 0);
+	}
 
+  this.run.variance = this.variance;
+  	
+	//label
+	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
+		textSize(11);
+		text("0" + this.run.block + "BLW" + this.number, this.x - 18, this.y - 6);
+	}
+	if(this.direction === 1 && (this.line <= 6)) {
+		textSize(11);
+		text("0" + this.run.block + "TUW" + this.number, this.x - 18, this.y - 6);
+	}
+  	
+	//doors
+	if(this.docked === true && this.dwell > 4) {
+	    this.doorOpen = true;
+	} else {
+	    this.doorOpen = false;
+	}
+  if(this.doorOpen === true && this.track === 2) {
+  	noStroke();
+		fill(90, 90, 90, 180);
+		rect(this.x + 7, eastY + 3, 9, 9);
+	}
+	if(this.doorOpen === true && this.track === 1) {
+    noStroke();
+    fill(90, 90, 90, 180);
+    rect(this.x + 6, westY + 3, 9, 9);
+  }
+};
 
-
-// shorten conditions to 'return false'? save processing - shorter arrays first
-Trains.prototype.checkSafeDistance = function() {
-  let trainClear = true;
-  let switchClear = true;
-  let trackClear = true;
-  let selfClear = true;
+Trains.prototype.checkSafe = function() {
   for(let i = 0; i < trainsArray.length; i++) {
     if(this.track === 2) {
       if(trainsArray[i].track === 2 && trainsArray[i].x > this.x && this.x > trainsArray[i].x - 25) {
-        trainClear = false;
-        i = trainsArray.length;
-      } else {
-        trainClear = true;
+        return false;
       }
     }
     if(this.track === 1) {
       if(trainsArray[i].track === 1 && trainsArray[i].x < this.x && this.x < trainsArray[i].x + 25) {
-        trainClear = false;
-        i = trainsArray.length;
-      } else {
-        trainClear = true;
+        return false;
       }
     }
   }
@@ -677,54 +663,36 @@ Trains.prototype.checkSafeDistance = function() {
   for(let i = 0; i < switchesArray.length; i++) {
     if(this.track === 2 && switchesArray[i].track === 2) {
       if((switchesArray[i].x > this.x && this.x > switchesArray[i].x - 45) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
-        switchClear = false;
-        i = switchesArray.length;
-      } else {
-        switchClear = true;
+        return false;
       }
     }
     if(this.track === 1 && switchesArray[i].track === 1) {
       if((switchesArray[i].x < this.x && this.x < switchesArray[i].x + 45) && ((switchesArray[i].owner !== "16" && switchesArray[i].owner !== this.number) || switchesArray[i].blocked === true || switchesArray[i].manual === true)) {
-        switchClear = false;
-        i = switchesArray.length;
-      } else {
-        switchClear = true;
+        return false;
       }
     }
+  }
+  
+  if(this.eb === true) {
+    return false;
   }
   
   if(this.track === 1) {
     for(let i = 0; i < tracksArray.length / 2; i++) {
       if((this.x > tracksArray[i].x + tracksArray[i].length + 2 && this.x < tracksArray[i].x + tracksArray[i].length + 6) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
-        trackClear = false;
-        i = tracksArray.length / 2;
-      } else {
-        trackClear = true;
+        return false;
       }
     }
   }
   if(this.track === 2) {
     for(let i = tracksArray.length / 2; i < tracksArray.length; i++) {
       if((this.x < tracksArray[i].x - 15 && this.x > tracksArray[i].x - 30) && (tracksArray[i].close === true || (tracksArray[i].wz === true && this.atpm === false))) {
-        trackClear = false;
-        i = tracksArray.length;
-      } else {
-        trackClear = true;
+        return false;
       }
     }
   }
   
-  if(this.eb === true) {
-    selfClear = false;
-  } else {
-    selfClear = true;
-  }
-  
-  if(trainClear === true && switchClear === true && trackClear === true && selfClear === true) {
-    this.safe = true;
-  } else {
-    this.safe = false;
-  }
+  return true;
 };
 
 
@@ -2255,13 +2223,9 @@ draw = function() {
 	for(let i = 0; i < switchesArray.length; i++) {
 	  switchesArray[i].drawSwitch();
 	}
-  
-  for(let i = 0; i < trainsArray.length; i++) {
-		trainsArray[i].checkSafeDistance();
-	}
-    
+      
 	for(let i = 0; i < trainsArray.length; i++) {
-		trainsArray[i].drawTrain();
+		trainsArray[i].operateTrain();
 	}
 
   for(let i = 0; i < runsArray.length; i++) {
