@@ -209,40 +209,41 @@ let ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 // Train Draw Method
 
 Trains.prototype.operateTrain = function() {	
-	for(let j = 0; j < stationsArray.length; j++) {  //cycle stations
-		if(this.x >= stationsArray[j].x - 10 && 
-		this.x <= stationsArray[j].x + 10 &&
-		this.x !== stationsArray[j].x) {  //if near, set dwell
+	for(let i = 0; i < stationsArray.length; i++) {  //cycle stations
+		if(this.x >= stationsArray[i].x - 10 && 
+		this.x <= stationsArray[i].x + 10 &&
+		this.x !== stationsArray[i].x) {  //if near, set dwell
 			if(this.track === 1) {
-			  this.dwell = stationsArray[j].wPlatform.dwell;
-			  stationsArray[j].wPlatform.occupied = false;
+			  this.dwell = stationsArray[i].wPlatform.dwell;
+			  stationsArray[i].wPlatform.occupied = false;
 			}
 			if(this.track === 2) {
-			  this.dwell = stationsArray[j].ePlatform.dwell;
-			  stationsArray[j].ePlatform.occupied = false;
+			  this.dwell = stationsArray[i].ePlatform.dwell;
+			  stationsArray[i].ePlatform.occupied = false;
 			}
 			this.near = true;
 			this.docked = false;
-			j = stationsArray.length;
+			i = stationsArray.length;
 		} else {
 			this.near = false;
 		}
 	}
-	for(let d = 0; d < stationsArray.length; d++) {
-		if(this.x === stationsArray[d].x && ((this.track === 1 && stationsArray[d].wPlatform.close === false) || (this.track === 2 && stationsArray[d].ePlatform.close === false))) {
+
+	for(let i = 0; i < stationsArray.length; i++) {
+		if(this.x === stationsArray[i].x && ((this.track === 1 && stationsArray[i].wPlatform.close === false) || (this.track === 2 && stationsArray[i].ePlatform.close === false))) {
 			this.docked = true;
-			if((this.track === 2 && stationsArray[d].ePlatform.hold === true) || (this.track === 1 && stationsArray[d].wPlatform.hold === true) || systemH === true) {
+			if((this.track === 2 && stationsArray[i].ePlatform.hold === true) || (this.track === 1 && stationsArray[i].wPlatform.hold === true) || systemH === true) {
   			this.hold = true;
 			} else {
 			  this.hold = false;
 			}
 			if(this.track === 1) {
-			  stationsArray[d].wPlatform.occupied = true;
+			  stationsArray[i].wPlatform.occupied = true;
 			}
 			if(this.track === 2) {
-			  stationsArray[d].ePlatform.occupied = true;
+			  stationsArray[i].ePlatform.occupied = true;
 			}
-			d = stationsArray.length;
+			i = stationsArray.length;
 		}
 	}
   	
@@ -350,36 +351,36 @@ Trains.prototype.operateTrain = function() {
   // LMA Controls
   
   if(this.direction === 0 && this.track === 2) {
-    for(let t = tracksArray.length / 2; t < tracksArray.length - 3; t++) {                    //this.x < 3410?
-      if(this.x > tracksArray[t].x - 100 && this.x < tracksArray[t].x + tracksArray[t].length && this.x < 3410 && (this.docked === false || this.dwell <= 10)) {
-        tracksArray[t].lma = true;
-        tracksArray[t].eastArrow = true;
+    for(let i = tracksArray.length / 2; i < tracksArray.length - 3; i++) {                    //this.x < 3410?
+      if(this.x > tracksArray[i].x - 100 && this.x < tracksArray[i].x + tracksArray[i].length && this.x < 3410 && (this.docked === false || this.dwell <= 10)) {
+        tracksArray[i].lma = true;
+        tracksArray[i].eastArrow = true;
       }
-      if(this.x > tracksArray[t].x - 100 && this.x < tracksArray[t].x + tracksArray[t].length + 14 && this.docked === true && this.dwell > 10) {
-        tracksArray[t].lma = false;
-        tracksArray[t].eastArrow = false;
+      if(this.x > tracksArray[i].x - 100 && this.x < tracksArray[i].x + tracksArray[i].length + 14 && this.docked === true && this.dwell > 10) {
+        tracksArray[i].lma = false;
+        tracksArray[i].eastArrow = false;
       }
-      if(this.x > tracksArray[t].x + tracksArray[t].length && this.x < tracksArray[t].x + tracksArray[t].length + 14) {
-        tracksArray[t].lma = false;
-        tracksArray[t].eastArrow = false;
+      if(this.x > tracksArray[i].x + tracksArray[i].length && this.x < tracksArray[i].x + tracksArray[i].length + 14) {
+        tracksArray[i].lma = false;
+        tracksArray[i].eastArrow = false;
       }
     }
   }
   
   
   if(this.direction === 1 && this.track === 1) {
-    for(let t = 0; t < tracksArray.length / 2; t++) {                                         //this.x > 290?
-      if(this.x < tracksArray[t].x + tracksArray[t].length + 74 && this.x > tracksArray[t].x - 26 && this.x > 290 && (this.docked === false || this.dwell <= 10)) {
-        tracksArray[t].lma = true;
-        tracksArray[t].westArrow = true;
+    for(let i = 0; i < tracksArray.length / 2; i++) {                                         //this.x > 290?
+      if(this.x < tracksArray[i].x + tracksArray[i].length + 74 && this.x > tracksArray[i].x - 26 && this.x > 290 && (this.docked === false || this.dwell <= 10)) {
+        tracksArray[i].lma = true;
+        tracksArray[i].westArrow = true;
       }
-      if(this.x < tracksArray[t].x + tracksArray[t].length + 74 && this.x > tracksArray[t].x - 30 && this.docked === true && this.dwell > 10) {
-        tracksArray[t].lma = false;
-        tracksArray[t].westArrow = false;
+      if(this.x < tracksArray[i].x + tracksArray[i].length + 74 && this.x > tracksArray[i].x - 30 && this.docked === true && this.dwell > 10) {
+        tracksArray[i].lma = false;
+        tracksArray[i].westArrow = false;
       }
-      if(this.x + 26 < tracksArray[t].x && this.x + 26 > tracksArray[t].x - 14) {
-        tracksArray[t].lma = false;
-        tracksArray[t].westArrow = false;
+      if(this.x + 26 < tracksArray[i].x && this.x + 26 > tracksArray[i].x - 14) {
+        tracksArray[i].lma = false;
+        tracksArray[i].westArrow = false;
       }
     }
   }
