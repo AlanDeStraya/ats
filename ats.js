@@ -307,7 +307,7 @@ Trains.prototype.drawTrain = function() {
     this.variance = this.x - this.run.x;
   }
   
-  //line decisions
+  //Line 1 crossovers
 	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= 170 && this.x <= 178) {
 	  this.track = 3;
 	  this.x = 179;
@@ -401,6 +401,11 @@ Trains.prototype.drawTrain = function() {
     translate(this.x, this.y); 
     rotate(4);
 	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
   	popMatrix();
 	}
 	if(this.track === 5) {
@@ -408,6 +413,11 @@ Trains.prototype.drawTrain = function() {
     translate(this.x, this.y); 
     rotate(-1);
   	beginShape(); vertex(0, 0); vertex(22, 0); vertex(30, 8); vertex(22, 15); vertex(0, 15); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
   	popMatrix();
 	}
 	if(this.track === 6) {
@@ -415,20 +425,27 @@ Trains.prototype.drawTrain = function() {
     translate(this.x, this.y); 
     rotate(4);
 	  beginShape(); vertex(0, 0); vertex(22, 0); vertex(22, 15); vertex(0, 15); vertex(8, 8); vertex(0, 0); endShape();
+  	if(this.atpm === true && this.doorOpen === false) {
+  		fill(80, 80, 80);
+  		textSize(13);
+  		text("P", this.x + 7, this.y + 12);
+  	}
   	popMatrix();
 	}
   
   //labelColor
-	if(this.variance > 20) {
+	if(this.variance > 60) {
 		stroke(0, 0, 0);
 		fill(255, 255, 0);
-	} else if(this.variance <= 20 && this.variance >= -20) {
+	} else if(this.variance < -40) {
 		stroke(255, 255, 255);
-		fill(0, 0, 0);
+		fill(0, 255, 0);
 	} else {
 		stroke(0, 0, 0);
-		fill(0, 255, 0);
+		fill(0, 0, 0);
 	}
+
+  this.run.variance = this.variance;
   	
 	//label
 	if(this.direction === 0 && (this.line === 1 || this.line === 7 || this.line === 12 || this.line === 16 || this.line === 18)) {
@@ -716,27 +733,27 @@ Trains.prototype.checkSafeDistance = function() {
 
 //shadowDrawMethod  run, x, y, dwell, docked, near, jump, direction, track
 Shadows.prototype.drawShadow = function() {
-  for(let j = 0; j < stationsArray.length; j++) {
-		if(this.x >= stationsArray[j].x +3 && 
-		this.x <= stationsArray[j].x + 26 &&
-		this.x !== stationsArray[j].x + 13) {
+  for(let i = 0; i < stationsArray.length; i++) {
+		if(this.x >= stationsArray[i].x +3 && 
+		this.x <= stationsArray[i].x + 26 &&
+		this.x !== stationsArray[i].x + 13) {
 			if(this.track === 1) {
-			  this.dwell = stationsArray[j].wPlatform.dwell;
+			  this.dwell = stationsArray[i].wPlatform.dwell;
 			}
 			if(this.track === 2) {
-			  this.dwell = stationsArray[j].ePlatform.dwell;
+			  this.dwell = stationsArray[i].ePlatform.dwell;
 			}
 			this.near = true;
 			this.docked = false;
-			j = stationsArray.length;
+			i = stationsArray.length;
 		} else {
 			this.near = false;
 		}
 	}
-	for(let d = 0; d < stationsArray.length; d++) {
-		if(this.x === stationsArray[d].x + 13) {
+	for(let i = 0; i < stationsArray.length; i++) {
+		if(this.x === stationsArray[i].x + 13) {
 			this.docked = true;
-			d = stationsArray.length;
+			i = stationsArray.length;
 		} 
 	}
 
@@ -802,18 +819,16 @@ Shadows.prototype.drawShadow = function() {
   }
   
   strokeWeight(0.4);
-  stroke(255, 255, 255);
-  fill(0, 0, 0);
-  // if(variance[7] > 100) {
-  //   stroke(0, 0, 0);
-  //   fill(255, 255, 0);
-  // } else if(variance[7] <= 100 && variance[7] >- 11) {
-  //   stroke(255, 255, 255);
-  //   fill(0, 0, 0);
-  // } else {
-  //   stroke(0, 0, 0);
-  //   fill(0, 255, 0);
-  // }
+  if(this.variance > 60) {
+    stroke(0, 0, 0);
+    fill(255, 255, 0);
+  } else if(this.variance < -40) {
+    stroke(255, 255, 255);
+    fill(0, 255, 0);
+  } else {
+    stroke(0, 0, 0);
+    fill(0, 0, 0);
+  }
   ellipse(this.x, this.y + 8, 14, 14);
 	
   if(this.x === tun.x + 13) {
