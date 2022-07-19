@@ -63,6 +63,7 @@ header {
   padding: 0 20px;
   box-shadow: 0 0 15px 15px var(--header-bg);
   transition-duration: 0.4s;
+  z-index: 1;
 }
 h1 {
   letter-spacing: 1px;
@@ -255,18 +256,15 @@ tr:nth-of-type(even), th {
 }
 
 main {
-  width: calc(100vw - 235px);
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  column-gap: 8px;
+  width: calc(100vw - 570px);
+  display: flex;
+  flex-direction: column;
 }
 sub {
   position: relative;
   top: -150px;
 }
 section {
-  grid-column-start: 1;
-  grid-column-end: 2;
   padding: 10px;
   margin-left: 80px;
 }
@@ -303,6 +301,16 @@ h3 {
 section:last-of-type {
   margin-bottom: 120px;
 }
+
+.weatherWidget {
+  width: calc(100vw - 620px);
+  max-width: 350px;
+  margin-bottom: 80px;
+  position: relative;
+  top: 120px;
+  left: 20px;
+}
+
 footer a {
   z-index: 12;
   text-decoration: none;
@@ -310,7 +318,7 @@ footer a {
 }
 footer a:hover {
   background-color: var(--body-bg);
-  border-radius: 50%;
+  border-radius: 5px;
 }
   
 footer {
@@ -447,6 +455,7 @@ footer {
   </div>
   
   <main>
+  <div class="weatherWidget"></div>
   <section>
   <sub id='rules'></sub>
     <h2>Rules</h2>
@@ -482,6 +491,7 @@ footer {
     <h3>Procedural</h3>
     <ul>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Forms/Group%20By%20Document%20Type.aspx?id=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation%2FSystem%20and%20Station%20Status%20and%20Failures%2Epdf&parent=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation' target='_blank'>System and Station Status and Failures</a></li>
+      <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Forms/Group%20By%20Document%20Type.aspx?id=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation%2FManaging%20Disturbed%20and%20Trailed%20Switch%20Zones%2Epdf&parent=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation' target='_blank'>Disturbed AND Trailed Switch</a></li>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Forms/Group%20By%20Document%20Type.aspx?id=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation%2FActivation%20of%20Line%201%20Back%20Up%20Control%20Center%2Epdf&parent=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation' target='_blank'>Activation of Backup Control Center (BCC)</a></li>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Forms/Group%20By%20Document%20Type.aspx?id=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation%2FTemporary%20Speed%20Restrictions%2Epdf&parent=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation' target='_blank'>Temporary Speed Restrictions (TSR)</a></li>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Forms/AllItems.aspx?FilterField1=OCT%5Fx0020%5FOperational%5Fx0020%5FDocument%5Fx0020%5FType&FilterValue1=Work%20Instruction&FilterType1=Lookup&FilterDisplay1=Work%20Instruction&id=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation%2FWork%20Zones%2Epdf&parent=%2Fsites%2FRailOperationsDocumentControl%2FOCTOperationalDocumentation' target='_blank'>Work Zones</a></li>
@@ -556,6 +566,7 @@ footer {
       <li><a href='https://ottawacity.sharepoint.com/:x:/r/sites/TransitOperations/Shared%20Documents/Rail%20Operations/Ongoing%20SCADA.xlsx?d=wa27f309285be4ab0be31bcc887fdeae7&csf=1&web=1&e=T5EmDg' target='_blank'>Ongoing SCADA issues spreadsheet</a></li>
       <li><a href='https://ottawacity.sharepoint.com/:w:/r/sites/TransitOperations/Shared%20Documents/Rail%20Operations/Diversion%20Statistics%20for%20CS%20Messaging.docx?d=w92ef5a8baa394409b23fe851438307b8&csf=1&web=1&e=8nkddq' target='_blank'>Diversion Statistics for CS Messaging</a></li>
       <li><a href='https://ottawacity.sharepoint.com/:w:/r/sites/TransitOperations/Shared%20Documents/Rail%20Operations/Pre-launch%20email%20.docx?d=w5d4feb4762974ecc9d79a17c1221ca3f&csf=1&web=1&e=5TEUdQ' target='_blank'>Pre-Launch Email</a></li>
+      <li><a href='https://ottawacity.sharepoint.com/:x:/r/sites/TransitOperations/Shared%20Documents/Rail%20Operations/Track%20Speeds.xlsx?d=w85df5510f11941ecbcea361829d0da17&csf=1&web=1&e=QMj7Qo' target='_blank'>Track Segment Speeds</a></li>
       <li>(These are normally found on Teams >  Transit Ops > ERCs. You can open/edit in browser.)</li>
     </ul>
   </section>
@@ -564,8 +575,6 @@ footer {
     <sub id='resources'></sub>
     <h2>New ERC Resources</h2>
     <ul>
-      <li>Windows + L => Lock your computer!</li>
-      <li>Windows + Shift + S => Snip tool shortcut</li>
       <li>Printer - Windows + R => \\cmfp037\BLFB01F02MFD</li>
       <li>Mouse Without Borders - 976VGFdrmb</li>
       <li><a href='https://mycentre.ottawa.ca/home#Shell-home' target='_blank'>Pay/Leave</a></li>
@@ -586,22 +595,52 @@ footer {
           <li>VLC as default media player (CCTV computer)</li>
         </ul>
       </li>
+      <h3>Shortcuts</h3>
+      <ul>
+        <li>Windows + L => Lock your computer!</li>
+        <li>Windows + Shift + S => Snip tool shortcut</li>
+        <li>Windows + E => Windows explorer</li>
+        <li>Windows + D => Minimize all windows</li>
+        <li>Ctrl + L, Alt + Enter => duplicate tab (eg to make another CAD)</li>
+      </ul>
     </ul>
   </section>
   </main>
   <footer>
-  <div>
-  <a id='top-link' href='#top'>^Top</a>
-  </div>
-  <div>
-  <p>Updated 2022-07-12</p>
-  </div>
-  <a href='diversion-checklist.html' target='_blank'>Diversion Checklist</a>
-  </div>
+    <div>
+      <a id='top-link' href='#top'>^Top</a>
+    </div>
+    <div>
+      <p>Updated 2022-07-19 <em><a id='recent' href='recent-updates.html'>List of Recent Updates</a></em></p>
+    </div>
+    <div>
+    <a href='diversion-checklist.html' target='_blank'>Diversion Checklist</a>
+    </div>
   </footer>
   
   <script>
-  	
+  window.weatherWidgetConfig =  window.weatherWidgetConfig || [];
+  window.weatherWidgetConfig.push({
+    selector: ".weatherWidget",
+    apiKey: "79GRWU92BG3J59PMQX4S7PRUQ", //Sign up for your personal key
+    location: "Ottawa, CA", //Enter an address
+    unitGroup: "metric", //"us" or "metric"
+    forecastDays: 3, //how many days forecast to show
+    title: "Weather from unauthorized source", //optional title
+    showTitle: true, 
+    showConditions: false
+  });
+  
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'visualCrossingWidget.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+
+  
+  <script>
     const fireEl = document.getElementById('fire');
     const fireButtonEl = document.getElementById('fire-mode');
     function hideFire() {
