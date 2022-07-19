@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<style>
+
+:root.dark {
+  --body-bg: rgb(40, 40, 40);
+  --header-bg: rgb(30, 60, 30);
+  --text: rgb(205, 225, 200);
+  --link: rgb(180, 180, 180);
+  --sidebar: rgb(55, 55, 55);
+  --smoke: rgb(65, 65, 10);
+  --flame: rgb(53, 15, 15);
+  --tr: rgb(70, 70, 70);
+}
+:root.light {
+  --body-bg: rgb(190, 190, 190);
+  --header-bg: rgb(150, 150, 150);
+  --text: rgb(45, 5, 5);
+  --link: rgb(110, 10, 10);
+  --sidebar: white;
+  --smoke: rgb(255, 255, 200);
+  --flame: rgb(255, 180, 180);
+  --tr: rgb(220, 220, 220);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+body {
+  background-color: var(--body-bg);
+  font-family: sans-serif;
+  transition-duration: 0.4s;
+}
+h2 {
+  margin: 20px;
+}
+a {
+  color: var(--link);
+}
+h2, h3, h4, li, th, td, p {
+  color: var(--text);
+}
+header {
+  height: 75px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--header-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 0 15px 15px var(--header-bg);
+  transition-duration: 0.4s;
+  z-index: 1;
+}
+h1 {
+  letter-spacing: 1px;
+  color: var(--text);
+  border: 1px solid var(--text);
+  border-radius: 10px;
+  padding: 5px;
+  background-color: var(--sidebar);
+  transition-duration: 0.4s;
+}
+h1 a, #weather a {
+  text-decoration: none;
+}
+#weather {
+  width: 30px;
+  height: 20px;
+  transition-duration: 0.4s;
+}
+#weather a:hover {
+  background-color: rgb(150, 165, 255);
+}
+#weather a {
+  font-size: 42px;
+  position: relative;
+  bottom: 20px;
+  border: 1px solid grey;
+  border-radius: 35%;
+  background-color: var(--text);
+  padding-top: 5px;
+  transition-duration: 0.4s;
+}
+nav {
+  display: flex;
+  align-items: center;
+}
+nav li {
+  display: inline-block;
+  list-style: none;
+  margin: 0 3px;
+}
+nav li a {
+  text-decoration: none;
+  padding: 5px;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+}
+nav li a:hover {
+  background-color: rgb(80, 80, 80);
+}
+
+
+#dark-mode {
+  width: 140px;
+  line-height: 25px;
+  font-size: 16px;
+  background-color: var(--body-bg);
+  color: var(--text);
+  border: 1px solid var(--text);
+  transition-duration: 0.3s;
+  padding: 3px;
+}
+#dark-mode:hover, #obstruction-button:hover {
+  background-color: var(--header-bg);
+  box-shadow: 0 0 7px 3px var(--link);
+}
+#dark-mode:active, #obstruction-button:active {
+  background-color: var(--body-bg);
+}
+ 
+main {
+  display: flex;
+  flex-direction: column;
+  margin: 80px;
+}
+@media only screen and (min-width: 1300px) {
+  section {
+    margin-left: calc(80px + ((100vw - 1300px) * 0.2));
+  }
+}
+section:first-of-type {
+  margin-top: 100px;
+}
+section li {
+  margin-top: 10px;
+  margin-left: 10px;
+  font-family: verdana, sans-serif;
+}
+.set-up ul {
+  margin-left: 10px;
+}
+footer a {
+  z-index: 12;
+  text-decoration: none;
+  padding: 8px;
+}
+footer a:hover {
+  background-color: var(--body-bg);
+  border-radius: 5px;
+}
+  
+footer {
+  height: 40px;
+  margin-top: 100px;
+  padding: 0 15px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background-color: var(--header-bg);
+  box-shadow: 0 0 15px 15px var(--header-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition-duration: 0.4s;
+}
+
+@media only screen and (max-height: 822px) {
+  header {
+    height: 65px;
+  }
+  footer {
+    height: 15px;
+  }
+}
+
+</style>
+<title>Sharepoint++</title>
+</head>
+<body>
+  <header>
+    <h1><a href='sharepoint.html'>Sharepoint++</a></h1>
+    <div id='weather'><a href='https://weather.gc.ca/city/pages/on-118_metric_e.html' target='_blank'>⛅</a></div>
+    <nav>
+      <ul>
+        <li><a href='sharepoint.html'>Back to Sharepoint++</a></li>
+      </ul>
+    </nav>
+    <button id='dark-mode'>Toggle Dark Mode</button>
+    <p>Use Ctrl + F to search</p>
+  </header>
+    
+  <main>
+  <section>
+  <h2>Recent Updates</h2>
+  <ul>
+    <li>2022-07-19 - <strong>Created keyboard shortcuts section</strong> - a few handy keyboard shortcuts</li>
+    <li>2022-07-19 - <strong>Created Track Segment Speeds</strong> - excel sheet, added under Teams Files</li>
+    <li>2022-07-13 - <strong>Added Weather widget</strong> - from unofficial source (working on Environment Canada source)</li>
+    <li>2022-07-12 - <strong>Created Diversion Checklist</strong> - prototype for checklists</li>
+    <li>2022-07-11 - <strong>Created Payphones info</strong> - excel sheet, under Misc</li>
+    <li>2022-07-10 - <strong>Added Teams Files section</strong> - Comms Card, SCADA Handover/Issues, Diversion Stats, Launch Email</li>
+    <li>2022-07-04 - <strong>Added User Manuals</strong> - Onyx, IndigoVision, P25, Fire Panel, TG Baker under Manuals</li>
+    <li>2022-07-04 - <strong>Added CAD, Telestaff, Logistik</strong> - under NERC resources</li>
+  </ul>
+  </section>
+  </main>
+  <footer>
+    <div>
+      <a id='top-link' href='#top'>^Top</a>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+  </footer>
+  
+  
+  <script>
+        
+    let isDark;
+    let darkness = window.matchMedia("(prefers-color-scheme: dark)");
+    function toggleDarkMode(input) {
+      if (input.matches) {
+        document.documentElement.className = 'dark';
+        isDark = true;
+      } else {
+        document.documentElement.className = 'light';
+        isDark = false;
+      }
+    }
+    toggleDarkMode(darkness); // Call listener function at run time
+    darkness.addListener(toggleDarkMode); // state changes
+    const darkButtonEl = document.getElementById('dark-mode');
+    function toggleDark() {
+      console.log('clicked');
+      if (isDark === true) {
+        isDark = false;
+        document.documentElement.className = 'light';
+      } else if(isDark === false) {
+        isDark = true;
+        document.documentElement.className = 'dark';
+      }
+    }
+    darkButtonEl.addEventListener('click', toggleDark);
+      
+  </script>
+</body>
+</html>
+
