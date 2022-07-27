@@ -210,8 +210,7 @@ let ptre = new Pseudos("PTRE", 2280, false, false, false, false, false);
 
 Trains.prototype.operateTrain = function() {	
 	for(let i = 0; i < stationsArray.length; i++) {  //cycle stations
-		if(this.x >= stationsArray[i].x - 10 && 
-		this.x <= stationsArray[i].x + 10 &&
+		if(this.x >= stationsArray[i].x - 10 && this.x <= stationsArray[i].x + 10 &&
 		this.x !== stationsArray[i].x) {  //if near, set dwell
 			if(this.track === 1) {
 			  this.dwell = stationsArray[i].wPlatform.dwell;
@@ -250,30 +249,31 @@ Trains.prototype.operateTrain = function() {
   // Move distances (horizontal)
 	if(this.near === true && this.docked === false) {
 		this.jump = 1;
-	} else if(this.docked === true) { //possibly unnecessary?
+	} else if(this.docked === true) {
 		this.jump = 0;
 	} else if(this.near === false && this.docked === false) {
 		this.jump = floor(random(1, 9));
 	}
 
-  if(this.checkSafe() === true) {	
+  if(this.checkSafe() === true && frameCount % speed === 0 && power === true) {	
     // Move horizontally
-  	if(frameCount % speed === 0 && this.docked === false && this.direction === 0 && power === true) {
+  	if(this.docked === false && this.direction === 0) {
   		this.x += this.jump;
   	}
-  	if(frameCount % speed === 0 && this.docked === false && this.direction === 1 && power === true) {
+  	if(this.docked === false && this.direction === 1) {
   		this.x -= this.jump;
   	}
  
     // Move vertically
-    if(frameCount % speed === 0 && (this.track === 3 || this.track === 6) && power === true) {
+    if(this.track === 3 || this.track === 6) {
       this.y += this.jump * 1.73;
     }
-    if(frameCount % speed ===0 && (this.track === 4 || this.track === 5) && power === true) {
+    if(this.track === 4 || this.track === 5) {
       this.y -= this.jump * 1.73;
     }
- }
-	//depart
+  }
+  
+	// Depart from stations
 	if(this.docked === true && this.hold === false && this.dwell <= 0 && this.direction === 0 && this.line > 0) {
 		this.x += 1;
 		this.docked = false;
@@ -282,11 +282,11 @@ Trains.prototype.operateTrain = function() {
 		this.x -= 1;
 		this.docked = false;
 	}
-	//dwellCount
+	// Dwell countdown
 	if(frameCount % speed === 0 && this.docked === true) {
 		this.dwell -= 1;
 	}
-  //dwellShow
+  // Show the dwell time
   if(this.line > 0) {
   	textSize(13);
   	if(this.dwell < 0) {
@@ -308,35 +308,33 @@ Trains.prototype.operateTrain = function() {
     this.variance = this.x - this.run.x;
   }
   
-  //Line 1 crossovers
-	if(this.line === 1 && this.direction === 0 && this.track === 1 && this.x >= switch301.x - 10 && this.x <= switch301.x - 2) {
-	  this.track = 3;
-	  this.x = 179;
-	  this.y += 5;
-	  this.turnout = true;
-	}
-	if(this.line === 1 && this.direction === 0 && this.track === 3 && this.x > switch301.x + 40) {
-	  this.turnout = false;
-	  this.track = 2;
-	  this.x += 15;
-	}
-	
-	if(this.line === 1 && this.direction === 0 && this.track === 2 && this.x >= switch329.x - 10 && this.x <= switch329.x - 2) {
-	  this.track = 5;
-	  this.x = 3540;
-	  this.y -= 5;
-	  this.turnout = true;
-	}
-	if(this.line === 1 && this.direction === 0 && this.track === 5 && this.x > switch329.x + 40) {
-	  this.turnout = false;
-	  this.track = 1;
-	  this.x += 15;
-	  track281.lma = false;
-	}
-  	
-  //draw
-  this.drawTrain();
-
+  // Line 1 crossovers
+  if(this.line === 1) {
+    if(this.direction === 0 && this.track === 1 && this.x >= switch301.x - 10 && this.x <= switch301.x - 2) {
+      this.track = 3;
+      this.x = 179;
+      this.y += 5;
+      this.turnout = true;
+    }
+    if(this.direction === 0 && this.track === 3 && this.x > switch301.x + 40) {
+      this.turnout = false;
+      this.track = 2;
+      this.x += 15;
+    }
+    
+    if(this.direction === 0 && this.track === 2 && this.x >= switch329.x - 10 && this.x <= switch329.x - 2) {
+      this.track = 5;
+      this.x = 3540;
+      this.y -= 5;
+      this.turnout = true;
+    }
+    if(this.direction === 0 && this.track === 5 && this.x > switch329.x + 40) {
+      this.turnout = false;
+      this.track = 1;
+      this.x += 15;
+      track281.lma = false;
+    }
+  }
 
   // Terminus End Changes
   if((this.line >= 1 && this.line <= 6) && this.x === tun.x) {
@@ -364,7 +362,7 @@ Trains.prototype.operateTrain = function() {
         tracksArray[i].lma = false;
         tracksArray[i].eastArrow = false;
       }
-    }
+    }  	
   }
   
   
@@ -497,9 +495,11 @@ Trains.prototype.operateTrain = function() {
     switch329.owner = "16";
     switch330.owner = "16";
   }
-  
 
+  this.drawTrain();
 };
+
+
 
 
 Trains.prototype.drawTrain = function() {
@@ -646,6 +646,10 @@ Trains.prototype.drawTrain = function() {
     rect(this.x + 6, westY + 3, 9, 9);
   }
 };
+
+
+
+
 
 Trains.prototype.checkSafe = function() {
   for(let i = 0; i < trainsArray.length; i++) {
