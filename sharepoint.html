@@ -373,6 +373,83 @@ footer {
   }
 }
 
+@media only screen and (max-width: 1200px) {
+  header {
+    height: 104px;
+  }
+  nav {
+    margin-left: 50px;
+  }
+  nav li {
+    margin-top: 20px;
+  }
+  #weather {
+    margin: 0 20px;
+  }
+  section {
+    margin-left: 25px;
+  }
+}
+
+@media only screen and (max-width: 840px) {
+  header {
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100vh;
+    min-height: 600px;
+    position: absolute;
+    padding: 20px 0;
+  }
+  h1 {
+    width: 60vw;
+    font-size: 7vw;
+    text-align: center;
+  }
+  nav {
+    margin-left: 0;
+  }
+  nav li {
+    display: block;
+    margin: 15px 0;
+    text-align: center;
+    font-size: 30px;
+  }
+  #fire-mode, #obstruction-button, #sidebar {
+    display: none;
+  }
+  #midbar {
+    position: static;
+    margin: 110vh auto 0;
+    height: 500px;
+  }
+  #fire, #obstruction-plans {
+    visibility: visible;
+    opacity: 1;
+    height: 250px;
+  }
+  .weatherWidget {
+    display: none;
+  }
+  main {
+    width: 100%;
+    margin: 0;
+  }
+  section {
+    width: 100%;
+    margin: 20px 0;
+    padding: 0 15px 0 40px;
+  }
+  footer {
+    position: static;
+    top: 0;
+    height: 30vh;
+    flex-direction: column-reverse;
+    justify-content: space-around;
+    z-index: 50;
+    margin-top: 20px;
+  }
+}
+
 </style>
 <title>Sharepoint++</title>
 </head>
@@ -517,6 +594,8 @@ footer {
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Propulsion%20Fault%20Troubleshooting%20-%20SD.pdf' target='_blank'>Propulsion (PCE) Fault</a></li>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/Track%20Brake%20Fault%20Troubleshooting%20-%20SD.pdf' target='_blank'>Track Brake Fault</a></li>
       <li><a href='https://ottawacity.sharepoint.com/sites/RailOperationsDocumentControl/OCTOperationalDocumentation/VOBC%20Failure%20Troubleshooting%20-%20SD.pdf' target='_blank'>VOBC Failure</a></li>
+      <li><a href='https://ottawacity.sharepoint.com/sites/RailOperations/KnowledgeBase/WSS%20Reset%20Procedure.pdf?CT=1658943118360&OR=ItemsView' target='_blank'>WSS Reset Procedure</a></li>
+      <li><a href='https://ottawacity.sharepoint.com/sites/RailOperations/KnowledgeBase/WSM%20Reset%20Procedure%20(Rev%20TS1).pdf?CT=1658943103037&OR=ItemsView' target='_blank'>WSM Reset Procedure (RVM code 4 or 5)</a></li>
     </ul>
   </section>
 
@@ -611,7 +690,7 @@ footer {
       <a id='top-link' href='#top'>^Top</a>
     </div>
     <div>
-      <p>Updated 2022-07-19 <em><a id='recent' href='recent-updates.html'>List of Recent Updates</a></em></p>
+      <p>Updated 2022-07-27 <em><a id='recent' href='recent-updates.html'>List of Recent Updates</a></em></p>
     </div>
     <div>
     <a href='diversion-checklist.html' target='_blank'>Diversion Checklist</a>
