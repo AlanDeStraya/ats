@@ -450,13 +450,16 @@ Trains.prototype.operateTrain = function() {
   //   text(switch327.owner, 3200, 100);
   // }
     
-  // BLA arrival
-  if(this.x >= 3410 && this.x < 3450 && this.track === 2 && this.direction === 0 && switch327.owner === "16") {
+  // BLA-W arrival
+  if(this.x >= 3410 && this.x < 3420 && this.track === 2 && this.direction === 0 && switch327.owner === "16") {
     track182.lma = true;
     track183.lma = true;
     cross14.lma = true;
     sig42.aspect = 2;
+    switch327.tangent = true;
     switch327.owner = this.number;
+    switch328.tangeng = true;
+    switch328.owner = this.number;
     switch329.tangent = false;
     switch329.owner = this.number;
     switch330.tangent = false;
@@ -471,11 +474,13 @@ Trains.prototype.operateTrain = function() {
     cross14.lma = false;
     switch329.flank = false;
     switch330.flank = false;
+    switch327.owner = '16';
+    switch328.owner = '16';
     switch329.owner = "16";
     switch330.owner = "16";
   }
-  // BLA departure
-  if(this.direction === 1 && this.track === 1 && this.x === bla.x && this.dwell < 10) {
+  // BLA-W departure
+  if(this.direction === 1 && this.track === 1 && this.x === bla.x && this.dwell < 10 && switch330.owner === '16' && switch327.owner === '16') {
     switch327.tangent = true;
     switch327.owner = this.number;
     switch328.tangent = true;
