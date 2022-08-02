@@ -148,6 +148,9 @@ let Switches = function(x, y, track, number, tangent, disturbed, manual, blocked
   this.owner = owner;
 };
 
+// {p: 555, y: westY - 36, hold: false, close: false, occupied: false, dwell: 23, menu: false}
+let puotw = new Platforms(1520, westY - 36, false, false, false, 90, false);
+let puote = new Platforms(1520, eastY + 36, false, false, false, 90, false);
 
 let tunw = new Platforms(130, westY - 36, false, false, false, 90, false);
 let tune = new Platforms(130, eastY + 36, false, false, false, 23, false);
@@ -382,24 +385,81 @@ Trains.prototype.operateTrain = function() {
       }
     }
   }
-  
-  
-  // TUN approach
-  if(this.x > 244 && this.x < 290 && this.track === 1 && this.direction === 1 && switch304.owner === "16") { // && tunw.occupied === false
-    switch301.tangent = true;
-    switch301.owner = this.number;
-    switch302.tangent = true;
-    switch302.owner = this.number;
-    switch303.tangent = true;
-    switch303.owner = this.number;
-    switch304.tangent = true;
-    switch304.owner = this.number;
-    sig13.aspect = 1;
-    
+
+  if(this.direction === 1) {
+    this.westTurnback(this.line)
   }
-  if(this.x > switch304.x - 10 && this.x < switch304.x && this.track === 1 && this.direction === 1) {
-    sig13.aspect = 0;
+
+  this.drawTrain();
+};
+  
+
+
+
+
+
+
+Trains.prototype.westTurnback = function(line) {
+  let switchset = [];
+  let entrySwitch, primary, secondary, govSignal;
+  if(line >= 1 && line <= 6) {
+      entrySwitch = switch304;
+      primary = tunw;
+      secondary = tune;
+      govSignal = sig13;
+      switchset.push(switch301, switch302, switch303, switch304);
+  } else if(line >= 7 && line <= 11) {
+      entrySwitch = switch308;
+      primary = lyoe;
+      secondary = lyow;
+      govSignal = sig23;
+      switchset.push(switch305, switch306, switch307, switch308);
+    } else if(line >= 12 && line <= 15) {
+      entrySwitch = switch312;
+      govSignal = sig27;
+      switchset.push(switch309, switch310, switch311, switch312);
+    } else if(line === 16 || line === 17) {
+      entrySwitch = switch315;
+      govSignal = sig37;
+      govSignalTwo = sig33;
+      primary = hure;
+      secondary = hurw;
+      switchset.push(switch313, switch314, switch316, switch315);
+    } else if(line === 18) {
+      entrySwitch = switch319;
+      govSignal = sig35;
+      govSignalTwo = sig311;
+      primary = tree;
+      secondary = trew;
+      switchset.push(switch317, switch318, switch320, switch319);
+    } else if(line === 19) {
+      entrySwitch = switch312;
+      govSignal = sig27;
+      primary = ridw;
+      secondary = ride;
+      switchset.push(switch309, switch310, switch311, switch312);
+    } else if(line === 20) {
+      entrySwitch = switch312;
+      govSignal = sig27;
+      primary = ride;
+      secondary = ridw;
+      switchset.push(switch309, switch310, switch311, switch312);
+    }
   }
+  // TUN approach, primary unoccupied
+  if(this.x > 244 && this.x < 254 && entrySwitch.owner === '16' && primary.occupied === false) { 
+    for(let i = 0; i < switchset.length; i++) {
+      switchset[i].owner = this.number;
+      switchset[i].tangent = true;
+    }
+    govSignal.aspect = 1;  
+    if(this.x > entrySwitch.x - 10 && this.x < entrySwitch.x) {
+      govSignal.aspect = 0;
+    }
+  }
+
+  //////////////////////////////////////
+  
   // TUN arrival
   if(this.x === tun.x) {
     track100.lma = false;
@@ -500,9 +560,8 @@ Trains.prototype.operateTrain = function() {
     switch329.owner = "16";
     switch330.owner = "16";
   }
+}
 
-  this.drawTrain();
-};
 
 
 
